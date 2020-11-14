@@ -1,0 +1,29 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="senaite.patient">
+
+  <!-- Guard handler for Sample (aka AnalysisRequest) content type -->
+  <adapter
+    for="bika.lims.interfaces.IAnalysisRequest"
+    provides="bika.lims.interfaces.IGuardAdapter"
+    factory=".guards.SampleGuardAdapter"
+    name="senaite.patient.adapter.guard.sample" />
+
+  <!-- Samples listing with additional filters and columns -->
+  <subscriber
+    for="bika.lims.browser.analysisrequest.AnalysisRequestsView
+         bika.lims.interfaces.IAnalysisRequestsFolder"
+    provides="senaite.app.listing.interfaces.IListingViewAdapter"
+    factory=".listing.SamplesListingAdapter" />
+  <subscriber
+    for="bika.lims.browser.analysisrequest.AnalysisRequestsView
+         bika.lims.interfaces.IClient"
+    provides="senaite.app.listing.interfaces.IListingViewAdapter"
+    factory=".listing.SamplesListingAdapter" />
+  <subscriber
+    for="bika.lims.browser.analysisrequest.AnalysisRequestsView
+         bika.lims.interfaces.IBatch"
+    provides="senaite.app.listing.interfaces.IListingViewAdapter"
+    factory=".listing.SamplesListingAdapter" />
+
+</configure>

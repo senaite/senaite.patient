@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="senaite.patient">
+
+  <!-- Temporary Medical Record Number viewlet -->
+  <browser:viewlet
+    for="bika.lims.interfaces.IAnalysisRequest"
+    name="senaite.patient.temporary_mrn_viewlet"
+    class=".TemporaryMRNViewlet"
+    manager="plone.app.layout.viewlets.interfaces.IAboveContent"
+    template="templates/temporary_mrn_viewlet.pt"
+    permission="zope2.View"
+    layer="senaite.patient.interfaces.ISenaitePatientLayer" />
+
+</configure>

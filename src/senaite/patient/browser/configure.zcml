@@ -1,0 +1,27 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="senaite.patient">
+
+  <!-- Package includes -->
+  <include package=".theme"/>
+  <include package=".viewlets"/>
+  <include package=".widgets"/>
+
+  <!-- Static directory for js, css and image resources -->
+  <plone:static
+    directory="static"
+    type="plone"
+    name="senaite.patient.static" />
+
+  <!-- Static Resources Viewlet -->
+  <browser:viewlet
+    name="senaite.patient.static"
+    manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+    class="senaite.core.browser.viewlets.resources.ResourcesViewlet"
+    permission="zope2.View"
+    template="./static/resources.pt"
+    layer="senaite.patient.interfaces.ISenaitePatientLayer" />
+
+</configure>

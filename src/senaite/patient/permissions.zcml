@@ -1,0 +1,13 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="senaite.patient">
+
+  <!-- Field Permissions (Sample, aka AnalysisRequest) -->
+  <permission id="senaite.patient.permissions.FieldEditAge" title="senaite.patient: Field: Edit Age"/>
+  <permission id="senaite.patient.permissions.FieldEditDateOfBirth" title="senaite.patient: Field: Edit Date of Birth"/>
+  <permission id="senaite.patient.permissions.FieldEditMedicalRecordNumber" title="senaite.patient: Field: Edit Medical Record Number"/>
+  <permission id="senaite.patient.permissions.FieldEditPatientAddress" title="senaite.patient: Field: Edit Patient Address"/>
+  <permission id="senaite.patient.permissions.FieldEditPatientFullName" title="senaite.patient: Field: Edit Patient Fullname"/>
+  <permission id="senaite.patient.permissions.FieldEditSex" title="senaite.patient: Field: Edit Sex"/>
+  
+</configure>

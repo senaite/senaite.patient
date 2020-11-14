@@ -1,0 +1,19 @@
+<div tal:omit-tag=""
+     tal:condition="python: view.is_visible()"
+     i18n:domain="senaite.patient">
+
+  <div class="visualClear"></div>
+
+  <div id="portal-alert" tal:define="portal_url nocall:context/portal_url">
+    <div class="portlet-alert-item alert alert-warning alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <p class="title" style="margin-bottom:0">
+        <strong i18n:translate="">
+          The Medical Record Number (MRN) assigned to this sample is temporary
+        </strong>&nbsp;
+      </p>
+    </div>
+  </div>
+</div>

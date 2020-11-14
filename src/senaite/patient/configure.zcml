@@ -1,0 +1,58 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:cmf="http://namespaces.zope.org/cmf"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="senaite.patient">
+
+  <five:registerPackage package="." initialize=".initialize"/>
+
+  <!-- Register locales -->
+  <i18n:registerTranslations directory="locales"/>
+
+  <!-- Filesystem directory view -->
+  <cmf:registerDirectory name="skins" directory="skins" recursive="True"/>
+
+  <!-- Import senaite.core permissions -->
+  <include package="bika.lims" file="permissions.zcml" />
+
+  <!-- Import senaite.patient permissions -->
+  <include file="permissions.zcml" />
+
+  <!-- Package includes -->
+  <include package=".adapters" />
+  <include package=".browser" />
+  <include package=".catalog" />
+  <include package=".content" />
+  <include package=".monkeys" />
+
+  <!-- Default profile -->
+  <genericsetup:registerProfile
+    name="default"
+    title="SENAITE PATIENT"
+    directory="profiles/default"
+    description="Installs SENAITE PATIENT"
+    pre_handler=".setuphandlers.pre_install"
+    post_handler=".setuphandlers.post_install"
+    provides="Products.GenericSetup.interfaces.EXTENSION" />
+
+  <!-- Generic Setup Handler -->
+  <genericsetup:importStep
+    name="senaite.patient.setup_handler"
+    title="SENAITE PATIENT: Setup Handler"
+    description="Run various configuration actions"
+    handler=".setuphandlers.setup_handler">
+    <depends name="typeinfo"/>
+  </genericsetup:importStep>
+
+  <!-- Uninstall profile -->
+  <genericsetup:registerProfile
+    name="uninstall"
+    title="SENAITE PATIENT (uninstall)"
+    directory="profiles/uninstall"
+    description="Uninstalls SENAITE PATIENT"
+    post_handler=".setuphandlers.post_uninstall"
+    provides="Products.GenericSetup.interfaces.EXTENSION" />
+
+</configure>

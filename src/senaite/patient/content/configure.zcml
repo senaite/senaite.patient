@@ -1,0 +1,13 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  i18n_domain="senaite.patient">
+
+  <include package="archetypes.schemaextender" />
+
+  <!-- Schema extender for AnalysisRequest (Sample) -->
+  <adapter
+    name="senaite.patient.analysisrequest.schemaextender"
+    provides="archetypes.schemaextender.interfaces.ISchemaExtender"
+    factory=".analysisrequest.AnalysisRequestSchemaExtender" />
+
+</configure>

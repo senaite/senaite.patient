@@ -1,0 +1,22 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:monkey="http://namespaces.plone.org/monkey"
+    i18n_domain="senaite.patient">
+
+  <!-- Returns whether the Medical Record Number is temporary -->
+  <monkey:patch
+    description="Whether the Medical Record Number is temporary"
+    class="bika.lims.content.analysisrequest.AnalysisRequest"
+    original="isMedicalRecordTemporary"
+    ignoreOriginal="True"
+    replacement=".content.analysisrequest.isMedicalRecordTemporary" />
+
+  <!-- Returns the Medical Record Number value assigned to the sample -->
+  <monkey:patch
+    description="Medical Record Number value assigned to the sample"
+    class="bika.lims.content.analysisrequest.AnalysisRequest"
+    original="getMedicalRecordNumberValue"
+    ignoreOriginal="True"
+    replacement=".content.analysisrequest.getMedicalRecordNumberValue" />
+
+</configure>
