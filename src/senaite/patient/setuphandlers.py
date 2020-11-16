@@ -24,12 +24,14 @@ import transaction
 from bika.lims import api
 from bika.lims.catalog import CATALOG_ANALYSIS_REQUEST_LISTING
 from bika.lims.catalog.catalog_utilities import addZCTextIndex
-from senaite.patient import logger
-from senaite.patient import permissions
-from senaite.patient import PRODUCT_NAME
-from senaite.patient import PROFILE_ID
+from plone.registry.interfaces import IRegistry
 from Products.DCWorkflow.Guard import Guard
 from Products.ZCatalog.ProgressHandler import ZLogHandler
+from senaite.patient import PRODUCT_NAME
+from senaite.patient import PROFILE_ID
+from senaite.patient import logger
+from senaite.patient import permissions
+from zope.component import getUtility
 
 # Maximum threshold in seconds before a transaction.commit takes place
 # Default: 300 (5 minutes)
@@ -50,9 +52,20 @@ COLUMNS = [
     (CATALOG_ANALYSIS_REQUEST_LISTING, "isMedicalRecordTemporary"),
 ]
 
+NAVTYPES = [
+    "PatientFolder",
+]
+
 # An array of dicts. Each dict represents an ID formatting configuration
 ID_FORMATTING = [
     {
+        "portal_type": "Patient",
+        "form": "P{seq:06d}",
+        "prefix": "patient",
+        "sequence_type": "generated",
+        "counter_type": "",
+        "split_length": 1,
+    }, {
         "portal_type": "MedicalRecordNumber",
         "form": "TA{seq:06d}",
         "prefix": "medicalrecordnumber",
@@ -134,6 +147,12 @@ def setup_handler(context):
     logger.info("{} setup handler [BEGIN]".format(PRODUCT_NAME.upper()))
     portal = context.getSite()
 
+    # Setup patient content type
+    add_patient_folder(portal)
+
+    # Configure visible navigation items
+    setup_navigation_types(portal)
+
     # Setup catalogs
     setup_catalogs(portal)
 
@@ -183,6 +202,26 @@ def post_uninstall(portal_setup):
     portal = context.getSite()  # noqa
 
     logger.info("{} uninstall handler [DONE]".format(PRODUCT_NAME.upper()))
+
+
+def add_patient_folder(portal):
+    """Adds the initial Patient folder
+    """
+    if portal.get("patients") is None:
+        logger.info("Adding Patient Folder")
+        portal.invokeFactory("PatientFolder", "patients", title="Patients")
+
+
+def setup_navigation_types(portal):
+    """Add additional types for navigation
+    """
+    registry = getUtility(IRegistry)
+    key = "plone.displayed_types"
+    display_types = registry.get(key, ())
+
+    new_display_types = set(display_types)
+    new_display_types.update(NAVTYPES)
+    registry[key] = tuple(new_display_types)
 
 
 def setup_id_formatting(portal, format_definition=None):

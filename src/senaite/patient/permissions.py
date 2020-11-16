@@ -24,3 +24,7 @@ FieldEditMedicalRecordNumber = "senaite.patient: Field: Edit Medical Record Numb
 FieldEditPatientAddress = "senaite.patient: Field: Edit Patient Address"
 FieldEditPatientFullName = "senaite.patient: Field: Edit Patient Fullname"
 FieldEditSex = "senaite.patient: Field: Edit Sex"
+
+EditPatient = "senaite.lims: Edit Patient"
+ViewPatient = "senaite.lims: View Patient"
+FieldEditPatient = "senaite.lims: Field: Edit Patient"
