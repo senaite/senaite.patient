@@ -31,6 +31,7 @@ from senaite.patient import PRODUCT_NAME
 from senaite.patient import PROFILE_ID
 from senaite.patient import logger
 from senaite.patient import permissions
+from senaite.patient.config import PATIENT_CATALOG
 from zope.component import getUtility
 
 # Maximum threshold in seconds before a transaction.commit takes place
@@ -44,12 +45,17 @@ CATALOGS_BY_TYPE = [
 # Tuples of (catalog, index_name, index_type)
 INDEXES = [
     (CATALOG_ANALYSIS_REQUEST_LISTING, "is_temporary_mrn", "BooleanIndex"),
-    (CATALOG_ANALYSIS_REQUEST_LISTING, "medical_record_number", "KeywordIndex")
+    (CATALOG_ANALYSIS_REQUEST_LISTING, "medical_record_number", "KeywordIndex"),
+    (PATIENT_CATALOG, "patient_mrn", "FieldIndex"),
+    (PATIENT_CATALOG, "patient_email", "FieldIndex"),
+    (PATIENT_CATALOG, "patient_fullname", "FieldIndex"),
+    (PATIENT_CATALOG, "patient_searchable_text", "TextIndexNG3"),
 ]
 
 # Tuples of (catalog, column_name)
 COLUMNS = [
     (CATALOG_ANALYSIS_REQUEST_LISTING, "isMedicalRecordTemporary"),
+    (PATIENT_CATALOG, "mrn"),
 ]
 
 NAVTYPES = [
