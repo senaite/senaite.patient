@@ -51,9 +51,9 @@ class IPatient(model.Schema):
 
     # Default
 
-    code = schema.TextLine(
-        title=_(u"label_patient_code", default=u"Tax/Fiscal Code"),
-        description=_(u"Patient unique Tax/Fiscal Code"),
+    mrn = schema.TextLine(
+        title=_(u"label_patient_mrn", default=u"Medical Record #"),
+        description=_(u"Patient Medical Record Number"),
         required=True,
     )
 
@@ -140,22 +140,26 @@ class IPatient(model.Schema):
     # Validators
 
     @invariant
-    def validate_code(data):
-        """Checks if the patient code is unique
+    def validate_mrn(data):
+        """Checks if the patient MRN # is unique
         """
         # https://community.plone.org/t/dexterity-unique-field-validation
         context = getattr(data, "__context__", None)
         if context is not None:
-            if context.code == data.code:
+            if context.mrn == data.mrn:
                 # nothing changed
                 return
         query = {
             "portal_type": "Patient",
-            "patient_code": data.code,
+            "patient_mrn": data.mrn,
         }
         results = api.search(query, catalog=PATIENT_CATALOG)
         if len(results) > 0:
-            raise Invalid(_("Patient code must be unique"))
+            for brain in results:
+                obj = api.get_object(brain)
+                if obj.mrn != data.mrn:
+                    continue
+                raise Invalid(_("Patient Medical Record # must be unique"))
 
     @invariant
     def validate_email(data):
@@ -176,11 +180,11 @@ class Patient(Item):
         fullname = self.get_fullname()
         return fullname.encode("utf8")
 
-    def get_code(self):
-        code = self.code
-        if not code:
+    def get_mrn(self):
+        mrn = self.mrn
+        if not mrn:
             return u""
-        return code.strip()
+        return mrn.strip()
 
     def get_email(self):
         email = self.email

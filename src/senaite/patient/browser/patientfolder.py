@@ -45,9 +45,9 @@ class PatientFolderView(ListingView):
         self.pagesize = 25
 
         self.columns = collections.OrderedDict((
-            ("code", {
-                "title": _("Tax/Fiscal Code"),
-                "index": "patient_code"}),
+            ("mrn", {
+                "title": _("Medical Record #"),
+                "index": "patient_mrn"}),
             ("fullname", {
                 "title": _("Fullname"),
                 "index": "patient_fullname"}),
@@ -58,8 +58,6 @@ class PatientFolderView(ListingView):
                 "title": _("Gender"), }),
             ("birthdate", {
                 "title": _("Birthdate"), }),
-            ("client", {
-                "title": _("Client"), }),
         ))
 
         self.review_states = [
@@ -94,21 +92,17 @@ class PatientFolderView(ListingView):
     def folderitem(self, obj, item, index):
         obj = api.get_object(obj)
         url = api.get_url(obj)
-        client = api.get_parent(obj)
         birthdate = obj.get_birthdate()
         email = obj.get_email()
 
         # get_link assumes non-unicode values
+        mrn = obj.get_mrn().encode("utf8")
         fullname = obj.get_fullname().encode("utf8")
-        client_title = api.get_title(client).encode("utf8")
-        code = obj.get_code().encode("utf8")
 
-        item["replace"]["code"] = get_link(
-            url, value=code)
+        item["replace"]["mrn"] = get_link(
+            url, value=mrn)
         item["replace"]["fullname"] = get_link(
             url, value=fullname)
-        item["replace"]["client"] = get_link(
-            api.get_url(client), value=client_title)
         item["replace"]["email"] = get_email_link(
             email, value=email)
 
