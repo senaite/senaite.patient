@@ -43,6 +43,7 @@ from senaite.patient.permissions import FieldEditPatientFullName
 from zope.component import adapts
 from zope.interface import implementer
 
+
 MedicalRecordNumberField = TemporaryIdentifierField(
     "MedicalRecordNumber",
     required=True,
