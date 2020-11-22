@@ -1,6 +1,5 @@
-### Please use this command to compile this file into the proper folder:
-    coffee --no-header -w -o ../ -c temporaryidentifierwidget.coffee
-###
+import $ from "jquery"
+
 
 class TemporaryIdentifierWidgetController
 
