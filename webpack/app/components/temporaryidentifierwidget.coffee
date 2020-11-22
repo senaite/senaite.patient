@@ -108,11 +108,19 @@ class TemporaryIdentifierWidgetController
     .done (data) ->
       return unless data
 
+      # Address blocks
+      address = [
+        data.address,
+        data.zipcode,
+        data.city,
+        data.country
+      ].filter((value) -> value)
+
       # map patient fields -> Sample fields
       record = {
         "PatientFullName": data.Title,
-        "PatientAddress": data.country,
-        "DateOfBirth": @format_date( data.birthdate),
+        "PatientAddress": address.join(", "),
+        "DateOfBirth": @format_date(data.birthdate),
         "Age": data.age,
         "Gender": data.gender,
       }
