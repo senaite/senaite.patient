@@ -1,1 +1,7 @@
+<!-- JS bundle -->
+
 <script tal:attributes="src string:${view/site_url}//++plone++senaite.patient.static/bundles/senaite.patient-d2c413c.js"></script>
+
+
+<!-- CSS bundle -->
+

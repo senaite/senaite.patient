@@ -30,6 +30,21 @@ module.exports = {
   module: {
     rules: [
       {
+        // Coffee
+        test: /\.(coffee)$/,
+        exclude: [/node_modules/],
+        use: [
+          {
+            // https://webpack.js.org/loaders/babel-loader/
+            loader: "babel-loader"
+          },
+          {
+            // https://webpack.js.org/loaders/coffee-loader/
+            loader: "coffee-loader"
+          }
+        ]
+      },
+      {
         // JS
         test: /\.(js|jsx)$/,
         exclude: [/node_modules/],

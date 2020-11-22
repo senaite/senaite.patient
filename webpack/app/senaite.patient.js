@@ -1,4 +1,4 @@
-import TemporaryIdentifierWidgetController from "./components/temporaryidentifierwidget.js"
+import TemporaryIdentifierWidgetController from "./components/temporaryidentifierwidget.coffee"
 
 document.addEventListener("DOMContentLoaded", () => {
   console.debug("*** SENAITE PATIENT JS LOADED ***");
