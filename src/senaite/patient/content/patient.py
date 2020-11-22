@@ -157,6 +157,7 @@ class IPatient(model.Schema):
         query = {
             "portal_type": "Patient",
             "patient_mrn": data.mrn,
+            "is_active": True.mrn,
         }
         results = api.search(query, catalog=PATIENT_CATALOG)
         if len(results) > 0:
@@ -214,7 +215,7 @@ class Patient(Item):
         surname = self.get_surname()
         fullname = u"{} {}".format(name, surname).strip()
         if not fullname:
-            return self.get_code()
+            return self.get_mrn()
         return fullname
 
     def get_gender(self):
@@ -233,11 +234,18 @@ class Patient(Item):
         return DateTime(self.birthdate)
 
     def set_birthdate(self, value):
-        if isinstance(value, datetime):
+        if not value:
+            value = None
+        elif isinstance(value, DateTime):
+            value = value.asdatetime()
+        elif isinstance(value, datetime):
             self.birthdate = value
         elif isinstance(value, string_types):
-            dt = api.to_date(value)
-            value = dt.asdatetime()
+            dt = api.to_date(value, None)
+            if dt is not None:
+                value = dt.asdatetime()
+            else:
+                value = None
         else:
             value = None
         self.birthdate = value
