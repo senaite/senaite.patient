@@ -249,6 +249,9 @@ class Patient(Item):
         """
         if self.birthdate:
             return
+        elif not value:
+            return
+
         today = datetime.now()
         year_of_birth = today.year - value
         self.birthdate = datetime(year_of_birth, today.month, today.day)
