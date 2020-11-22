@@ -63,15 +63,9 @@ class IPatient(model.Schema):
         required=False,
     )
 
-    name = schema.TextLine(
-        title=_(u"label_patient_name", default=u"Name"),
-        description=_(u"Patient name"),
-        required=False,
-    )
-
-    surname = schema.TextLine(
-        title=_(u"label_patient_surname", default=u"Surname"),
-        description=_(u"Patient surname"),
+    fullname = schema.TextLine(
+        title=_(u"label_patient_fullname", default=u"Fullname"),
+        description=_(u"Patient fullname"),
         required=False,
     )
 
@@ -192,31 +186,22 @@ class Patient(Item):
             return u""
         return mrn.strip()
 
+    def get_fullname(self):
+        fullname = self.fullname
+        if not fullname:
+            return ""
+        return fullname.strip()
+
+    def set_fullname(self, value):
+        if not isinstance(value, string_types):
+            self.fullname = ""
+        self.fullname = value
+
     def get_email(self):
         email = self.email
         if not email:
             return u""
         return email.strip()
-
-    def get_name(self):
-        name = self.name
-        if not name:
-            return u""
-        return name.strip()
-
-    def get_surname(self):
-        surname = self.surname
-        if not surname:
-            return u""
-        return surname.strip()
-
-    def get_fullname(self):
-        name = self.get_name()
-        surname = self.get_surname()
-        fullname = u"{} {}".format(name, surname).strip()
-        if not fullname:
-            return self.get_mrn()
-        return fullname
 
     def get_gender(self):
         genders = dict(GENDERS)
