@@ -25,6 +25,11 @@
       component="senaite.patient.vocabularies.GenderVocabularyFactory"
       name="senaite.patient.vocabularies.gender" />
 
+  <!-- Country Vocabulary -->
+  <utility
+      component="senaite.patient.vocabularies.CountryVocabularyFactory"
+      name="senaite.patient.vocabularies.country" />
+
   <!-- Package includes -->
   <include package=".adapters" />
   <include package=".browser" />

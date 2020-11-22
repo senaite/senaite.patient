@@ -123,9 +123,10 @@ class IPatient(model.Schema):
         required=False,
     )
 
-    country = schema.TextLine(
+    country = schema.Choice(
         title=_(u"label_patient_country", default=u"Country"),
         description=_(u"Patient country"),
+        source="senaite.patient.vocabularies.country",
         required=False,
     )
 
