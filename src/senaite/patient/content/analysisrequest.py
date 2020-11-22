@@ -72,6 +72,9 @@ MedicalRecordNumberField = TemporaryIdentifierField(
             "sort_on": "sortable_title",
             "sort_order": "ascending",
         },
+        # BBB
+        search_fields=("patient_searchable_text", ),
+        search_index="patient_searchable_text",
         colModel=[
             {"columnName": "mrn", "width": "50",
                 "label": _("MRN")},
