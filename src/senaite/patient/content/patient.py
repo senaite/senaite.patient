@@ -12,9 +12,9 @@ from plone.autoform import directives
 from plone.dexterity.content import Item
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
+from senaite.patient import messageFactory as _
 from senaite.patient.config import GENDERS
 from senaite.patient.config import PATIENT_CATALOG
-from senaite.patient import messageFactory as _
 from zope import schema
 from zope.interface import Invalid
 from zope.interface import implementer
@@ -137,7 +137,11 @@ class IPatient(model.Schema):
         required=False,
     )
 
-    # Validators
+    age = schema.Int(
+        title=_(u"label_patient_age", default=u"Age"),
+        description=_(u"Patient age"),
+        required=False,
+    )
 
     @invariant
     def validate_mrn(data):
@@ -216,6 +220,12 @@ class Patient(Item):
         genders = dict(GENDERS)
         return genders.get(self.gender)
 
+    def set_gender(self, value):
+        for k, v in GENDERS:
+            if value == v:
+                value = k
+        self.gender = value
+
     def get_birthdate(self):
         if not self.birthdate:
             return None
@@ -231,8 +241,22 @@ class Patient(Item):
             value = None
         self.birthdate = value
 
-    def set_gender(self, value):
-        for k, v in GENDERS:
-            if value == v:
-                value = k
-        self.gender = value
+    def get_age(self):
+        """Calculate the Age from the birthdate
+        """
+        birthdate = self.birthdate
+        if not birthdate:
+            return None
+        now = datetime.now()
+        return now.year - birthdate.year
+
+    def set_age(self, value):
+        """Set the birthdate according to the age
+        """
+        if self.birthdate:
+            return
+        today = datetime.now()
+        year_of_birth = today.year - value
+        self.birthdate = datetime(year_of_birth, today.month, today.day)
+
+    age = property(get_age, set_age)

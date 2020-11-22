@@ -25,30 +25,23 @@ from bika.lims.fields import ExtDateTimeField
 from bika.lims.fields import ExtIntegerField
 from bika.lims.fields import ExtStringField
 from bika.lims.interfaces import IAnalysisRequest
-from senaite.patient import messageFactory as _
-from senaite.patient.browser.widgets import TemporaryIdentifierWidget
-from senaite.patient.content.fields import TemporaryIdentifierField
-from senaite.patient.permissions import FieldEditAge
-from senaite.patient.permissions import FieldEditDateOfBirth
-from senaite.patient.permissions import FieldEditMedicalRecordNumber
-from senaite.patient.permissions import FieldEditPatientAddress
-from senaite.patient.permissions import FieldEditPatientFullName
-from senaite.patient.permissions import FieldEditSex
-from Products.Archetypes import DisplayList
 from Products.Archetypes.Widget import IntegerWidget
 from Products.Archetypes.Widget import StringWidget
 from Products.CMFCore.permissions import View
 from senaite.core.browser.widgets import DateTimeWidget
+from senaite.patient import messageFactory as _
+from senaite.patient.browser.widgets import TemporaryIdentifierWidget
+from senaite.patient.config import GENDERS
+from senaite.patient.content.fields import TemporaryIdentifierField
 from senaite.patient.interfaces import ISenaitePatientLayer
+from senaite.patient.permissions import FieldEditAge
+from senaite.patient.permissions import FieldEditDateOfBirth
+from senaite.patient.permissions import FieldEditGender
+from senaite.patient.permissions import FieldEditMedicalRecordNumber
+from senaite.patient.permissions import FieldEditPatientAddress
+from senaite.patient.permissions import FieldEditPatientFullName
 from zope.component import adapts
 from zope.interface import implementer
-
-
-SEX = DisplayList((
-    ('male', _('Male')),
-    ('female', _('Female')),
-    ('unk', _(''))
-    ))
 
 MedicalRecordNumberField = TemporaryIdentifierField(
     "MedicalRecordNumber",
@@ -145,15 +138,15 @@ AgeField = ExtIntegerField(
     ),
 )
 
-SexField = ExtStringField(
-    "Sex",
-    vocabulary=SEX,
+GenderField = ExtStringField(
+    "Gender",
+    vocabulary=GENDERS,
     required=False,
-    default="unk",
+    default="",
     read_permission=View,
-    write_permission=FieldEditSex,
+    write_permission=FieldEditGender,
     widget=SelectionWidget(
-        label=_("Sex"),
+        label=_("Gender"),
         format="select",
         visible={
             'add': 'edit',
@@ -182,5 +175,5 @@ class AnalysisRequestSchemaExtender(object):
             PatientAddressField,
             DateOfBirthField,
             AgeField,
-            SexField,
+            GenderField,
         ]

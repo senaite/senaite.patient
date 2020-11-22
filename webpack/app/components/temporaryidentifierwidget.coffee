@@ -107,15 +107,23 @@ class TemporaryIdentifierWidgetController
     @search_mrn el.value
     .done (data) ->
       return unless data
+
+      # map patient fields -> Sample fields
+      record = {
+        "PatientFullName": data.Title,
+        "PatientAddress": data.country,
+        "DateOfBirth": @format_date( data.birthdate),
+        "Age": data.age,
+        "Gender": data.gender,
+      }
+
       # Render the popup dialog
       me = @
       data.identifier ?= el.value
       dialog = @template_dialog "existing-identifier", data
       dialog.on "yes", ->
         # Update field values from the whole form
-        for field, value of data
-          if field ==  'DateOfBirth'
-            value = me.format_date value
+        for field, value of record
           me.set_sibling_value el, field, value
 
       dialog.on "no", ->
@@ -207,19 +215,26 @@ class TemporaryIdentifierWidgetController
 
     # Fields to include on search results
     fields = [
-      "PatientFullName"
-      "PatientAddress"
-      "DateOfBirth"
-      "Age"
-      "Sex"
+      "Title"
+      "name"
+      "surname"
+      "age"
+      "birthdate"
+      "gender"
+      "email"
+      "address"
+      "zipcode"
+      "city"
+      "country"
     ]
 
     deferred = $.Deferred()
     options =
       url: @get_portal_url() + "/@@API/read"
       data:
-        catalog_name: "bika_catalog_analysisrequest_listing"
-        medical_record_number: mrn
+        portal_type: "Patient"
+        catalog_name: "portal_catalog"
+        patient_mrn: mrn
         include_fields: fields
         page_size: 1
 

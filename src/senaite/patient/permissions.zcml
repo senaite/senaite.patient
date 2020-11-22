@@ -8,7 +8,7 @@
   <permission id="senaite.patient.permissions.FieldEditMedicalRecordNumber" title="senaite.patient: Field: Edit Medical Record Number"/>
   <permission id="senaite.patient.permissions.FieldEditPatientAddress" title="senaite.patient: Field: Edit Patient Address"/>
   <permission id="senaite.patient.permissions.FieldEditPatientFullName" title="senaite.patient: Field: Edit Patient Fullname"/>
-  <permission id="senaite.patient.permissions.FieldEditSex" title="senaite.patient: Field: Edit Sex"/>
+  <permission id="senaite.patient.permissions.FieldEditGender" title="senaite.patient: Field: Edit Gender"/>
 
   <permission id="senaite.patient.permissions.EditPatient" title="senaite.patient: Edit Patient"/>
   <permission id="senaite.patient.permissions.ViewPatient" title="senaite.patient: View Patient"/>

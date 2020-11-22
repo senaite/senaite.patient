@@ -92,7 +92,7 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMedicalRecordNumber: (),
                     permissions.FieldEditPatientAddress: (),
                     permissions.FieldEditPatientFullName: (),
-                    permissions.FieldEditSex: (),
+                    permissions.FieldEditGender: (),
                 }
             },
             "published": {
@@ -103,7 +103,7 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMedicalRecordNumber: (),
                     permissions.FieldEditPatientAddress: (),
                     permissions.FieldEditPatientFullName: (),
-                    permissions.FieldEditSex: (),
+                    permissions.FieldEditGender: (),
                 }
             },
             "rejected": {
@@ -114,7 +114,7 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMedicalRecordNumber: (),
                     permissions.FieldEditPatientAddress: (),
                     permissions.FieldEditPatientFullName: (),
-                    permissions.FieldEditSex: (),
+                    permissions.FieldEditGender: (),
                 }
             },
             "invalid": {
@@ -125,7 +125,7 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMedicalRecordNumber: (),
                     permissions.FieldEditPatientAddress: (),
                     permissions.FieldEditPatientFullName: (),
-                    permissions.FieldEditSex: (),
+                    permissions.FieldEditGender: (),
                 }
             },
             "cancelled": {
@@ -136,7 +136,7 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMedicalRecordNumber: (),
                     permissions.FieldEditPatientAddress: (),
                     permissions.FieldEditPatientFullName: (),
-                    permissions.FieldEditSex: (),
+                    permissions.FieldEditGender: (),
                 }
             }
         }

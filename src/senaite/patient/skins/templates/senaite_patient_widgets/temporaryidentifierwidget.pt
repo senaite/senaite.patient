@@ -40,7 +40,7 @@
             A record for <strong>{{identifier}}</strong> exists already.
           </p>
           <div class="dialog-listing">
-            <div>{{PatientFullName}}</div>
+            <div>{{Title}}</div>
             <div>{{PatientAddress}}</div>
           </div>
           <p i18n:translate="">
