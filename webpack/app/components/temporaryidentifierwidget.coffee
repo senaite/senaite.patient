@@ -49,6 +49,7 @@ class TemporaryIdentifierWidgetController
     @debug "TemporaryIdentifierWidget::bind_event_handler"
     $("body").on "change", ".TemporaryIdentifier input[type='checkbox']", @on_temporary_change
     $("body").on "change", ".TemporaryIdentifier input[type='text']", @on_value_change
+    $("body").on "keypress", ".TemporaryIdentifier input[type='text']", @on_keypress
 
   ###
   Event handler for TemporaryIdentifier's checkbox change
@@ -138,6 +139,15 @@ class TemporaryIdentifierWidgetController
         # Restore the value and do nothing else
         el.value = current_value
         me.set_current_id field, current_value
+
+  ###
+  Event handler for TemporaryIdentifier's value change
+  ###
+  on_keypress: (event) =>
+    if event.keyCode == 13
+      el = event.currentTarget
+      $(el).trigger("blur")
+      event.preventDefault()
 
   ###
   Sets the temporary value of te field
