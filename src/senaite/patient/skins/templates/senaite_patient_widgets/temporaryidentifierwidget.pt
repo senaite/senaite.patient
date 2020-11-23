@@ -80,22 +80,9 @@
           <input tal:condition="python:True"
                  type="text" size="20"
                  tal:attributes="id string:${fieldName}_value;
-                                 value string:${value};
+                                 value python:value_temp and value_auto or value;
                                  disabled value_temp|nothing;
                                  required required|nothing;"/>
-
-          <!-- ReactJS based reference widget -->
-          <div tal:condition="python:False"
-               tal:define="view python:context.restrictedTraverse('@@referencewidget_view');"
-               tal:attributes="python:view.get_field_attributes(field);
-                               data-id string:${fieldName}_value;
-                               data-disabled python:value_temp and 'disabled' or 'false';
-                               data-name string:${fieldName}_value;
-                               data-value string:${value};"
-
-               class="senaite-reference-widget">
-          </div>
-
         </div>
 
         <!-- Temporary checkbox -->
