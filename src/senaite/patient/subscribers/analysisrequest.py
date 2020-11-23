@@ -24,8 +24,8 @@ def ensure_patient(instance):
     if patient is None:
         logger.info("Creating new Patient with MRN #: {}".format(mrn))
         patient = patient_api.create_empty_patient()
-        values = get_patient_fields(instance)
-        patient_api.update_patient(patient, **values)
+    values = get_patient_fields(instance)
+    patient_api.update_patient(patient, **values)
 
 
 def get_patient_fields(instance):

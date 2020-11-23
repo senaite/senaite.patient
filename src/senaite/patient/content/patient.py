@@ -188,9 +188,13 @@ class Patient(Item):
         return mrn.strip()
 
     def set_mrn(self, value):
+        value = value.strip()
+        if self.mrn == value:
+            # noting changed
+            return
         if patient_api.get_patient_by_mrn(value, full_object=False):
             raise ValueError("A patient with that MRN already exists!")
-        self.mrn = value.strip()
+        self.mrn = value
 
     def get_fullname(self):
         fullname = self.fullname
