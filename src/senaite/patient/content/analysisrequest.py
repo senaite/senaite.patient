@@ -95,6 +95,7 @@ DateOfBirthField = ExtDateTimeField(
     validators=("isDateFormat",),
     widget=DateTimeWidget(
         label=_("Date of birth"),
+        show_time=False,
         datepicker_nofuture=1,
         render_own_label=True,
         visible={

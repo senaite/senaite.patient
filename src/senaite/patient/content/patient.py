@@ -193,7 +193,7 @@ class Patient(Item):
     def set_fullname(self, value):
         if not isinstance(value, string_types):
             self.fullname = ""
-        self.fullname = value
+        self.fullname = api.safe_unicode(value)
 
     def get_email(self):
         email = self.email
