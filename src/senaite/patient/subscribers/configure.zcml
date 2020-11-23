@@ -11,10 +11,18 @@
       handler=".analysisrequest.on_object_edited"
       />
 
+  <!-- Sample created -->
   <subscriber
       for="bika.lims.interfaces.IAnalysisRequest
            Products.Archetypes.interfaces.IObjectInitializedEvent"
       handler=".analysisrequest.on_object_created"
+      />
+
+  <!-- Before transition event -->
+  <subscriber
+      for="senaite.patient.content.patient.IPatient
+           Products.DCWorkflow.interfaces.IBeforeTransitionEvent"
+      handler=".patient.on_before_transition"
       />
 
 </configure>
