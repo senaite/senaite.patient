@@ -229,18 +229,20 @@ class Patient(Item):
 
         Tries to convert value to datetime before set.
         """
-        if not value:
-            value = None
-        elif isinstance(value, DateTime):
+        if isinstance(value, DateTime):
+            # convert DateTime -> datetime
             value = value.asdatetime()
-        elif isinstance(value, datetime):
-            value = value
         elif isinstance(value, string_types):
+            # convert string to datetime
             dt = api.to_date(value, None)
             if dt is not None:
                 value = dt.asdatetime()
-            else:
-                value = None
+        # Ensure the datetime object has no timezone set
+        # Happens when setting `DateOfBirth` of the Sample to the Patient
+        #
+        # TypeError: can't compare offset-naive and offset-aware datetimes
+        if isinstance(value, datetime):
+            value = value.replace(tzinfo=None)
         else:
             value = None
         self.birthdate = value
