@@ -58,27 +58,6 @@ MedicalRecordNumberField = TemporaryIdentifierField(
             "secondary": "disabled",
             "header_table": "prominent",
         },
-        catalog_name="portal_catalog",
-        base_query={
-            "portal_type": "Patient",
-            "is_active": True,
-            "sort_limit": 50,
-            "sort_on": "sortable_title",
-            "sort_order": "ascending",
-        },
-        # BBB
-        search_fields=("patient_searchable_text", ),
-        search_index="patient_searchable_text",
-        colModel=[
-            {"columnName": "mrn", "width": "50",
-                "label": _("MRN")},
-            {"columnName": "Title", "width": "50",
-                "label": _("Name")},
-            {"columnName": "email", "width": "50",
-                "label": _("Email Address")},
-        ],
-        showOn=True,
-        ui_item="mrn",
     )
 )
 
