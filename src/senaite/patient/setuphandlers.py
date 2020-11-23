@@ -85,6 +85,7 @@ WORKFLOW_TO_UPDATE = {
     "bika_ar_workflow": {
         "states": {
             "verified": {
+                "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
@@ -96,6 +97,7 @@ WORKFLOW_TO_UPDATE = {
                 }
             },
             "published": {
+                "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
@@ -107,6 +109,7 @@ WORKFLOW_TO_UPDATE = {
                 }
             },
             "rejected": {
+                "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
@@ -118,6 +121,7 @@ WORKFLOW_TO_UPDATE = {
                 }
             },
             "invalid": {
+                "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
@@ -129,6 +133,7 @@ WORKFLOW_TO_UPDATE = {
                 }
             },
             "cancelled": {
+                "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
