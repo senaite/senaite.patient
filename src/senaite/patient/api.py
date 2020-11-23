@@ -66,3 +66,5 @@ def update_patient(patient, **values):
     patient.set_gender(values.get("gender", ""))
     patient.set_birthdate(values.get("birthdate"))
     patient.address = values.get("address")
+    # reindex the new values
+    patient.reindexObject()

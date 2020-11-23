@@ -10,12 +10,18 @@
       <tal:values define="values python:field.getEditAccessor(here)();
                           session_values python:here.session_restore_value(fieldName, values);
                           cached_values python:request.get(fieldName, session_values);
+                          patient python:field.get_linked_patient(here);
+                          temporary python:values.get('temporary');
                           values python:cached_values or values;">
 
-        <span tal:condition="not:values/temporary|nothing"
-              tal:content="values/value|nothing"/>
+        <a href="#"
+           tal:attributes="href python:patient and patient.absolute_url() or ''"
+           tal:omit-tag="python:patient is None"
+           tal:condition="python:not temporary">
+          <span tal:content="values/value|nothing"/>
+        </a>
 
-        <span tal:condition="values/temporary|nothing"
+        <span tal:condition="python:temporary"
               tal:content="python: '{} (temp)'.format(values.get('value'))"/>
 
       </tal:values>

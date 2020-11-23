@@ -173,10 +173,7 @@ class Patient(Item):
         return fullname.encode("utf8")
 
     def get_mrn(self):
-        mrn = self.mrn
-        if not mrn:
-            return u""
-        return mrn.strip()
+        return self.mrn
 
     def set_mrn(self, value):
         value = value.strip()

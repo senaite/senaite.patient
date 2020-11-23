@@ -23,6 +23,7 @@ import six
 from AccessControl import ClassSecurityInfo
 from bika.lims.fields import ExtensionField
 from Products.Archetypes.Field import ObjectField
+from senaite.patient import api as patient_api
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 
 
@@ -47,3 +48,11 @@ class TemporaryIdentifierField(ExtensionField, ObjectField):
         if isinstance(val, six.string_types):
             val = {"value": val, "temporary": False}
         return val
+
+    def get_linked_patient(self, instance):
+        """Get the linked client
+        """
+        mrn = instance.getMedicalRecordNumberValue()
+        if not mrn:
+            return None
+        return patient_api.get_patient_by_mrn(mrn)
