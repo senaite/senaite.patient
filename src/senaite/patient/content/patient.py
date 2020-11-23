@@ -149,18 +149,9 @@ class IPatient(model.Schema):
             if context.mrn == data.mrn:
                 # nothing changed
                 return
-        query = {
-            "portal_type": "Patient",
-            "patient_mrn": data.mrn,
-            "is_active": True.mrn,
-        }
-        results = api.search(query, catalog=PATIENT_CATALOG)
-        if len(results) > 0:
-            for brain in results:
-                obj = api.get_object(brain)
-                if obj.mrn != data.mrn:
-                    continue
-                raise Invalid(_("Patient Medical Record # must be unique"))
+        patient = patient_api.get_patient_by_mrn(data.mrn, full_object=False)
+        if patient:
+            raise Invalid(_("Patient Medical Record # must be unique"))
 
     @invariant
     def validate_email(data):
