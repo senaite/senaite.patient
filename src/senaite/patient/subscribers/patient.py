@@ -8,7 +8,7 @@ def on_before_transition(instance, event):
     """Event handler when a sample was created
     """
     # we only care when reactivating the patient
-    if event.new_state != "activate":
+    if event.new_state != "active":
         return
     mrn = instance.get_mrn()
     patient = patient_api.get_patient_by_mrn(mrn, full_object=False)
