@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from bika.lims import api
+from DateTime import DateTime
 from senaite.patient import api as patient_api
 from senaite.patient import logger
-from DateTime import DateTime
 
 
 def on_object_created(instance, event):
@@ -23,6 +24,7 @@ def handle_age_and_birthdate(instance):
     """Calculate Age from Birthdate and vice versa
     """
     now = DateTime()
+    request = api.get_request()
 
     age_field = instance.getField("Age")
     dob_field = instance.getField("DateOfBirth")
@@ -41,6 +43,10 @@ def handle_age_and_birthdate(instance):
         yob = current_year - age
         dob = DateTime(yob, now.month(), now.day())
         dob_field.set(instance, dob)
+
+    # update the request to display the values immediately
+    request.set("Age", age)
+    request.set("DateOfBirth", dob)
 
 
 def update_patient(instance):
