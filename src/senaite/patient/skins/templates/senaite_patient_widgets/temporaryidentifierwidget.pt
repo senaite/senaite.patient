@@ -47,7 +47,7 @@
           </p>
           <div class="dialog-listing">
             <div>{{Title}}</div>
-            <div>{{PatientAddress}}</div>
+            <div>{{address}}</div>
           </div>
           <p i18n:translate="">
             Do you want to apply these changes?
