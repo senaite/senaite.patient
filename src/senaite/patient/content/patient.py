@@ -12,6 +12,7 @@ from plone.autoform import directives
 from plone.dexterity.content import Item
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
+from senaite.patient import api as patient_api
 from senaite.patient import messageFactory as _
 from senaite.patient.config import GENDERS
 from senaite.patient.config import PATIENT_CATALOG
@@ -185,6 +186,11 @@ class Patient(Item):
         if not mrn:
             return u""
         return mrn.strip()
+
+    def set_mrn(self, value):
+        if patient_api.get_patient_by_mrn(value, full_object=False):
+            raise ValueError("A patient with that MRN already exists!")
+        self.mrn = value.strip()
 
     def get_fullname(self):
         fullname = self.fullname

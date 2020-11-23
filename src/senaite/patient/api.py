@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from bika.lims import api
+from bika.lims.utils import tmpID
 from senaite.patient.config import PATIENT_CATALOG
+from zope.component import getUtility
+from zope.component.interfaces import IFactory
+from zope.event import notify
+from zope.lifecycleevent import ObjectCreatedEvent
 
 
-def get_patient_by_mrn(mrn):
+def get_patient_by_mrn(mrn, full_object=True):
     """Get a patient by Medical Record Number
     """
     catalog = get_patient_catalog()
@@ -20,6 +25,8 @@ def get_patient_by_mrn(mrn):
     elif count > 1:
         raise ValueError(
             "Found {} Patients for MRN {}".format(count, mrn))
+    if full_object is False:
+        return results[0]
     return api.get_object(results[0])
 
 
@@ -31,17 +38,31 @@ def get_patient_catalog():
     return api.get_tool(PATIENT_CATALOG)
 
 
-def create_patient(mrn, **kw):
+def create_empty_patient():
+    """Create a new empty patient in the patients folder
+    """
+    tid = tmpID()
+    portal = api.get_portal()
+    container = portal.patients
+    portal_type = "Patient"
+    portal_types = api.get_tool("portal_types")
+    fti = portal_types.getTypeInfo(portal_type)
+    factory = getUtility(IFactory, fti.factory)
+    obj = factory(tid)
+    obj._setPortalTypeName(fti.getId())
+    notify(ObjectCreatedEvent(obj))
+    container._setObject(tid, obj)
+    patient = container.get(obj.getId())
+    return patient
+
+
+def update_patient(patient, **values):
     """Create a new patient
     """
-    portal = api.get_portal()
-    patients = portal.patients
-    patient = api.create(patients, "Patient")
-
     # set values explicitly
-    patient.mrn = mrn
-    patient.set_fullname(kw.get("fullname", ""))
-    patient.set_age(api.to_int(kw.get("age"), None))
-    patient.set_gender(kw.get("gender", ""))
-    patient.set_birthdate(kw.get("birthdate"))
-    patient.address = kw.get("address")
+    patient.set_mrn(values.get("mrn", api.get_id(patient)))
+    patient.set_fullname(values.get("fullname", ""))
+    patient.set_age(api.to_int(values.get("age"), None))
+    patient.set_gender(values.get("gender", ""))
+    patient.set_birthdate(values.get("birthdate"))
+    patient.address = values.get("address")

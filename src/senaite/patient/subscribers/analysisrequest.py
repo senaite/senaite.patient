@@ -23,13 +23,15 @@ def ensure_patient(instance):
     patient = patient_api.get_patient_by_mrn(mrn)
     if patient is None:
         logger.info("Creating new Patient with MRN #: {}".format(mrn))
+        patient = patient_api.create_empty_patient()
         values = get_patient_fields(instance)
-        patient_api.create_patient(mrn, **values)
+        patient_api.update_patient(patient, **values)
 
 
 def get_patient_fields(instance):
     """Extract the patient fields from the sample
     """
+    mrn = instance.getMedicalRecordNumberValue()
     gender = instance.getField("Gender").get(instance)
     birthdate = instance.getField("DateOfBirth").get(instance)
     age = instance.getField("Age").get(instance)
@@ -37,6 +39,7 @@ def get_patient_fields(instance):
     fullname = instance.getField("PatientFullName").get(instance)
 
     return {
+        "mrn": mrn,
         "age": age,
         "gender": gender,
         "birthdate": birthdate,
