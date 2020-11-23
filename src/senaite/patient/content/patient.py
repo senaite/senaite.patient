@@ -216,15 +216,19 @@ class Patient(Item):
     def get_birthdate(self):
         if not self.birthdate:
             return None
-        return DateTime(self.birthdate)
+        return self.birthdate
 
     def set_birthdate(self, value):
+        """Set birthdate field
+
+        Tries to convert value to datetime before set.
+        """
         if not value:
             value = None
         elif isinstance(value, DateTime):
             value = value.asdatetime()
         elif isinstance(value, datetime):
-            self.birthdate = value
+            value = value
         elif isinstance(value, string_types):
             dt = api.to_date(value, None)
             if dt is not None:
@@ -248,10 +252,10 @@ class Patient(Item):
         """Set the birthdate according to the age
         """
         if self.birthdate:
+            # age can not be edited when birthdate is set
             return
-        elif not value:
+        if not value:
             return
-
         today = datetime.now()
         year_of_birth = today.year - value
         self.birthdate = datetime(year_of_birth, today.month, today.day)
