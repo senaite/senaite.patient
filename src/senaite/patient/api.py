@@ -9,8 +9,13 @@ from zope.event import notify
 from zope.lifecycleevent import ObjectCreatedEvent
 
 
-def get_patient_by_mrn(mrn, full_object=True):
+def get_patient_by_mrn(mrn, full_object=True, include_inactive=False):
     """Get a patient by Medical Record Number
+
+    :param mrn: Unique medical record number
+    :param full_object: If true, return objects instead of catalog brains
+    :param include_inactive: Also find inactive patients
+    :returns: Patient or None
     """
     catalog = get_patient_catalog()
     query = {
@@ -18,6 +23,9 @@ def get_patient_by_mrn(mrn, full_object=True):
         "patient_mrn": mrn,
         "is_active": True,
     }
+    # Remove active index
+    if include_inactive:
+        query.pop("is_active", None)
     results = catalog(query)
     count = len(results)
     if count == 0:

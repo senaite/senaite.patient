@@ -15,7 +15,6 @@ from plone.supermodel.directives import fieldset
 from senaite.patient import api as patient_api
 from senaite.patient import messageFactory as _
 from senaite.patient.config import GENDERS
-from senaite.patient.config import PATIENT_CATALOG
 from zope import schema
 from zope.interface import Invalid
 from zope.interface import implementer
@@ -149,7 +148,9 @@ class IPatient(model.Schema):
             if context.mrn == data.mrn:
                 # nothing changed
                 return
-        patient = patient_api.get_patient_by_mrn(data.mrn, full_object=False)
+
+        patient = patient_api.get_patient_by_mrn(
+            data.mrn, full_object=False, include_inactive=True)
         if patient:
             raise Invalid(_("Patient Medical Record # must be unique"))
 
@@ -180,7 +181,8 @@ class Patient(Item):
         if self.mrn == value:
             # noting changed
             return
-        if patient_api.get_patient_by_mrn(value, full_object=False):
+        if patient_api.get_patient_by_mrn(
+                value, full_object=False, include_inactive=True):
             raise ValueError("A patient with that MRN already exists!")
         self.mrn = value
 

@@ -253,7 +253,7 @@ class TemporaryIdentifierWidgetController
         portal_type: "Patient"
         catalog_name: "portal_catalog"
         patient_mrn: mrn
-        is_active: yes
+        is_active: yes  # search only active patients
         include_fields: fields
         page_size: 1
 
