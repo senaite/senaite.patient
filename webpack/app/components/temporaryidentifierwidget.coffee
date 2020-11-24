@@ -124,12 +124,24 @@ class TemporaryIdentifierWidgetController
         "DateOfBirth": @format_date(data.birthdate),
         "Age": data.age,
         "Gender": data.gender,
+        "review_state": data.review_state,
       }
+
+      # Template dialog to render depending if active or not
+      template_id = "existing-identifier"
+      buttons = null
+      if data.review_state == "inactive"
+        template_id = "inactive-patient"
+        buttons = {}
+        buttons[_t("Close")] = ->
+          # trigger 'no' event
+          $(@).trigger "no"
+          $(@).dialog "close"
 
       # Render the popup dialog
       me = @
       data.identifier ?= el.value
-      dialog = @template_dialog "existing-identifier", data
+      dialog = @template_dialog template_id, data, buttons
       dialog.on "yes", ->
         # Update field values from the whole form
         for field, value of record
@@ -244,6 +256,7 @@ class TemporaryIdentifierWidgetController
       "zipcode"
       "city"
       "country"
+      "review_state"
     ]
 
     deferred = $.Deferred()
@@ -253,7 +266,6 @@ class TemporaryIdentifierWidgetController
         portal_type: "Patient"
         catalog_name: "portal_catalog"
         patient_mrn: mrn
-        is_active: yes  # search only active patients
         include_fields: fields
         page_size: 1
 
