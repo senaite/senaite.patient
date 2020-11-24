@@ -55,4 +55,4 @@ class TemporaryIdentifierField(ExtensionField, ObjectField):
         mrn = instance.getMedicalRecordNumberValue()
         if not mrn:
             return None
-        return patient_api.get_patient_by_mrn(mrn)
+        return patient_api.get_patient_by_mrn(mrn, include_inactive=True)
