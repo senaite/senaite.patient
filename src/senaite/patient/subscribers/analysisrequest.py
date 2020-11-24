@@ -53,6 +53,9 @@ def update_patient(instance):
     if instance.isMedicalRecordTemporary():
         return
     mrn = instance.getMedicalRecordNumberValue()
+    # Allow empty value when patients are not required for samples
+    if mrn is None:
+        return
     patient = patient_api.get_patient_by_mrn(mrn, include_inactive=True)
     if patient is None:
         logger.info("Creating new Patient with MRN #: {}".format(mrn))

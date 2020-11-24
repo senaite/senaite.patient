@@ -17,6 +17,14 @@
       permission="zope2.View"
       />
 
+  <!-- Patient Controlpanel -->
+  <browser:page
+      name="patient-controlpanel"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".controlpanel.PatientControlPanelView"
+      permission="senaite.core.permissions.ManageBika"
+      layer="senaite.patient.interfaces.ISenaitePatientLayer" />
+
   <!-- Static directory for js, css and image resources -->
   <plone:static
     directory="static"

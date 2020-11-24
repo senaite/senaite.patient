@@ -9,6 +9,16 @@ from zope.event import notify
 from zope.lifecycleevent import ObjectCreatedEvent
 
 
+def is_patient_required():
+    """Checks if the patient is required
+    """
+    required = api.get_registry_record(
+        "senaite.patient.require_patient")
+    if not required:
+        return False
+    return True
+
+
 def get_patient_by_mrn(mrn, full_object=True, include_inactive=False):
     """Get a patient by Medical Record Number
 

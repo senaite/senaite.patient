@@ -7,7 +7,7 @@
   <body>
 
     <metal:view_macro define-macro="view">
-      <tal:values define="values python:field.getEditAccessor(here)();
+      <tal:values define="values python:field.getEditAccessor(here)() or {};
                           session_values python:here.session_restore_value(fieldName, values);
                           cached_values python:request.get(fieldName, session_values);
                           patient python:field.get_linked_patient(here);
@@ -55,7 +55,7 @@
         </div>
       </script>
       <div class="form form-inline field ArchetypesTemporaryIdentifierWidget TemporaryIdentifier"
-          tal:define="values python:field.getEditAccessor(here)();
+          tal:define="values python:field.getEditAccessor(here)() or {};
                       session_values python:here.session_restore_value(fieldName, values);
                       cached_values python:request.get(fieldName, session_values);
                       values python:cached_values or values;

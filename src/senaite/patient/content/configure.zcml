@@ -10,4 +10,10 @@
     provides="archetypes.schemaextender.interfaces.ISchemaExtender"
     factory=".analysisrequest.AnalysisRequestSchemaExtender" />
 
+  <!-- Schema modifier for AnalysisRequest (Sample) -->
+  <adapter
+      name="senaite.patient.analysisrequest.schemamodifier"
+      factory=".analysisrequest.AnalysisRequestSchemaModifier"
+      provides="archetypes.schemaextender.interfaces.ISchemaModifier"/>
+
 </configure>

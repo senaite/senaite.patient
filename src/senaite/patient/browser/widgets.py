@@ -42,9 +42,14 @@ class TemporaryIdentifierWidget(TypesWidget):
     def process_form(self, instance, field, form, empty_marker=None,
                      emptyReturnsMarker=False, validating=True):
 
+        value = form.get(field.getName())
+
+        # Allow non-required fields
+        if not value:
+            return None, {}
+
         # Is this Identifier temporary?
         true_values = ("true", "1", "on", "True", True, 1)
-        value = form.get(field.getName())
         temporary = value.get("temporary", False) in true_values
 
         # The ID might need to be auto-generated if temporary?

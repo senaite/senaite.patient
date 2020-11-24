@@ -22,6 +22,8 @@ def isMedicalRecordTemporary(self):  # noqa camelcase, but compliant with AT's
     """Returns whether the Medical Record Number is temporary
     """
     mrn = self.getField("MedicalRecordNumber").get(self)
+    if not mrn:
+        return False
     if mrn.get("temporary"):
         return True
     if not mrn.get("value"):
@@ -33,4 +35,6 @@ def getMedicalRecordNumberValue(self):  # noqa camelcase, but compliant with AT'
     """Returns the medical record number ID
     """
     mrn = self.getField("MedicalRecordNumber").get(self)
+    if not mrn:
+        return None
     return mrn.get("value")
