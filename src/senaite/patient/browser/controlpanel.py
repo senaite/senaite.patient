@@ -15,7 +15,6 @@ class IPatientControlPanel(Interface):
         title=_(u"Require Patient"),
         description=_("Require Patients in Samples"),
         default=True,
-        required=True,
     )
 
 
