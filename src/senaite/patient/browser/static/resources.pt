@@ -1,7 +1,1 @@
-<!-- JS bundle -->
-
-<script tal:attributes="src string:${view/site_url}//++plone++senaite.patient.static/bundles/senaite.patient-2c8c0bf.js"></script>
-
-
-<!-- CSS bundle -->
-
+<script tal:attributes="src string:${view/site_url}//++plone++senaite.patient.static/bundles/senaite.patient-ad3e119.js"></script>
