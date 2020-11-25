@@ -52,6 +52,6 @@ def check_installed(default_return):
         def wrapper(*args, **kwargs):
             if not is_installed():
                 return default_return
-            return func(args, **kwargs)
+            return func(*args, **kwargs)
         return wrapper
     return is_installed_decorator
