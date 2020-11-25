@@ -8,6 +8,7 @@ from bika.lims.utils import get_link
 from bika.lims.utils import get_email_link
 from senaite.app.listing.view import ListingView
 from senaite.patient import messageFactory as _sp
+from senaite.patient.config import PATIENT_CATALOG
 
 
 class PatientFolderView(ListingView):
@@ -17,7 +18,7 @@ class PatientFolderView(ListingView):
     def __init__(self, context, request):
         super(PatientFolderView, self).__init__(context, request)
 
-        self.catalog = "portal_catalog"
+        self.catalog = PATIENT_CATALOG
 
         self.contentFilter = {
             "portal_type": "Patient",
