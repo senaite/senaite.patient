@@ -25,6 +25,8 @@ from bika.lims.fields import ExtensionField
 from Products.Archetypes.Field import ObjectField
 from senaite.patient import api as patient_api
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
+from senaite.patient.config import AUTO_ID_MARKER
+from senaite.patient.config import PATIENT_CATALOG
 
 
 class TemporaryIdentifierField(ExtensionField, ObjectField):
@@ -39,6 +41,8 @@ class TemporaryIdentifierField(ExtensionField, ObjectField):
     _properties.update({
         "type": "temporaryidentifier",
         "default": {"temporary": False, "value": ""},
+        "catalog": PATIENT_CATALOG,
+        "auto_id_marker": AUTO_ID_MARKER,
         "widget": TemporaryIdentifierWidget
     })
     security = ClassSecurityInfo()

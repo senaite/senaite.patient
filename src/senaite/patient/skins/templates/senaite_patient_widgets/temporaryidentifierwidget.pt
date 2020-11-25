@@ -82,7 +82,9 @@
                       value_temp python:value_temp in ['true','1','on',True,1];
                       css_class python: value_temp and 'temporary-id' or '';
                       css_class string:form form-inline field ArchetypesTemporaryIdentifierWidget TemporaryIdentifier ${css_class};
-                      required field/required|nothing;"
+                      required field/required|nothing;
+                      auto_id_marker field/auto_id_marker;
+                      catalog field/catalog;"
           tal:attributes="class css_class;
                           id string:archetypes-fieldname-${fieldName};
                           data-fieldname string:${fieldName}">
@@ -119,6 +121,12 @@
         <input type="hidden"
                tal:attributes="name string:${subfield_auto};
                                value string:${value_auto}"/>
+
+        <!-- Input elements with config options -->
+        <input type="hidden" name="config_catalog"
+               tal:attributes="value string:${catalog}"/>
+        <input type="hidden" name="config_auto_id_marker"
+               tal:attributes="value string:${auto_id_marker}"/>
       </div>
 
     </metal:view_macro>

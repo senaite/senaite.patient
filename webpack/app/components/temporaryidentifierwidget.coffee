@@ -104,8 +104,11 @@ class TemporaryIdentifierWidgetController
     # Do not continue unless the value is non-empty
     return unless el.value and el.value != @auto_wildcard
 
+    # Grab the catalog name to search against
+    catalog_name = @get_sibling(el, "config_catalog").value
+
     # Search for an existing MRN
-    @search_mrn el.value
+    @search_mrn el.value, catalog_name
     .done (data) ->
       return unless data
 
@@ -240,7 +243,7 @@ class TemporaryIdentifierWidgetController
   Searches by medical record number. Returns a dict with information about the
   patient if the mrn is found. Returns nothing otherwise
   ###
-  search_mrn: (mrn) =>
+  search_mrn: (mrn, catalog_name) =>
     @debug "°°° TemporaryIdentifierWidget::search_mrn:mrn=#{ mrn } °°°"
 
     # Fields to include on search results
@@ -264,7 +267,7 @@ class TemporaryIdentifierWidgetController
       url: @get_portal_url() + "/@@API/read"
       data:
         portal_type: "Patient"
-        catalog_name: "portal_catalog"
+        catalog_name: catalog_name
         patient_mrn: mrn
         include_fields: fields
         page_size: 1

@@ -118,7 +118,7 @@ TemporaryIdentifierWidgetController = (function() {
    */
 
   TemporaryIdentifierWidgetController.prototype.on_value_change = function(event) {
-    var current_value, el, field;
+    var catalog_name, current_value, el, field;
     this.debug("°°° TemporaryIdentifierWidget::on_value_change °°°");
     el = event.currentTarget;
     field = this.get_field_name(el);
@@ -127,7 +127,8 @@ TemporaryIdentifierWidgetController = (function() {
     if (!(el.value && el.value !== this.auto_wildcard)) {
       return;
     }
-    return this.search_mrn(el.value).done(function(data) {
+    catalog_name = this.get_sibling(el, "config_catalog").value;
+    return this.search_mrn(el.value, catalog_name).done(function(data) {
       var address, buttons, dialog, me, record, template_id;
       if (!data) {
         return;
@@ -307,7 +308,7 @@ TemporaryIdentifierWidgetController = (function() {
   patient if the mrn is found. Returns nothing otherwise
    */
 
-  TemporaryIdentifierWidgetController.prototype.search_mrn = function(mrn) {
+  TemporaryIdentifierWidgetController.prototype.search_mrn = function(mrn, catalog_name) {
     var deferred, fields, options;
     this.debug("°°° TemporaryIdentifierWidget::search_mrn:mrn=" + mrn + " °°°");
     fields = ["Title", "name", "surname", "age", "birthdate", "gender", "email", "address", "zipcode", "city", "country", "review_state"];
@@ -316,7 +317,7 @@ TemporaryIdentifierWidgetController = (function() {
       url: this.get_portal_url() + "/@@API/read",
       data: {
         portal_type: "Patient",
-        catalog_name: "portal_catalog",
+        catalog_name: catalog_name,
         patient_mrn: mrn,
         include_fields: fields,
         page_size: 1
