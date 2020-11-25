@@ -19,6 +19,7 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims.interfaces import IGuardAdapter
+from senaite.patient import check_installed
 from zope.interface import implements
 
 
@@ -28,6 +29,7 @@ class SampleGuardAdapter(object):
     def __init__(self, context):
         self.context = context
 
+    @check_installed(True)
     def guard(self, action):
         func_name = "guard_{}".format(action)
         func = getattr(self, func_name, None)
