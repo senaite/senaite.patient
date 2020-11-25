@@ -19,8 +19,8 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims.interfaces import IAnalysisRequest
-
 from plone.indexer import indexer
+from senaite.patient.content.patient import IPatient
 
 
 @indexer(IAnalysisRequest)
@@ -35,3 +35,39 @@ def medical_record_number(instance):
     """Returns the Medical Record Number value assigned to the sample
     """
     return [instance.getMedicalRecordNumberValue() or None]
+
+
+@indexer(IPatient)
+def patient_mrn(instance):
+    """Index Medical Record #
+    """
+    return instance.get_mrn()
+
+
+@indexer(IPatient)
+def patient_fullname(instance):
+    """Index client fullname
+    """
+    fullname = instance.get_fullname()
+    return fullname
+
+
+@indexer(IPatient)
+def patient_email(instance):
+    """Index client email
+    """
+    email = instance.get_email()
+    return email
+
+
+@indexer(IPatient)
+def patient_searchable_text(instance):
+    """Index for searchable text queries
+    """
+    searchable_text_tokens = [
+        instance.get_email(),
+        instance.get_mrn(),
+        instance.get_fullname(),
+        instance.get_gender(),
+    ]
+    return u" ".join(searchable_text_tokens)

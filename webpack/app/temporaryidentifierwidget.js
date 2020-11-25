@@ -1,9 +1,7 @@
-
-/* Please use this command to compile this file into the proper folder:
-    coffee --no-header -w -o ../ -c temporaryidentifierwidget.coffee
- */
 var TemporaryIdentifierWidgetController,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+import $ from "jquery";
 
 TemporaryIdentifierWidgetController = (function() {
   function TemporaryIdentifierWidgetController() {
@@ -23,6 +21,7 @@ TemporaryIdentifierWidgetController = (function() {
     this.get_current_id = bind(this.get_current_id, this);
     this.set_current_id = bind(this.set_current_id, this);
     this.set_temporary = bind(this.set_temporary, this);
+    this.on_keypress = bind(this.on_keypress, this);
     this.on_value_change = bind(this.on_value_change, this);
     this.on_temporary_change = bind(this.on_temporary_change, this);
     this.bind_event_handler = bind(this.bind_event_handler, this);
@@ -85,7 +84,8 @@ TemporaryIdentifierWidgetController = (function() {
   TemporaryIdentifierWidgetController.prototype.bind_event_handler = function() {
     this.debug("TemporaryIdentifierWidget::bind_event_handler");
     $("body").on("change", ".TemporaryIdentifier input[type='checkbox']", this.on_temporary_change);
-    return $("body").on("change", ".TemporaryIdentifier input[type='text']", this.on_value_change);
+    $("body").on("change", ".TemporaryIdentifier input[type='text']", this.on_value_change);
+    return $("body").on("keypress", ".TemporaryIdentifier input[type='text']", this.on_keypress);
   };
 
 
@@ -118,7 +118,7 @@ TemporaryIdentifierWidgetController = (function() {
    */
 
   TemporaryIdentifierWidgetController.prototype.on_value_change = function(event) {
-    var current_value, el, field;
+    var catalog_name, current_value, el, field;
     this.debug("°°° TemporaryIdentifierWidget::on_value_change °°°");
     el = event.currentTarget;
     field = this.get_field_name(el);
@@ -127,24 +127,43 @@ TemporaryIdentifierWidgetController = (function() {
     if (!(el.value && el.value !== this.auto_wildcard)) {
       return;
     }
-    return this.search_mrn(el.value).done(function(data) {
-      var dialog, me;
+    catalog_name = this.get_sibling(el, "config_catalog").value;
+    return this.search_mrn(el.value, catalog_name).done(function(data) {
+      var address, buttons, dialog, me, record, template_id;
       if (!data) {
         return;
+      }
+      address = [data.address, data.zipcode, data.city, data.country].filter(function(value) {
+        return value;
+      });
+      record = {
+        "PatientFullName": data.Title,
+        "PatientAddress": address.join(", "),
+        "DateOfBirth": this.format_date(data.birthdate),
+        "Age": data.age,
+        "Gender": data.gender,
+        "review_state": data.review_state
+      };
+      template_id = "existing-identifier";
+      buttons = null;
+      if (data.review_state === "inactive") {
+        template_id = "inactive-patient";
+        buttons = {};
+        buttons[_t("Close")] = function() {
+          $(this).trigger("no");
+          return $(this).dialog("close");
+        };
       }
       me = this;
       if (data.identifier == null) {
         data.identifier = el.value;
       }
-      dialog = this.template_dialog("existing-identifier", data);
+      dialog = this.template_dialog(template_id, data, buttons);
       dialog.on("yes", function() {
         var results, value;
         results = [];
-        for (field in data) {
-          value = data[field];
-          if (field === 'DateOfBirth') {
-            value = me.format_date(value);
-          }
+        for (field in record) {
+          value = record[field];
           results.push(me.set_sibling_value(el, field, value));
         }
         return results;
@@ -154,6 +173,20 @@ TemporaryIdentifierWidgetController = (function() {
         return me.set_current_id(field, current_value);
       });
     });
+  };
+
+
+  /*
+  Event handler for TemporaryIdentifier's value change
+   */
+
+  TemporaryIdentifierWidgetController.prototype.on_keypress = function(event) {
+    var el;
+    if (event.keyCode === 13) {
+      el = event.currentTarget;
+      $(el).trigger("blur");
+      return event.preventDefault();
+    }
   };
 
 
@@ -275,16 +308,17 @@ TemporaryIdentifierWidgetController = (function() {
   patient if the mrn is found. Returns nothing otherwise
    */
 
-  TemporaryIdentifierWidgetController.prototype.search_mrn = function(mrn) {
+  TemporaryIdentifierWidgetController.prototype.search_mrn = function(mrn, catalog_name) {
     var deferred, fields, options;
     this.debug("°°° TemporaryIdentifierWidget::search_mrn:mrn=" + mrn + " °°°");
-    fields = ["PatientFullName", "PatientAddress", "DateOfBirth", "Age", "Sex"];
+    fields = ["Title", "name", "surname", "age", "birthdate", "gender", "email", "address", "zipcode", "city", "country", "review_state"];
     deferred = $.Deferred();
     options = {
       url: this.get_portal_url() + "/@@API/read",
       data: {
-        catalog_name: "bika_catalog_analysisrequest_listing",
-        medical_record_number: mrn,
+        portal_type: "Patient",
+        catalog_name: catalog_name,
+        patient_mrn: mrn,
         include_fields: fields,
         page_size: 1
       }

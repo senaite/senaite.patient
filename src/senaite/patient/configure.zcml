@@ -20,12 +20,23 @@
   <!-- Import senaite.patient permissions -->
   <include file="permissions.zcml" />
 
+  <!-- Gender Vocabulary -->
+  <utility
+      component="senaite.patient.vocabularies.GenderVocabularyFactory"
+      name="senaite.patient.vocabularies.gender" />
+
+  <!-- Country Vocabulary -->
+  <utility
+      component="senaite.patient.vocabularies.CountryVocabularyFactory"
+      name="senaite.patient.vocabularies.country" />
+
   <!-- Package includes -->
   <include package=".adapters" />
   <include package=".browser" />
   <include package=".catalog" />
   <include package=".content" />
   <include package=".monkeys" />
+  <include package=".subscribers" />
 
   <!-- Default profile -->
   <genericsetup:registerProfile

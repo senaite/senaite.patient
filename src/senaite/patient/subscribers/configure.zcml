@@ -1,0 +1,28 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    i18n_domain="senaite.patient">
+  
+  <!-- Sample modified -->
+  <subscriber
+      for="bika.lims.interfaces.IAnalysisRequest
+           Products.Archetypes.interfaces.IObjectEditedEvent"
+      handler=".analysisrequest.on_object_edited"
+      />
+
+  <!-- Sample created -->
+  <subscriber
+      for="bika.lims.interfaces.IAnalysisRequest
+           Products.Archetypes.interfaces.IObjectInitializedEvent"
+      handler=".analysisrequest.on_object_created"
+      />
+
+  <!-- Before transition event -->
+  <subscriber
+      for="senaite.patient.content.patient.IPatient
+           Products.DCWorkflow.interfaces.IBeforeTransitionEvent"
+      handler=".patient.on_before_transition"
+      />
+
+</configure>

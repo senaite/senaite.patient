@@ -28,6 +28,30 @@
 
   <permissions>
 
+    <!-- Edit Patient -->
+    <permission name="senaite.patient: Edit Patient" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+    </permission>
+
+    <!-- View Patient -->
+    <permission name="senaite.patient: View Patient" acquire="False">
+      <role name="Analyst"/>
+      <role name="Client"/>
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Verifier"/>
+    </permission>
+
+    <!-- Field: Edit Patient -->
+    <permission name="senaite.patient: Field: Edit Patient" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+    </permission>
+
     <!-- Field permissions -->
     <permission name="senaite.patient: Field: Edit Age" acquire="False">
       <role name="LabClerk"/>
@@ -59,7 +83,7 @@
       <role name="Manager"/>
       <role name="Client"/>
     </permission>
-    <permission name="senaite.patient: Field: Edit Sex" acquire="False">
+    <permission name="senaite.patient: Field: Edit Gender" acquire="False">
       <role name="LabClerk"/>
       <role name="LabManager"/>
       <role name="Manager"/>

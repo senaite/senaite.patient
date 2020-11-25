@@ -24,12 +24,15 @@ import transaction
 from bika.lims import api
 from bika.lims.catalog import CATALOG_ANALYSIS_REQUEST_LISTING
 from bika.lims.catalog.catalog_utilities import addZCTextIndex
-from senaite.patient import logger
-from senaite.patient import permissions
-from senaite.patient import PRODUCT_NAME
-from senaite.patient import PROFILE_ID
+from plone.registry.interfaces import IRegistry
 from Products.DCWorkflow.Guard import Guard
 from Products.ZCatalog.ProgressHandler import ZLogHandler
+from senaite.patient import PRODUCT_NAME
+from senaite.patient import PROFILE_ID
+from senaite.patient import logger
+from senaite.patient import permissions
+from senaite.patient.config import PATIENT_CATALOG
+from zope.component import getUtility
 
 # Maximum threshold in seconds before a transaction.commit takes place
 # Default: 300 (5 minutes)
@@ -42,17 +45,33 @@ CATALOGS_BY_TYPE = [
 # Tuples of (catalog, index_name, index_type)
 INDEXES = [
     (CATALOG_ANALYSIS_REQUEST_LISTING, "is_temporary_mrn", "BooleanIndex"),
-    (CATALOG_ANALYSIS_REQUEST_LISTING, "medical_record_number", "KeywordIndex")
+    (CATALOG_ANALYSIS_REQUEST_LISTING, "medical_record_number", "KeywordIndex"),
+    (PATIENT_CATALOG, "patient_mrn", "FieldIndex"),
+    (PATIENT_CATALOG, "patient_email", "FieldIndex"),
+    (PATIENT_CATALOG, "patient_fullname", "FieldIndex"),
+    (PATIENT_CATALOG, "patient_searchable_text", "TextIndexNG3"),
 ]
 
 # Tuples of (catalog, column_name)
 COLUMNS = [
     (CATALOG_ANALYSIS_REQUEST_LISTING, "isMedicalRecordTemporary"),
+    (PATIENT_CATALOG, "mrn"),
+]
+
+NAVTYPES = [
+    "PatientFolder",
 ]
 
 # An array of dicts. Each dict represents an ID formatting configuration
 ID_FORMATTING = [
     {
+        "portal_type": "Patient",
+        "form": "P{seq:06d}",
+        "prefix": "patient",
+        "sequence_type": "generated",
+        "counter_type": "",
+        "split_length": 1,
+    }, {
         "portal_type": "MedicalRecordNumber",
         "form": "TA{seq:06d}",
         "prefix": "medicalrecordnumber",
@@ -66,6 +85,7 @@ WORKFLOW_TO_UPDATE = {
     "bika_ar_workflow": {
         "states": {
             "verified": {
+                "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
@@ -73,10 +93,11 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMedicalRecordNumber: (),
                     permissions.FieldEditPatientAddress: (),
                     permissions.FieldEditPatientFullName: (),
-                    permissions.FieldEditSex: (),
+                    permissions.FieldEditGender: (),
                 }
             },
             "published": {
+                "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
@@ -84,10 +105,11 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMedicalRecordNumber: (),
                     permissions.FieldEditPatientAddress: (),
                     permissions.FieldEditPatientFullName: (),
-                    permissions.FieldEditSex: (),
+                    permissions.FieldEditGender: (),
                 }
             },
             "rejected": {
+                "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
@@ -95,10 +117,11 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMedicalRecordNumber: (),
                     permissions.FieldEditPatientAddress: (),
                     permissions.FieldEditPatientFullName: (),
-                    permissions.FieldEditSex: (),
+                    permissions.FieldEditGender: (),
                 }
             },
             "invalid": {
+                "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
@@ -106,10 +129,11 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMedicalRecordNumber: (),
                     permissions.FieldEditPatientAddress: (),
                     permissions.FieldEditPatientFullName: (),
-                    permissions.FieldEditSex: (),
+                    permissions.FieldEditGender: (),
                 }
             },
             "cancelled": {
+                "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
@@ -117,7 +141,7 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMedicalRecordNumber: (),
                     permissions.FieldEditPatientAddress: (),
                     permissions.FieldEditPatientFullName: (),
-                    permissions.FieldEditSex: (),
+                    permissions.FieldEditGender: (),
                 }
             }
         }
@@ -133,6 +157,12 @@ def setup_handler(context):
 
     logger.info("{} setup handler [BEGIN]".format(PRODUCT_NAME.upper()))
     portal = context.getSite()
+
+    # Setup patient content type
+    add_patient_folder(portal)
+
+    # Configure visible navigation items
+    setup_navigation_types(portal)
 
     # Setup catalogs
     setup_catalogs(portal)
@@ -183,6 +213,26 @@ def post_uninstall(portal_setup):
     portal = context.getSite()  # noqa
 
     logger.info("{} uninstall handler [DONE]".format(PRODUCT_NAME.upper()))
+
+
+def add_patient_folder(portal):
+    """Adds the initial Patient folder
+    """
+    if portal.get("patients") is None:
+        logger.info("Adding Patient Folder")
+        portal.invokeFactory("PatientFolder", "patients", title="Patients")
+
+
+def setup_navigation_types(portal):
+    """Add additional types for navigation
+    """
+    registry = getUtility(IRegistry)
+    key = "plone.displayed_types"
+    display_types = registry.get(key, ())
+
+    new_display_types = set(display_types)
+    new_display_types.update(NAVTYPES)
+    registry[key] = tuple(new_display_types)
 
 
 def setup_id_formatting(portal, format_definition=None):

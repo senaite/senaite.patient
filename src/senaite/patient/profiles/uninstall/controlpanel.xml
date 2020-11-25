@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<object
+  name="portal_controlpanel"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+
+  <configlet
+    title="Patient Settings"
+    action_id="senaite.patient"
+    appId="senaite.patient"
+    category="Products"
+    condition_expr=""
+    icon_expr="senaite_theme/icon/patient"
+    url_expr="string:${portal_url}/@@patient-controlpanel"
+    visible="True"
+    i18n:domain="senaite.patient"
+    i18n:attributes="title"
+    remove="True">
+    <permission>senaite.core: Manage Bika</permission>
+  </configlet>
+
+</object>

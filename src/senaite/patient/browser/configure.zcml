@@ -9,6 +9,22 @@
   <include package=".viewlets"/>
   <include package=".widgets"/>
 
+  <!-- Patient Folder View -->
+  <browser:page
+      name="view"
+      for="senaite.patient.content.patientfolder.IPatientFolder"
+      class=".patientfolder.PatientFolderView"
+      permission="zope2.View"
+      />
+
+  <!-- Patient Controlpanel -->
+  <browser:page
+      name="patient-controlpanel"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".controlpanel.PatientControlPanelView"
+      permission="senaite.core.permissions.ManageBika"
+      layer="senaite.patient.interfaces.ISenaitePatientLayer" />
+
   <!-- Static directory for js, css and image resources -->
   <plone:static
     directory="static"

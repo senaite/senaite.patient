@@ -1,0 +1,9 @@
+<registry
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="senaite.patient">
+
+  <records
+      interface="senaite.patient.browser.controlpanel.IPatientControlPanel"
+      prefix="senaite.patient" />
+
+</registry>

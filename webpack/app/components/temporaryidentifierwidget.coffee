@@ -1,6 +1,5 @@
-### Please use this command to compile this file into the proper folder:
-    coffee --no-header -w -o ../ -c temporaryidentifierwidget.coffee
-###
+import $ from "jquery"
+
 
 class TemporaryIdentifierWidgetController
 
@@ -50,6 +49,7 @@ class TemporaryIdentifierWidgetController
     @debug "TemporaryIdentifierWidget::bind_event_handler"
     $("body").on "change", ".TemporaryIdentifier input[type='checkbox']", @on_temporary_change
     $("body").on "change", ".TemporaryIdentifier input[type='text']", @on_value_change
+    $("body").on "keypress", ".TemporaryIdentifier input[type='text']", @on_keypress
 
   ###
   Event handler for TemporaryIdentifier's checkbox change
@@ -104,25 +104,65 @@ class TemporaryIdentifierWidgetController
     # Do not continue unless the value is non-empty
     return unless el.value and el.value != @auto_wildcard
 
+    # Grab the catalog name to search against
+    catalog_name = @get_sibling(el, "config_catalog").value
+
     # Search for an existing MRN
-    @search_mrn el.value
+    @search_mrn el.value, catalog_name
     .done (data) ->
       return unless data
+
+      # Address blocks
+      address = [
+        data.address,
+        data.zipcode,
+        data.city,
+        data.country
+      ].filter((value) -> value)
+
+      # map patient fields -> Sample fields
+      record = {
+        "PatientFullName": data.Title,
+        "PatientAddress": address.join(", "),
+        "DateOfBirth": @format_date(data.birthdate),
+        "Age": data.age,
+        "Gender": data.gender,
+        "review_state": data.review_state,
+      }
+
+      # Template dialog to render depending if active or not
+      template_id = "existing-identifier"
+      buttons = null
+      if data.review_state == "inactive"
+        template_id = "inactive-patient"
+        buttons = {}
+        buttons[_t("Close")] = ->
+          # trigger 'no' event
+          $(@).trigger "no"
+          $(@).dialog "close"
+
       # Render the popup dialog
       me = @
       data.identifier ?= el.value
-      dialog = @template_dialog "existing-identifier", data
+      dialog = @template_dialog template_id, data, buttons
       dialog.on "yes", ->
         # Update field values from the whole form
-        for field, value of data
-          if field ==  'DateOfBirth'
-            value = me.format_date value
+        for field, value of record
           me.set_sibling_value el, field, value
 
       dialog.on "no", ->
         # Restore the value and do nothing else
         el.value = current_value
         me.set_current_id field, current_value
+
+  ###
+  Event handler for TemporaryIdentifier's value change
+  ###
+  on_keypress: (event) =>
+    if event.keyCode == 13
+      el = event.currentTarget
+      $(el).trigger("blur")
+      event.preventDefault()
 
   ###
   Sets the temporary value of te field
@@ -203,24 +243,32 @@ class TemporaryIdentifierWidgetController
   Searches by medical record number. Returns a dict with information about the
   patient if the mrn is found. Returns nothing otherwise
   ###
-  search_mrn: (mrn) =>
+  search_mrn: (mrn, catalog_name) =>
     @debug "°°° TemporaryIdentifierWidget::search_mrn:mrn=#{ mrn } °°°"
 
     # Fields to include on search results
     fields = [
-      "PatientFullName"
-      "PatientAddress"
-      "DateOfBirth"
-      "Age"
-      "Sex"
+      "Title"
+      "name"
+      "surname"
+      "age"
+      "birthdate"
+      "gender"
+      "email"
+      "address"
+      "zipcode"
+      "city"
+      "country"
+      "review_state"
     ]
 
     deferred = $.Deferred()
     options =
       url: @get_portal_url() + "/@@API/read"
       data:
-        catalog_name: "bika_catalog_analysisrequest_listing"
-        medical_record_number: mrn
+        portal_type: "Patient"
+        catalog_name: catalog_name
+        patient_mrn: mrn
         include_fields: fields
         page_size: 1
 

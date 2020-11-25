@@ -19,21 +19,30 @@
 # Some rights reserved, see README and LICENSE.
 
 import six
+
 from AccessControl import ClassSecurityInfo
 from bika.lims.fields import ExtensionField
 from Products.Archetypes.Field import ObjectField
+from senaite.patient import api as patient_api
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
+from senaite.patient.config import AUTO_ID_MARKER
+from senaite.patient.config import PATIENT_CATALOG
 
 
 class TemporaryIdentifierField(ExtensionField, ObjectField):
-    """Field Extender of ObjectField that stores a dictionary with two keys:
-    {'temporary': bool, 'value': str}, where 'temporary' indicates if the ID has
-    to be considered as temporary or not, and 'value' actually represents the ID
+    """ObjectField extender that stores a dictionary with two keys:
+
+        {
+            'temporary': bool,  # flags the ID as temporary
+            'value': str,       # current ID value
+        }
     """
     _properties = ObjectField._properties.copy()
     _properties.update({
         "type": "temporaryidentifier",
         "default": {"temporary": False, "value": ""},
+        "catalog": PATIENT_CATALOG,
+        "auto_id_marker": AUTO_ID_MARKER,
         "widget": TemporaryIdentifierWidget
     })
     security = ClassSecurityInfo()
@@ -41,5 +50,13 @@ class TemporaryIdentifierField(ExtensionField, ObjectField):
     def get(self, instance, **kwargs):
         val = super(TemporaryIdentifierField, self).get(instance, **kwargs)
         if isinstance(val, six.string_types):
-            val = {"value": val}
+            val = {"value": val, "temporary": False}
         return val
+
+    def get_linked_patient(self, instance):
+        """Get the linked client
+        """
+        mrn = instance.getMedicalRecordNumberValue()
+        if not mrn:
+            return None
+        return patient_api.get_patient_by_mrn(mrn, include_inactive=True)
