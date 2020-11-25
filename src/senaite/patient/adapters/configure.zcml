@@ -9,13 +9,6 @@
     factory=".guards.SampleGuardAdapter"
     name="senaite.patient.adapter.guard.sample" />
 
-  <!-- Guard handler for Patient content type -->
-  <adapter
-    for="senaite.patient.content.patient.IPatient"
-    provides="bika.lims.interfaces.IGuardAdapter"
-    factory=".guards.PatientGuardAdapter"
-    name="senaite.patient.adapter.guard.patient" />
-
   <!-- Samples listing with additional filters and columns -->
   <subscriber
     for="bika.lims.browser.analysisrequest.AnalysisRequestsView

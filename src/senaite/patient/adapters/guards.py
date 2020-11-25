@@ -18,13 +18,12 @@
 # Copyright 2020 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-from bika.lims import api
-from bika.lims.catalog import CATALOG_ANALYSIS_REQUEST_LISTING
 from bika.lims.interfaces import IGuardAdapter
 from zope.interface import implements
 
 
-class BaseGuardAdapter(object):
+class SampleGuardAdapter(object):
+    implements(IGuardAdapter)
 
     def __init__(self, context):
         self.context = context
@@ -38,40 +37,7 @@ class BaseGuardAdapter(object):
         # No guard intercept here
         return True
 
-
-class SampleGuardAdapter(BaseGuardAdapter):
-    implements(IGuardAdapter)
-
     def guard_verify(self):
         """Returns true if the Medical Record Number is not temporary
         """
         return not self.context.isMedicalRecordTemporary()
-
-
-class PatientGuardAdapter(BaseGuardAdapter):
-    implements(IGuardAdapter)
-
-    def guard_deactivate(self):
-        """Returns true if patient is not associated to active samples
-        """
-        mrn = self.context.get_mrn()
-        review_states = (
-            "sample_registered",
-            "scheduled_sampling",
-            "to_be_sampled",
-            "sample_due",
-            "sample_received",
-            "attachment_due",
-            "to_be_preserved",
-            "to_be_verified",
-            "verified",
-        )
-        query = {
-            "portal_type": "AnalysisRequest",
-            "review_state": review_states,
-            "medical_record_number": mrn
-        }
-        brains = api.search(query, CATALOG_ANALYSIS_REQUEST_LISTING)
-        if brains:
-            return False
-        return True
