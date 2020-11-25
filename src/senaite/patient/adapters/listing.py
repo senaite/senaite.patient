@@ -19,6 +19,7 @@
 # Some rights reserved, see README and LICENSE.
 
 from plone.memoize.instance import memoize
+from senaite.patient import check_installed
 from senaite.patient import messageFactory as _
 from senaite.app.listing.interfaces import IListingView
 from senaite.app.listing.interfaces import IListingViewAdapter
@@ -67,6 +68,7 @@ class SamplesListingAdapter(object):
     def icon_tag(self, name, **kwargs):
         return self.senaite_theme.icon_tag(name, **kwargs)
 
+    @check_installed(None)
     def folder_item(self, obj, item, index):
         if obj.isMedicalRecordTemporary:
             # Add an icon after the sample ID
@@ -74,8 +76,8 @@ class SamplesListingAdapter(object):
             kwargs = {"width": 16, "title": _("Temporary MRN")}
             after_icons += self.icon_tag("id-card-red", **kwargs)
             item["after"].update({"getId": after_icons})
-        return item
 
+    @check_installed(None)
     def before_render(self):
         # Add review_states
         for status in ADD_STATUSES:
