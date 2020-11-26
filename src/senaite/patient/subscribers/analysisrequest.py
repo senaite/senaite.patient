@@ -3,9 +3,11 @@
 from bika.lims import api
 from DateTime import DateTime
 from senaite.patient import api as patient_api
+from senaite.patient import check_installed
 from senaite.patient import logger
 
 
+@check_installed(None)
 def on_object_created(instance, event):
     """Event handler when a sample was created
     """
@@ -13,6 +15,7 @@ def on_object_created(instance, event):
     update_patient(instance)
 
 
+@check_installed(None)
 def on_object_edited(instance, event):
     """Event handler when a sample was edited
     """
