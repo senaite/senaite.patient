@@ -98,7 +98,7 @@
                  tal:attributes="id string:${fieldName}_value;
                                  value python:value_temp and value_auto or value;
                                  disabled value_temp|nothing;
-                                 required required|nothing;"/>
+                                 required python:required and 'required' or None"/>
         </div>
 
         <!-- Temporary checkbox -->
