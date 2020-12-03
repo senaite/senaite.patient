@@ -105,7 +105,8 @@ class TemporaryIdentifierWidgetController
     return unless el.value and el.value != @auto_wildcard
 
     # Grab the catalog name to search against
-    catalog_name = @get_sibling(el, "config_catalog").value
+    wrapper = el.closest ".field"
+    catalog_name = wrapper.querySelector('[name="config_catalog"]').value
 
     # Search for an existing MRN
     @search_mrn el.value, catalog_name
