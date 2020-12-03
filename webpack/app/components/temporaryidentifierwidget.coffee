@@ -206,10 +206,6 @@ class TemporaryIdentifierWidgetController
   ###
   get_sibling: (element, name) =>
     field = name
-    if @is_add_sample_form
-      parent = element.closest("td[arnum]")
-      sample_num = $(parent).attr "arnum"
-      field = name+'-'+sample_num
     document.querySelector('[name="'+field+'"]')
 
   ###
