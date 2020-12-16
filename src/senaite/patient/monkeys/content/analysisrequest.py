@@ -17,7 +17,10 @@
 #
 # Copyright 2020 by it's authors.
 # Some rights reserved, see README and LICENSE.
+from senaite.patient import check_installed
 
+
+@check_installed(False)
 def isMedicalRecordTemporary(self):  # noqa camelcase, but compliant with AT's
     """Returns whether the Medical Record Number is temporary
     """
@@ -31,6 +34,7 @@ def isMedicalRecordTemporary(self):  # noqa camelcase, but compliant with AT's
     return False
 
 
+@check_installed(None)
 def getMedicalRecordNumberValue(self):  # noqa camelcase, but compliant with AT's
     """Returns the medical record number ID
     """
