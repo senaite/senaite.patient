@@ -27,6 +27,7 @@ from bika.lims.catalog.catalog_utilities import addZCTextIndex
 from plone.registry.interfaces import IRegistry
 from Products.DCWorkflow.Guard import Guard
 from Products.ZCatalog.ProgressHandler import ZLogHandler
+from senaite.core.workflow import SAMPLE_WORKFLOW
 from senaite.patient import PRODUCT_NAME
 from senaite.patient import PROFILE_ID
 from senaite.patient import logger
@@ -82,7 +83,7 @@ ID_FORMATTING = [
 
 # Workflow updates
 WORKFLOW_TO_UPDATE = {
-    "bika_ar_workflow": {
+    SAMPLE_WORKFLOW: {
         "states": {
             "verified": {
                 "preserve_transitions": True,
