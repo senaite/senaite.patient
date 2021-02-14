@@ -94,7 +94,7 @@
           icon_expr=""
           link_target=""
           url_expr="string:${object_url}/edit" visible="True">
-    <permission value="senaite.patient: Edit Patient"/>
+    <permission value="Modify portal content"/>
   </action>
 
 </object>

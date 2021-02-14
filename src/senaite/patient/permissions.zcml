@@ -2,16 +2,20 @@
     xmlns="http://namespaces.zope.org/zope"
     i18n_domain="senaite.patient">
 
-  <!-- Field Permissions (Sample, aka AnalysisRequest) -->
+  <!-- Content permissions -->
+  <permission id="senaite.patient.permissions.AddPatientFolder" title="senaite.patient: Add Patient Folder"/>
+  <permission id="senaite.patient.permissions.AddPatient" title="senaite.patient: Add Patient"/>
+
+  <!-- Transition permissions -->
+  <permission id="senaite.patient.permissions.TransitionActivate" title="senaite.patient: Transition: Activate"/>
+  <permission id="senaite.patient.permissions.TransitionDeactivate" title="senaite.patient: Transition: Deactivate"/>
+
+  <!-- Field permissions  -->
   <permission id="senaite.patient.permissions.FieldEditAge" title="senaite.patient: Field: Edit Age"/>
   <permission id="senaite.patient.permissions.FieldEditDateOfBirth" title="senaite.patient: Field: Edit Date of Birth"/>
-  <permission id="senaite.patient.permissions.FieldEditMedicalRecordNumber" title="senaite.patient: Field: Edit Medical Record Number"/>
-  <permission id="senaite.patient.permissions.FieldEditPatientAddress" title="senaite.patient: Field: Edit Patient Address"/>
-  <permission id="senaite.patient.permissions.FieldEditPatientFullName" title="senaite.patient: Field: Edit Patient Fullname"/>
+  <permission id="senaite.patient.permissions.FieldEditMRN" title="senaite.patient: Field: Edit MRN"/>
+  <permission id="senaite.patient.permissions.FieldEditAddress" title="senaite.patient: Field: Edit Address"/>
+  <permission id="senaite.patient.permissions.FieldEditFullName" title="senaite.patient: Field: Edit Fullname"/>
   <permission id="senaite.patient.permissions.FieldEditGender" title="senaite.patient: Field: Edit Gender"/>
 
-  <permission id="senaite.patient.permissions.EditPatient" title="senaite.patient: Edit Patient"/>
-  <permission id="senaite.patient.permissions.ViewPatient" title="senaite.patient: View Patient"/>
-  <permission id="senaite.patient.permissions.FieldEditPatient" title="senaite.patient: Field: Edit Patient"/>
-  
 </configure>

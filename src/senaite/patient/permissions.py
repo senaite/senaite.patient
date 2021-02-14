@@ -18,13 +18,18 @@
 # Copyright 2020 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-FieldEditAge = "senaite.patient: Field: Edit Age"
-FieldEditDateOfBirth = "senaite.patient: Field: Edit Date of Birth"
-FieldEditMedicalRecordNumber = "senaite.patient: Field: Edit Medical Record Number"
-FieldEditPatientAddress = "senaite.patient: Field: Edit Patient Address"
-FieldEditPatientFullName = "senaite.patient: Field: Edit Patient Fullname"
-FieldEditGender = "senaite.patient: Field: Edit Gender"
+# Content permissions
+AddPatientFolder = "senaite.patient: Add PatientFolder"
+AddPatient = "senaite.patient: Add Patient"
 
-EditPatient = "senaite.lims: Edit Patient"
-ViewPatient = "senaite.lims: View Patient"
-FieldEditPatient = "senaite.lims: Field: Edit Patient"
+# Transition permissions
+TransitionActivate = "senaite.patient: Transition: Activate"
+TransitionDeactivate = "senaite.patient: Transition: Deactivate"
+
+# Field permissions
+FieldEditMRN = "senaite.patient: Field: Edit MRN"
+FieldEditFullName = "senaite.patient: Field: Edit Fullname"
+FieldEditGender = "senaite.patient: Field: Edit Gender"
+FieldEditDateOfBirth = "senaite.patient: Field: Edit Date of Birth"
+FieldEditAge = "senaite.patient: Field: Edit Age"
+FieldEditAddress = "senaite.patient: Field: Edit Address"

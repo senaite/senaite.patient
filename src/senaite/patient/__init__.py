@@ -19,22 +19,23 @@
 # Some rights reserved, see README and LICENSE.
 
 import logging
+
+from AccessControl.Permission import addPermission
+from AccessControl.SecurityInfo import ModuleSecurityInfo
 from bika.lims.api import get_request
+from senaite.patient import permissions
+from senaite.patient.config import DEFAULT_ROLES
+from senaite.patient.config import DEFAULT_TYPES
+from senaite.patient.config import PRODUCT_NAME
 from senaite.patient.interfaces import ISenaitePatientLayer
 from zope.i18nmessageid import MessageFactory
 
-PRODUCT_NAME = "senaite.patient"
-PROFILE_ID = "profile-{}:default".format(PRODUCT_NAME)
+security = ModuleSecurityInfo("senaite.patient")
 
 # Defining a Message Factory for when this product is internationalized.
 messageFactory = MessageFactory(PRODUCT_NAME)
 
 logger = logging.getLogger(PRODUCT_NAME)
-
-
-def initialize(context):
-    """Initializer called when used as a Zope 2 product."""
-    logger.info("*** Initializing SENAITE PATIENT Customization package ***")
 
 
 def is_installed():
@@ -55,3 +56,15 @@ def check_installed(default_return):
             return func(*args, **kwargs)
         return wrapper
     return is_installed_decorator
+
+
+def initialize(context):
+    """Initializer called when used as a Zope 2 product."""
+    logger.info("*** Initializing SENAITE PATIENT Customization package ***")
+
+    # Set add permissions
+    for typename in DEFAULT_TYPES:
+        permid = "Add" + typename
+        permname = getattr(permissions, permid)
+        security.declarePublic(permid)
+        addPermission(permname, default_roles=DEFAULT_ROLES)
