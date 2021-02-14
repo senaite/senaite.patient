@@ -3,7 +3,7 @@
     xmlns:monkey="http://namespaces.plone.org/monkey"
     i18n_domain="senaite.patient">
 
-  <!-- Returns whether the Medical Record Number is temporary -->
+  <!-- MRN temporary -->
   <monkey:patch
     description="Whether the Medical Record Number is temporary"
     class="bika.lims.content.analysisrequest.AnalysisRequest"
@@ -11,12 +11,52 @@
     ignoreOriginal="True"
     replacement=".content.analysisrequest.isMedicalRecordTemporary" />
 
-  <!-- Returns the Medical Record Number value assigned to the sample -->
+  <!-- MRN -->
   <monkey:patch
     description="Medical Record Number value assigned to the sample"
     class="bika.lims.content.analysisrequest.AnalysisRequest"
     original="getMedicalRecordNumberValue"
     ignoreOriginal="True"
     replacement=".content.analysisrequest.getMedicalRecordNumberValue" />
+
+  <!-- Full Name -->
+  <monkey:patch
+    description="Patient's full name"
+    class="bika.lims.content.analysisrequest.AnalysisRequest"
+    original="getPatientFullName"
+    ignoreOriginal="True"
+    replacement=".content.analysisrequest.getPatientFullName" />
+
+  <!-- Gender -->
+  <monkey:patch
+    description="Patient's gender"
+    class="bika.lims.content.analysisrequest.AnalysisRequest"
+    original="getGender"
+    ignoreOriginal="True"
+    replacement=".content.analysisrequest.getGender" />
+
+  <!-- Patient Date of Birth -->
+  <monkey:patch
+    description="Patient's date of birth"
+    class="bika.lims.content.analysisrequest.AnalysisRequest"
+    original="getDateOfBirth"
+    ignoreOriginal="True"
+    replacement=".content.analysisrequest.getDateOfBirth" />
+
+  <!-- Patient Age -->
+  <monkey:patch
+    description="Patient's age"
+    class="bika.lims.content.analysisrequest.AnalysisRequest"
+    original="getAge"
+    ignoreOriginal="True"
+    replacement=".content.analysisrequest.getAge" />
+
+  <!-- Patient Address -->
+  <monkey:patch
+    description="Patient's address"
+    class="bika.lims.content.analysisrequest.AnalysisRequest"
+    original="getPatientAddress"
+    ignoreOriginal="True"
+    replacement=".content.analysisrequest.getPatientAddress" />
 
 </configure>

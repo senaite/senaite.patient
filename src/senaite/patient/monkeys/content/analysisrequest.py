@@ -17,6 +17,7 @@
 #
 # Copyright 2020 by it's authors.
 # Some rights reserved, see README and LICENSE.
+
 from senaite.patient import check_installed
 
 
@@ -42,3 +43,38 @@ def getMedicalRecordNumberValue(self):  # noqa camelcase, but compliant with AT'
     if not mrn:
         return None
     return mrn.get("value")
+
+
+@check_installed(None)
+def getPatientFullName(self):  # noqa camelcase
+    """Returns the patient's full name
+    """
+    return self.getField("PatientFullName").get(self)
+
+
+@check_installed(None)
+def getGender(self):  # noqa camelcase
+    """Returns the patient's gender
+    """
+    return self.getField("Gender").get(self)
+
+
+@check_installed(None)
+def getDateOfBirth(self):  # noqa camelcase
+    """Returns the patient's date of birth
+    """
+    return self.getField("DateOfBirth").get(self)
+
+
+@check_installed(None)
+def getAge(self):  # noqa camelcase
+    """Returns the patient's age
+    """
+    return self.getField("Age").get(self)
+
+
+@check_installed(None)
+def getPatientAddress(self):  # noqa camelcase
+    """Returns the patient's address
+    """
+    return self.getField("PatientAddress").get(self)
