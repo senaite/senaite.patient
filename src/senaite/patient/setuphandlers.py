@@ -29,11 +29,12 @@ from Products.DCWorkflow.Guard import Guard
 from Products.ZCatalog.ProgressHandler import ZLogHandler
 from senaite.core.workflow import SAMPLE_WORKFLOW
 from senaite.patient import PRODUCT_NAME
-from senaite.patient import PROFILE_ID
 from senaite.patient import logger
 from senaite.patient import permissions
 from senaite.patient.config import PATIENT_CATALOG
 from zope.component import getUtility
+
+PROFILE_ID = "profile-{}:default".format(PRODUCT_NAME)
 
 # Maximum threshold in seconds before a transaction.commit takes place
 # Default: 300 (5 minutes)
@@ -91,9 +92,9 @@ WORKFLOW_TO_UPDATE = {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
                     permissions.FieldEditDateOfBirth: (),
-                    permissions.FieldEditMedicalRecordNumber: (),
-                    permissions.FieldEditPatientAddress: (),
-                    permissions.FieldEditPatientFullName: (),
+                    permissions.FieldEditMRN: (),
+                    permissions.FieldEditAddress: (),
+                    permissions.FieldEditFullName: (),
                     permissions.FieldEditGender: (),
                 }
             },
@@ -103,9 +104,21 @@ WORKFLOW_TO_UPDATE = {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
                     permissions.FieldEditDateOfBirth: (),
-                    permissions.FieldEditMedicalRecordNumber: (),
-                    permissions.FieldEditPatientAddress: (),
-                    permissions.FieldEditPatientFullName: (),
+                    permissions.FieldEditMRN: (),
+                    permissions.FieldEditAddress: (),
+                    permissions.FieldEditFullName: (),
+                    permissions.FieldEditGender: (),
+                }
+            },
+            "dispatched": {
+                "preserve_transitions": True,
+                "permissions": {
+                    # Field permissions (read-only)
+                    permissions.FieldEditAge: (),
+                    permissions.FieldEditDateOfBirth: (),
+                    permissions.FieldEditMRN: (),
+                    permissions.FieldEditAddress: (),
+                    permissions.FieldEditFullName: (),
                     permissions.FieldEditGender: (),
                 }
             },
@@ -115,9 +128,9 @@ WORKFLOW_TO_UPDATE = {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
                     permissions.FieldEditDateOfBirth: (),
-                    permissions.FieldEditMedicalRecordNumber: (),
-                    permissions.FieldEditPatientAddress: (),
-                    permissions.FieldEditPatientFullName: (),
+                    permissions.FieldEditMRN: (),
+                    permissions.FieldEditAddress: (),
+                    permissions.FieldEditFullName: (),
                     permissions.FieldEditGender: (),
                 }
             },
@@ -127,9 +140,9 @@ WORKFLOW_TO_UPDATE = {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
                     permissions.FieldEditDateOfBirth: (),
-                    permissions.FieldEditMedicalRecordNumber: (),
-                    permissions.FieldEditPatientAddress: (),
-                    permissions.FieldEditPatientFullName: (),
+                    permissions.FieldEditMRN: (),
+                    permissions.FieldEditAddress: (),
+                    permissions.FieldEditFullName: (),
                     permissions.FieldEditGender: (),
                 }
             },
@@ -139,9 +152,9 @@ WORKFLOW_TO_UPDATE = {
                     # Field permissions (read-only)
                     permissions.FieldEditAge: (),
                     permissions.FieldEditDateOfBirth: (),
-                    permissions.FieldEditMedicalRecordNumber: (),
-                    permissions.FieldEditPatientAddress: (),
-                    permissions.FieldEditPatientFullName: (),
+                    permissions.FieldEditMRN: (),
+                    permissions.FieldEditAddress: (),
+                    permissions.FieldEditFullName: (),
                     permissions.FieldEditGender: (),
                 }
             }

@@ -36,12 +36,12 @@ from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.config import GENDERS
 from senaite.patient.content.fields import TemporaryIdentifierField
 from senaite.patient.interfaces import ISenaitePatientLayer
+from senaite.patient.permissions import FieldEditAddress
 from senaite.patient.permissions import FieldEditAge
 from senaite.patient.permissions import FieldEditDateOfBirth
+from senaite.patient.permissions import FieldEditFullName
 from senaite.patient.permissions import FieldEditGender
-from senaite.patient.permissions import FieldEditMedicalRecordNumber
-from senaite.patient.permissions import FieldEditPatientAddress
-from senaite.patient.permissions import FieldEditPatientFullName
+from senaite.patient.permissions import FieldEditMRN
 from zope.component import adapts
 from zope.interface import implementer
 
@@ -55,7 +55,7 @@ MedicalRecordNumberField = TemporaryIdentifierField(
     required=True,
     validators=("temporary_identifier_validator",),
     read_permission=View,
-    write_permission=FieldEditMedicalRecordNumber,
+    write_permission=FieldEditMRN,
     widget=TemporaryIdentifierWidget(
         label=_("Medical Record #"),
         render_own_label=True,
@@ -71,7 +71,7 @@ PatientFullNameField = ExtStringField(
     "PatientFullName",
     required=True,
     read_permission=View,
-    write_permission=FieldEditPatientFullName,
+    write_permission=FieldEditFullName,
     widget=StringWidget(
         label=_("Patient full name"),
         render_own_label=True,
@@ -84,7 +84,7 @@ PatientFullNameField = ExtStringField(
 PatientAddressField = ExtStringField(
     "PatientAddress",
     read_permission=View,
-    write_permission=FieldEditPatientAddress,
+    write_permission=FieldEditAddress,
     widget=StringWidget(
         label=_("Place of residence"),
         render_own_label=True,

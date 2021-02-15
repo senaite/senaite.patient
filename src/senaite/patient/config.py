@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from senaite.patient import messageFactory as _
+from zope.i18nmessageid import MessageFactory
+
+_ = MessageFactory("senaite.patient")
+
+PRODUCT_NAME = "senaite.patient"
+
+DEFAULT_ROLES = ("Manager", )
+
+DEFAULT_TYPES = ("PatientFolder", "Patient", )
 
 PATIENT_CATALOG = "portal_catalog"
 
