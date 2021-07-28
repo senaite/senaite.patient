@@ -57,6 +57,8 @@ INDEXES = [
 # Tuples of (catalog, column_name)
 COLUMNS = [
     (CATALOG_ANALYSIS_REQUEST_LISTING, "isMedicalRecordTemporary"),
+    (CATALOG_ANALYSIS_REQUEST_LISTING, "getMedicalRecordNumberValue"),
+    (CATALOG_ANALYSIS_REQUEST_LISTING, "getPatientFullName"),
     (PATIENT_CATALOG, "mrn"),
 ]
 
