@@ -24,6 +24,7 @@ from senaite.patient import messageFactory as _
 from senaite.app.listing.interfaces import IListingView
 from senaite.app.listing.interfaces import IListingViewAdapter
 from senaite.app.listing.utils import add_review_state
+from senaite.app.listing.utils import add_column
 from zope.component import adapts
 from zope.component import getMultiAdapter
 from zope.interface import implements
@@ -42,6 +43,21 @@ ADD_STATUSES = [{
     "transitions": [],
     "custom_transitions": [],
 },
+]
+
+# Columns to add
+ADD_COLUMNS = [
+    ("MRN", {
+        "title": _("MRN"),
+        "sortable": False,
+        "index": "medical_record_number",
+        "after": "getId",
+    }),
+    ("Patient", {
+        "title": _("Patient"),
+        "sortable": False,
+        "after": "getId",
+    }),
 ]
 
 
@@ -77,8 +93,21 @@ class SamplesListingAdapter(object):
             after_icons += self.icon_tag("id-card-red", **kwargs)
             item["after"].update({"getId": after_icons})
 
+        item["MRN"] = obj.getMedicalRecordNumberValue
+        item["Patient"] = obj.getPatientFullName
+
     @check_installed(None)
     def before_render(self):
+        # Additional columns
+        rv_keys = map(lambda r: r["id"], self.listing.review_states)
+        for column_id, column_values in ADD_COLUMNS:
+            add_column(
+                listing=self.listing,
+                column_id=column_id,
+                column_values=column_values,
+                after=column_values.get("after", None),
+                review_states=rv_keys)
+
         # Add review_states
         for status in ADD_STATUSES:
             after = status.get("after", None)
