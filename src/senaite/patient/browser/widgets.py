@@ -72,9 +72,7 @@ class TemporaryIdentifierWidget(TypesWidget):
 
 class AgeDoBWidget(DateTimeWidget):
     """A widget for the introduction of Age and/or Date of Birth.
-    When Age is introduced, the Date of Birth is calculated automatically. Date
-    of Birth is considered as estimated on partial introduction of Age.
-    It returns a tuple with 3 elements maximum, (year, month, day)
+    When Age is introduced, the Date of Birth is calculated automatically.
     """
     security = ClassSecurityInfo()
     _properties = DateTimeWidget._properties.copy()
