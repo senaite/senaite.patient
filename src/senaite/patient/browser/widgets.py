@@ -102,6 +102,10 @@ class AgeDoBWidget(DateTimeWidget):
 
         value = form.get(field.getName())
 
+        # Not interested in the hidden field, but in the age + dob specific
+        if isinstance(value, (list, tuple)):
+            value = value[0] or None
+
         # Allow non-required fields
         if not value:
             return None, {}

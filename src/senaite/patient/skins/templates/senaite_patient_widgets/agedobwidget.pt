@@ -37,7 +37,8 @@
                           age_selected python:widget.default_age;">
 
         <div class="field AgeDoBWidget"
-             tal:attributes="data-required python:required and '1' or '0';">
+             tal:attributes="data-required python:required and '1' or '0';
+                             data-fieldname string:${fieldName}">
           <div class="fieldErrorBox" tal:condition="required"></div>
 
           <!-- Age / DoB toggle radio -->
@@ -57,7 +58,7 @@
                                      name string:${subfield_selector}"
                      tal:condition="not:age_selected"
                      type="radio" value="dob" checked/>
-              <input tal:attributes="id string:${fieldName}_dob_selector;
+              <input tal:attributes="id string:${fieldName}DateOfBirth_dob_selector;
                                      name string:${subfield_selector}"
                      tal:condition="age_selected"
                      type="radio" value="dob"/>&nbsp;
@@ -111,6 +112,16 @@
                                        value python: widget.ulocalized_gmt0_time(value, context=context, request=request) if value else '';"/>
               </div>
             </div>
+
+            <!-- Field not visible for when the value is set automatically by
+            others through JS. When a value is set to this field, agedob widget
+            automatically updates the value from the dob_control and selects
+            the proper radiobutton. Note we don't use a hidden field here, cause
+            'onchange' is not triggered for hidden fields -->
+            <input type="text" style="display:none;visibility:hidden;"
+                   tal:attributes="id string:${fieldName}-dob-fallback;
+                                   name string:${fieldName};
+                                   value string:${value}"/>
           </div>
         </div>
       </tal:values>

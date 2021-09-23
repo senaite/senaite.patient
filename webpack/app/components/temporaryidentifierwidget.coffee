@@ -222,6 +222,7 @@ class TemporaryIdentifierWidgetController
     return unless field
     @debug ">>> #{ field.name } = #{ value } "
     field.value = value
+    $(field).trigger "change"
 
   ###
   Formats a date to yyyy-mm-dd

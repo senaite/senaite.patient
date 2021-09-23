@@ -20,6 +20,9 @@ class AgeDoBWidgetController
     selector = ".AgeDoBWidget input[type='radio']"
     $("body").on "change", selector, @on_age_selector_change
 
+    selector = ".AgeDoBWidget input[id$='-dob-fallback']"
+    $("body").on "change", selector, @on_fallback_dob_change
+
   on_age_selector_change: (event) =>
     console.debug "AgeDoBWidgetController::on_age_selector_change"
     el = event.currentTarget
@@ -46,5 +49,20 @@ class AgeDoBWidgetController
       $(dob_controls).show()
       year_field.removeAttribute 'required'
       dob_field.setAttribute 'required', required
+
+  on_fallback_dob_change: (event) =>
+    console.debug "AgeDoBWidgetController::on_fallback_dob_change"
+    el = event.currentTarget
+
+    wrapper = el.closest ".AgeDoBWidget"
+
+    # Select the DoB radio
+    dob_selector = wrapper.querySelector("input[id$='_dob_selector']")
+    dob_selector.setAttribute 'checked', ''
+    $(dob_selector).trigger "change"
+
+    # Copy the value to the DoB control
+    dob_field = wrapper.querySelector('[id$=".dob:ignore_empty:record"]')
+    dob_field.value = el.value
 
 export default AgeDoBWidgetController
