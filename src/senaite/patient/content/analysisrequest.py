@@ -99,6 +99,7 @@ DateOfBirthField = ExtDateTimeField(
     widget=AgeDoBWidget(
         label=_("Age / Date of birth"),
         render_own_label=True,
+        default_age=True,
         visible={
             'add': 'edit',
         }

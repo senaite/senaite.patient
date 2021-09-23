@@ -80,6 +80,7 @@ class AgeDoBWidget(DateTimeWidget):
     _properties = DateTimeWidget._properties.copy()
     _properties.update({
         "show_time": False,
+        "default_age": True,
         "macro": "senaite_patient_widgets/agedobwidget",
     })
 
