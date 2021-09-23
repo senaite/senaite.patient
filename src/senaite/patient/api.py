@@ -86,7 +86,6 @@ def update_patient(patient, **values):
     # set values explicitly
     patient.set_mrn(values.get("mrn", api.get_id(patient)))
     patient.set_fullname(values.get("fullname", ""))
-    patient.set_age(api.to_int(values.get("age"), None))
     patient.set_gender(values.get("gender", ""))
     patient.set_birthdate(values.get("birthdate"))
     patient.address = values.get("address")
@@ -150,10 +149,10 @@ def get_birth_date(age_ymd, on_date=None):
     return dob
 
 
-def get_age_ymd(birth_date, to_date=None):
-    """Returns the age at to_date if not None. Otherwise, current age
+def get_age_ymd(birth_date, on_date=None):
+    """Returns the age at on_date if not None. Otherwise, current age
     """
-    delta = get_relative_delta(birth_date, to_date)
+    delta = get_relative_delta(birth_date, on_date)
     return to_ymd(delta)
 
 

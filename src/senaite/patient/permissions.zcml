@@ -11,7 +11,6 @@
   <permission id="senaite.patient.permissions.TransitionDeactivate" title="senaite.patient: Transition: Deactivate"/>
 
   <!-- Field permissions  -->
-  <permission id="senaite.patient.permissions.FieldEditAge" title="senaite.patient: Field: Edit Age"/>
   <permission id="senaite.patient.permissions.FieldEditDateOfBirth" title="senaite.patient: Field: Edit Date of Birth"/>
   <permission id="senaite.patient.permissions.FieldEditMRN" title="senaite.patient: Field: Edit MRN"/>
   <permission id="senaite.patient.permissions.FieldEditAddress" title="senaite.patient: Field: Edit Address"/>

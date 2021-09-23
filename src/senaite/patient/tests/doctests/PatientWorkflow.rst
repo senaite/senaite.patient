@@ -136,10 +136,6 @@ Field permission in **active** state:
     >>> get_roles_for_permission(FieldEditDateOfBirth, patient)
     ['LabClerk', 'LabManager', 'Manager']
 
-    >>> from senaite.patient.permissions import FieldEditAge
-    >>> get_roles_for_permission(FieldEditDateOfBirth, patient)
-    ['LabClerk', 'LabManager', 'Manager']
-
     >>> from senaite.patient.permissions import FieldEditAddress
     >>> get_roles_for_permission(FieldEditAddress, patient)
     ['LabClerk', 'LabManager', 'Manager']
@@ -165,10 +161,6 @@ Field permission in **inactive** state:
     []
 
     >>> from senaite.patient.permissions import FieldEditDateOfBirth
-    >>> get_roles_for_permission(FieldEditDateOfBirth, patient)
-    []
-
-    >>> from senaite.patient.permissions import FieldEditAge
     >>> get_roles_for_permission(FieldEditDateOfBirth, patient)
     []
 
@@ -210,10 +202,6 @@ All patient fields are editable in `sample_due`:
     >>> get_roles_for_permission(FieldEditDateOfBirth, sample)
     ['LabClerk', 'LabManager', 'Manager']
 
-    >>> from senaite.patient.permissions import FieldEditAge
-    >>> get_roles_for_permission(FieldEditDateOfBirth, sample)
-    ['LabClerk', 'LabManager', 'Manager']
-
     >>> from senaite.patient.permissions import FieldEditAddress
     >>> get_roles_for_permission(FieldEditAddress, sample)
     ['LabClerk', 'LabManager', 'Manager']
@@ -239,10 +227,6 @@ All patient fields are editable in `sample_received`:
     ['LabClerk', 'LabManager', 'Manager']
 
     >>> from senaite.patient.permissions import FieldEditDateOfBirth
-    >>> get_roles_for_permission(FieldEditDateOfBirth, sample)
-    ['LabClerk', 'LabManager', 'Manager']
-
-    >>> from senaite.patient.permissions import FieldEditAge
     >>> get_roles_for_permission(FieldEditDateOfBirth, sample)
     ['LabClerk', 'LabManager', 'Manager']
 
@@ -283,10 +267,6 @@ All patient fields are editable in `to_be_verified`:
     >>> get_roles_for_permission(FieldEditDateOfBirth, sample)
     ['LabClerk', 'LabManager', 'Manager']
 
-    >>> from senaite.patient.permissions import FieldEditAge
-    >>> get_roles_for_permission(FieldEditDateOfBirth, sample)
-    ['LabClerk', 'LabManager', 'Manager']
-
     >>> from senaite.patient.permissions import FieldEditAddress
     >>> get_roles_for_permission(FieldEditAddress, sample)
     ['LabClerk', 'LabManager', 'Manager']
@@ -319,10 +299,6 @@ All patient fields are readonly in `verified`:
     >>> get_roles_for_permission(FieldEditDateOfBirth, sample)
     []
 
-    >>> from senaite.patient.permissions import FieldEditAge
-    >>> get_roles_for_permission(FieldEditDateOfBirth, sample)
-    []
-
     >>> from senaite.patient.permissions import FieldEditAddress
     >>> get_roles_for_permission(FieldEditAddress, sample)
     []
@@ -349,10 +325,6 @@ All patient fields are readonly in `published`:
     []
 
     >>> from senaite.patient.permissions import FieldEditDateOfBirth
-    >>> get_roles_for_permission(FieldEditDateOfBirth, sample)
-    []
-
-    >>> from senaite.patient.permissions import FieldEditAge
     >>> get_roles_for_permission(FieldEditDateOfBirth, sample)
     []
 
