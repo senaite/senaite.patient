@@ -96,7 +96,6 @@ DateOfBirthField = ExtDateTimeField(
     required=False,
     read_permission=View,
     write_permission=FieldEditDateOfBirth,
-    validators=("isDateFormat",),
     widget=AgeDoBWidget(
         label=_("Age / Date of birth"),
         render_own_label=True,

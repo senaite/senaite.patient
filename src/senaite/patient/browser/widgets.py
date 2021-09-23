@@ -24,6 +24,7 @@ from bika.lims.idserver import generateUniqueId
 from Products.Archetypes.Registry import registerWidget
 from Products.Archetypes.Widget import StringWidget
 from Products.Archetypes.Widget import TypesWidget
+from senaite.core.browser.widgets import DateTimeWidget
 from senaite.patient import api as patient_api
 from senaite.patient.config import AUTO_ID_MARKER
 
@@ -69,17 +70,31 @@ class TemporaryIdentifierWidget(TypesWidget):
         return value, {}
 
 
-class AgeDoBWidget(TypesWidget):
+class AgeDoBWidget(DateTimeWidget):
     """A widget for the introduction of Age and/or Date of Birth.
     When Age is introduced, the Date of Birth is calculated automatically. Date
     of Birth is considered as estimated on partial introduction of Age.
     It returns a tuple with 3 elements maximum, (year, month, day)
     """
     security = ClassSecurityInfo()
-    _properties = StringWidget._properties.copy()
+    _properties = DateTimeWidget._properties.copy()
     _properties.update({
+        "show_time": False,
         "macro": "senaite_patient_widgets/agedobwidget",
     })
+
+    def get_current_age(self, dob):
+        """Returns a dict with keys "years", "months", "days"
+        """
+        if not api.is_date(dob):
+            return {}
+
+        delta = patient_api.get_relative_delta(dob)
+        return {
+            "years": delta.years,
+            "months": delta.months,
+            "days": delta.days,
+        }
 
     def process_form(self, instance, field, form, empty_marker=None,
                      emptyReturnsMarker=False, validating=True):

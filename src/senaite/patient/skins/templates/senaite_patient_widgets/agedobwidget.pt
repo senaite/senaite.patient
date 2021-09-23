@@ -19,19 +19,25 @@
     </metal:view_macro>
 
     <metal:edit_macro define-macro="edit">
-      <tal:values define="values python:field.getEditAccessor(here)() or {};
-                          session_values python:here.session_restore_value(fieldName, values);
-                          cached_values python:request.get(fieldName, session_values);
-                          values python:cached_values or values;
+      <tal:values define="value python:field.getEditAccessor(here)() or None;
+                          session_value python:here.session_restore_value(fieldName, value);
+                          cached_value python:request.get(fieldName, session_value);
+                          value python:cached_value or value;
+                          value python:field.getEditAccessor(here)() or None;
                           subfield_years string:${fieldName}.years:ignore_empty:record;
                           subfield_months string:${fieldName}.months:ignore_empty:record;
                           subfield_days string:${fieldName}.days:ignore_empty:record;
                           subfield_dob string:${fieldName}.dob:ignore_empty:record;
                           subfield_selector string:${fieldName}.selector:ignore_empty:record;
-                          selector python:values.get('selector', 'age');
-                          age_selected python:selector == 'age'">
+                          required field/required|nothing;
+                          current_age python:widget.get_current_age(value);
+                          years python:current_age.get('years') or '';
+                          months python:current_age.get('months') or '';
+                          days python:current_age.get('days') or '';
+                          age_selected python:not value;">
 
-        <div class="field AgeDoBWidget">
+        <div class="field AgeDoBWidget"
+             tal:attributes="data-required python:required and '1' or '0';">
           <div class="fieldErrorBox" tal:condition="required"></div>
 
           <!-- Age / DoB toggle radio -->
@@ -67,23 +73,27 @@
               <div class="form-group col-md-3">
                 <label tal:attributes="for string:${subfield_years}"
                        i18n:translate="" class="small">Years</label>
-                <input type="number" size='2' value='' min='0' max='150' class="form-control"
+                <input type="number" size='2' min='0' max='150' class="form-control"
                        tal:attributes="id string:${subfield_years};
-                                       name string:${subfield_years};"/>
+                                       name string:${subfield_years};
+                                       value years;
+                                       required python:required and 'required' or None;"/>
               </div>
               <div class="form-group col-md-3">
                 <label tal:attributes="for string:${subfield_months}"
                        i18n:translate="" class="small">Months</label>
                 <input type="number" size='2' value='' min='0' max='11' class="form-control"
                        tal:attributes="id string:${subfield_months};
-                                       name string:${subfield_months};"/>
+                                       name string:${subfield_months};
+                                       value months;"/>
               </div>
               <div class="form-group col-md-3">
                 <label tal:attributes="for string:${subfield_days}"
                        i18n:translate="" class="small">Days</label>
                 <input type="number" size='2' value='' min='0' max='30' class="form-control"
                        tal:attributes="id string:${subfield_days};
-                                       name string:${subfield_days};"/>
+                                       name string:${subfield_days};
+                                       value days;"/>
               </div>
             </div>
           </div>
@@ -94,10 +104,11 @@
             <div class="form-row">
               <div class="form-group">
                 <input type="text"
-                       required="required"
                        class="datepicker_nofuture"
                        tal:attributes="id string:${subfield_dob};
-                                       name string:${subfield_dob};"/>
+                                       name string:${subfield_dob};
+                                       required python:required and 'required' or None;
+                                       value python: widget.ulocalized_gmt0_time(value, context=context, request=request) if value else '';"/>
               </div>
             </div>
           </div>
