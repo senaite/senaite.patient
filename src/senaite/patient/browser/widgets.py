@@ -24,6 +24,7 @@ from bika.lims.idserver import generateUniqueId
 from Products.Archetypes.Registry import registerWidget
 from Products.Archetypes.Widget import StringWidget
 from Products.Archetypes.Widget import TypesWidget
+from senaite.patient import api as patient_api
 from senaite.patient.config import AUTO_ID_MARKER
 
 
@@ -68,5 +69,49 @@ class TemporaryIdentifierWidget(TypesWidget):
         return value, {}
 
 
+class AgeDoBWidget(TypesWidget):
+    """A widget for the introduction of Age and/or Date of Birth.
+    When Age is introduced, the Date of Birth is calculated automatically. Date
+    of Birth is considered as estimated on partial introduction of Age.
+    It returns a tuple with 3 elements maximum, (year, month, day)
+    """
+    security = ClassSecurityInfo()
+    _properties = StringWidget._properties.copy()
+    _properties.update({
+        "macro": "senaite_patient_widgets/agedobwidget",
+    })
+
+    def process_form(self, instance, field, form, empty_marker=None,
+                     emptyReturnsMarker=False, validating=True):
+
+        value = form.get(field.getName())
+
+        # Allow non-required fields
+        if not value:
+            return None, {}
+
+        # Grab the input for DoB first
+        dob = value.get("dob", "")
+        dob = patient_api.to_datetime(dob)
+
+        # Maybe user entered age instead of DoB
+        if value.get("selector") == "age":
+            # Validate the age entered
+            ymd = map(lambda p: value.get(p), ["years", "months", "days"])
+            if not any(ymd):
+                # No values set
+                return None
+
+            # Age in ymd format
+            ymd = filter(lambda p: p[0], zip(ymd, 'ymd'))
+            ymd = "".join(map(lambda p: "".join(p), ymd))
+
+            # Calculate the DoB
+            dob = patient_api.get_birth_date(ymd)
+
+        return dob, {}
+
+
 # Register widgets
 registerWidget(TemporaryIdentifierWidget, title="TemporaryIdentifierWidget")
+registerWidget(AgeDoBWidget, title="AgeDoBWidget")

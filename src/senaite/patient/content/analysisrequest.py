@@ -32,8 +32,10 @@ from Products.CMFCore.permissions import View
 from senaite.core.browser.widgets import DateTimeWidget
 from senaite.patient import messageFactory as _
 from senaite.patient.api import is_patient_required
+from senaite.patient.browser.widgets import AgeDoBWidget
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.config import GENDERS
+from senaite.patient.content.fields import AgeDoBField
 from senaite.patient.content.fields import TemporaryIdentifierField
 from senaite.patient.interfaces import ISenaitePatientLayer
 from senaite.patient.permissions import FieldEditAddress
@@ -111,6 +113,20 @@ DateOfBirthField = ExtDateTimeField(
     ),
 )
 
+NewAgeField = ExtDateTimeField(
+    "NewAge",
+    required=False,
+    read_permission=View,
+    write_permission=FieldEditAge,
+    widget=AgeDoBWidget(
+        label=_("Age / Date of Birth"),
+        render_own_label=True,
+        visible={
+            'add': 'edit',
+        }
+    ),
+)
+
 AgeField = ExtIntegerField(
     "Age",
     required=False,
@@ -162,6 +178,7 @@ class AnalysisRequestSchemaExtender(object):
             PatientAddressField,
             DateOfBirthField,
             AgeField,
+            NewAgeField,
             GenderField,
         ]
 

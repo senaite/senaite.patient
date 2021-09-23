@@ -2,6 +2,7 @@
 
 from datetime import datetime
 
+from senaite.patient.browser.widgets import AgeDoBWidget
 from six import string_types
 
 from bika.lims import api

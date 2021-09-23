@@ -1,0 +1,113 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="senaite.patient">
+  <body>
+
+    <metal:view_macro define-macro="view">
+      <tal:values define="age python:field.get_formatted_age(here);
+                          birth_date python:field.get_formatted_birth_date(here);">
+
+        <span tal:content="age"/>
+        <tal:dob condition="birth_date">
+          (<span tal:content="birth_date"/>)
+        </tal:dob>
+
+      </tal:values>
+    </metal:view_macro>
+
+    <metal:edit_macro define-macro="edit">
+      <tal:values define="values python:field.getEditAccessor(here)() or {};
+                          session_values python:here.session_restore_value(fieldName, values);
+                          cached_values python:request.get(fieldName, session_values);
+                          values python:cached_values or values;
+                          subfield_years string:${fieldName}.years:ignore_empty:record;
+                          subfield_months string:${fieldName}.months:ignore_empty:record;
+                          subfield_days string:${fieldName}.days:ignore_empty:record;
+                          subfield_dob string:${fieldName}.dob:ignore_empty:record;
+                          subfield_selector string:${fieldName}.selector:ignore_empty:record;
+                          selector python:values.get('selector', 'age');
+                          age_selected python:selector == 'age'">
+
+        <div class="field AgeDoBWidget">
+          <div class="fieldErrorBox" tal:condition="required"></div>
+
+          <!-- Age / DoB toggle radio -->
+          <div class="form form-inline">
+            <div class="form-group">
+              <input tal:attributes="id string:${fieldName}_age_selector;
+                                     name string:${subfield_selector}"
+                     tal:condition="age_selected"
+                     type="radio" value="age" checked/>
+              <input tal:attributes="id string:${fieldName}_age_selector;
+                                     name string:${subfield_selector}"
+                     tal:condition="not:age_selected"
+                     type="radio" value="age"/>&nbsp;
+              <label tal:attributes="for string:${fieldName}_age_selector;">Age</label>
+              &nbsp;&nbsp;
+              <input tal:attributes="id string:${fieldName}_dob_selector;
+                                     name string:${subfield_selector}"
+                     tal:condition="not:age_selected"
+                     type="radio" value="dob" checked/>
+              <input tal:attributes="id string:${fieldName}_dob_selector;
+                                     name string:${subfield_selector}"
+                     tal:condition="age_selected"
+                     type="radio" value="dob"/>&nbsp;
+              <label tal:attributes="for string:${fieldName}_dob_selector">Date of Birth</label>
+              &nbsp;&nbsp;
+            </div>
+          </div>
+
+          <!-- Age input area -->
+          <div class="form form-inline"
+               tal:attributes="id string:${fieldName}_age_controls">
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label tal:attributes="for string:${subfield_years}"
+                       i18n:translate="" class="small">Years</label>
+                <input type="number" size='2' value='' min='0' max='150' class="form-control"
+                       tal:attributes="id string:${subfield_years};
+                                       name string:${subfield_years};"/>
+              </div>
+              <div class="form-group col-md-3">
+                <label tal:attributes="for string:${subfield_months}"
+                       i18n:translate="" class="small">Months</label>
+                <input type="number" size='2' value='' min='0' max='11' class="form-control"
+                       tal:attributes="id string:${subfield_months};
+                                       name string:${subfield_months};"/>
+              </div>
+              <div class="form-group col-md-3">
+                <label tal:attributes="for string:${subfield_days}"
+                       i18n:translate="" class="small">Days</label>
+                <input type="number" size='2' value='' min='0' max='30' class="form-control"
+                       tal:attributes="id string:${subfield_days};
+                                       name string:${subfield_days};"/>
+              </div>
+            </div>
+          </div>
+
+          <!-- DoB input field -->
+          <div class="form form-inline"
+               tal:attributes="id string:${fieldName}_dob_controls">
+            <div class="form-row">
+              <div class="form-group">
+                <input type="text"
+                       required="required"
+                       class="datepicker_nofuture"
+                       tal:attributes="id string:${subfield_dob};
+                                       name string:${subfield_dob};"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tal:values>
+    </metal:edit_macro>
+
+    <metal:search_macro define-macro="search">
+      <div metal:use-macro="context/widgets/string/macros/edit"></div>
+    </metal:search_macro>
+
+  </body>
+</html>
