@@ -83,7 +83,7 @@
               <div class="form-group col-md-3">
                 <label tal:attributes="for string:${subfield_months}"
                        i18n:translate="" class="small">Months</label>
-                <input type="number" size='2' value='' min='0' max='11' class="form-control"
+                <input type="number" size='2' value='' min='0' max='12' class="form-control"
                        tal:attributes="id string:${subfield_months};
                                        name string:${subfield_months};
                                        value months;"/>
@@ -91,7 +91,7 @@
               <div class="form-group col-md-3">
                 <label tal:attributes="for string:${subfield_days}"
                        i18n:translate="" class="small">Days</label>
-                <input type="number" size='2' value='' min='0' max='30' class="form-control"
+                <input type="number" size='2' value='' min='0' max='31' class="form-control"
                        tal:attributes="id string:${subfield_days};
                                        name string:${subfield_days};
                                        value days;"/>
