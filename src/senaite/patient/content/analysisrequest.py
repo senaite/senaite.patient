@@ -23,21 +23,18 @@ from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
 from bika.lims.browser.widgets import SelectionWidget
 from bika.lims.fields import ExtDateTimeField
-from bika.lims.fields import ExtIntegerField
 from bika.lims.fields import ExtStringField
 from bika.lims.interfaces import IAnalysisRequest
-from Products.Archetypes.Widget import IntegerWidget
 from Products.Archetypes.Widget import StringWidget
 from Products.CMFCore.permissions import View
-from senaite.core.browser.widgets import DateTimeWidget
 from senaite.patient import messageFactory as _
 from senaite.patient.api import is_patient_required
+from senaite.patient.browser.widgets import AgeDoBWidget
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.config import GENDERS
 from senaite.patient.content.fields import TemporaryIdentifierField
 from senaite.patient.interfaces import ISenaitePatientLayer
 from senaite.patient.permissions import FieldEditAddress
-from senaite.patient.permissions import FieldEditAge
 from senaite.patient.permissions import FieldEditDateOfBirth
 from senaite.patient.permissions import FieldEditFullName
 from senaite.patient.permissions import FieldEditGender
@@ -99,26 +96,10 @@ DateOfBirthField = ExtDateTimeField(
     required=False,
     read_permission=View,
     write_permission=FieldEditDateOfBirth,
-    validators=("isDateFormat",),
-    widget=DateTimeWidget(
-        label=_("Date of birth"),
-        show_time=False,
-        datepicker_nofuture=1,
+    widget=AgeDoBWidget(
+        label=_("Age / Date of birth"),
         render_own_label=True,
-        visible={
-            'add': 'edit',
-        }
-    ),
-)
-
-AgeField = ExtIntegerField(
-    "Age",
-    required=False,
-    read_permission=View,
-    write_permission=FieldEditAge,
-    widget=IntegerWidget(
-        label=_("Age"),
-        render_own_label=True,
+        default_age=True,
         visible={
             'add': 'edit',
         }
@@ -161,7 +142,6 @@ class AnalysisRequestSchemaExtender(object):
             PatientFullNameField,
             PatientAddressField,
             DateOfBirthField,
-            AgeField,
             GenderField,
         ]
 

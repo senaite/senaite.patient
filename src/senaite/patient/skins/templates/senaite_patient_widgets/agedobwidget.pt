@@ -1,0 +1,135 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="senaite.patient">
+  <body>
+
+    <metal:view_macro define-macro="view">
+      <tal:values define="age python:field.get_formatted_age(here);
+                          birth_date python:field.get_formatted_birth_date(here);">
+
+        <span tal:content="age"/>
+        <tal:dob condition="birth_date">
+          (<span tal:content="birth_date"/>)
+        </tal:dob>
+
+      </tal:values>
+    </metal:view_macro>
+
+    <metal:edit_macro define-macro="edit">
+      <tal:values define="value python:field.getEditAccessor(here)() or None;
+                          session_value python:here.session_restore_value(fieldName, value);
+                          cached_value python:request.get(fieldName, session_value);
+                          value python:cached_value or value;
+                          value python:field.getEditAccessor(here)() or None;
+                          subfield_years string:${fieldName}.years:ignore_empty:record;
+                          subfield_months string:${fieldName}.months:ignore_empty:record;
+                          subfield_days string:${fieldName}.days:ignore_empty:record;
+                          subfield_dob string:${fieldName}.dob:ignore_empty:record;
+                          subfield_selector string:${fieldName}.selector:ignore_empty:record;
+                          required field/required|nothing;
+                          current_age python:widget.get_current_age(value);
+                          years python:current_age.get('years') or '';
+                          months python:current_age.get('months') or '';
+                          days python:current_age.get('days') or '';
+                          age_selected python:widget.default_age;">
+
+        <div class="field AgeDoBWidget"
+             tal:attributes="data-required python:required and '1' or '0';
+                             data-fieldname string:${fieldName}">
+          <div class="fieldErrorBox" tal:condition="required"></div>
+
+          <!-- Age / DoB toggle radio -->
+          <div class="form form-inline">
+            <div class="form-group">
+              <input tal:attributes="id string:${fieldName}_age_selector;
+                                     name string:${subfield_selector}"
+                     tal:condition="age_selected"
+                     type="radio" value="age" checked/>
+              <input tal:attributes="id string:${fieldName}_age_selector;
+                                     name string:${subfield_selector}"
+                     tal:condition="not:age_selected"
+                     type="radio" value="age"/>&nbsp;
+              <label tal:attributes="for string:${fieldName}_age_selector;">Age</label>
+              &nbsp;&nbsp;
+              <input tal:attributes="id string:${fieldName}_dob_selector;
+                                     name string:${subfield_selector}"
+                     tal:condition="not:age_selected"
+                     type="radio" value="dob" checked/>
+              <input tal:attributes="id string:${fieldName}DateOfBirth_dob_selector;
+                                     name string:${subfield_selector}"
+                     tal:condition="age_selected"
+                     type="radio" value="dob"/>&nbsp;
+              <label tal:attributes="for string:${fieldName}_dob_selector">Date of Birth</label>
+              &nbsp;&nbsp;
+            </div>
+          </div>
+
+          <!-- Age input area -->
+          <div class="form form-inline"
+               tal:attributes="id string:${fieldName}_age_controls">
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label tal:attributes="for string:${subfield_years}"
+                       i18n:translate="" class="small">Years</label>
+                <input type="number" size='2' min='0' max='150' class="form-control"
+                       tal:attributes="id string:${subfield_years};
+                                       name string:${subfield_years};
+                                       value years;
+                                       required python:required and 'required' or None;"/>
+              </div>
+              <div class="form-group col-md-3">
+                <label tal:attributes="for string:${subfield_months}"
+                       i18n:translate="" class="small">Months</label>
+                <input type="number" size='2' value='' min='0' max='12' class="form-control"
+                       tal:attributes="id string:${subfield_months};
+                                       name string:${subfield_months};
+                                       value months;"/>
+              </div>
+              <div class="form-group col-md-3">
+                <label tal:attributes="for string:${subfield_days}"
+                       i18n:translate="" class="small">Days</label>
+                <input type="number" size='2' value='' min='0' max='31' class="form-control"
+                       tal:attributes="id string:${subfield_days};
+                                       name string:${subfield_days};
+                                       value days;"/>
+              </div>
+            </div>
+          </div>
+
+          <!-- DoB input field -->
+          <div class="form form-inline"
+               tal:attributes="id string:${fieldName}_dob_controls">
+            <div class="form-row">
+              <div class="form-group">
+                <input type="text"
+                       class="datepicker_nofuture"
+                       tal:attributes="id string:${subfield_dob};
+                                       name string:${subfield_dob};
+                                       required python:required and 'required' or None;
+                                       value python: widget.ulocalized_gmt0_time(value, context=context, request=request) if value else '';"/>
+              </div>
+            </div>
+
+            <!-- Field not visible for when the value is set automatically by
+            others through JS. When a value is set to this field, agedob widget
+            automatically updates the value from the dob_control and selects
+            the proper radiobutton. Note we don't use a hidden field here, cause
+            'onchange' is not triggered for hidden fields -->
+            <input type="text" style="display:none;visibility:hidden;"
+                   tal:attributes="id string:${fieldName}-dob-fallback;
+                                   name string:${fieldName};
+                                   value string:${value}"/>
+          </div>
+        </div>
+      </tal:values>
+    </metal:edit_macro>
+
+    <metal:search_macro define-macro="search">
+      <div metal:use-macro="context/widgets/string/macros/edit"></div>
+    </metal:search_macro>
+
+  </body>
+</html>

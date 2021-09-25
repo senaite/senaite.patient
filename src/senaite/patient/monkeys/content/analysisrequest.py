@@ -19,6 +19,7 @@
 # Some rights reserved, see README and LICENSE.
 
 from senaite.patient import check_installed
+from senaite.patient.api import get_age_ymd
 
 
 @check_installed(False)
@@ -68,9 +69,11 @@ def getDateOfBirth(self):  # noqa camelcase
 
 @check_installed(None)
 def getAge(self):  # noqa camelcase
-    """Returns the patient's age
+    """Returns the patient's age when the sample was collected
     """
-    return self.getField("Age").get(self)
+    dob = getDateOfBirth()
+    sampled = self.getDateSampled()
+    return get_age_ymd(dob, sampled)
 
 
 @check_installed(None)

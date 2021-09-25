@@ -2,8 +2,6 @@
 
 from datetime import datetime
 
-from six import string_types
-
 from bika.lims import api
 from bika.lims.api.mail import is_valid_email_address
 from DateTime import DateTime
@@ -15,9 +13,10 @@ from plone.supermodel.directives import fieldset
 from senaite.patient import api as patient_api
 from senaite.patient import messageFactory as _
 from senaite.patient.config import GENDERS
+from six import string_types
 from zope import schema
-from zope.interface import Invalid
 from zope.interface import implementer
+from zope.interface import Invalid
 from zope.interface import invariant
 
 
@@ -132,12 +131,6 @@ class IPatient(model.Schema):
         required=False,
     )
 
-    age = schema.Int(
-        title=_(u"label_patient_age", default=u"Age"),
-        description=_(u"Patient age"),
-        required=False,
-    )
-
     @invariant
     def validate_mrn(data):
         """Checks if the patient MRN # is unique
@@ -240,26 +233,3 @@ class Patient(Item):
         else:
             value = None
         self.birthdate = value
-
-    def get_age(self):
-        """Calculate the Age from the birthdate
-        """
-        birthdate = self.birthdate
-        if not birthdate:
-            return None
-        now = datetime.now()
-        return now.year - birthdate.year
-
-    def set_age(self, value):
-        """Set the birthdate according to the age
-        """
-        if self.birthdate:
-            # age can not be edited when birthdate is set
-            return
-        if not value:
-            return
-        today = datetime.now()
-        year_of_birth = today.year - value
-        self.birthdate = datetime(year_of_birth, today.month, today.day)
-
-    age = property(get_age, set_age)

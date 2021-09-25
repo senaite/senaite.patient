@@ -92,7 +92,6 @@ WORKFLOW_TO_UPDATE = {
                 "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
-                    permissions.FieldEditAge: (),
                     permissions.FieldEditDateOfBirth: (),
                     permissions.FieldEditMRN: (),
                     permissions.FieldEditAddress: (),
@@ -104,7 +103,6 @@ WORKFLOW_TO_UPDATE = {
                 "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
-                    permissions.FieldEditAge: (),
                     permissions.FieldEditDateOfBirth: (),
                     permissions.FieldEditMRN: (),
                     permissions.FieldEditAddress: (),
@@ -116,7 +114,6 @@ WORKFLOW_TO_UPDATE = {
                 "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
-                    permissions.FieldEditAge: (),
                     permissions.FieldEditDateOfBirth: (),
                     permissions.FieldEditMRN: (),
                     permissions.FieldEditAddress: (),
@@ -128,7 +125,6 @@ WORKFLOW_TO_UPDATE = {
                 "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
-                    permissions.FieldEditAge: (),
                     permissions.FieldEditDateOfBirth: (),
                     permissions.FieldEditMRN: (),
                     permissions.FieldEditAddress: (),
@@ -140,7 +136,6 @@ WORKFLOW_TO_UPDATE = {
                 "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
-                    permissions.FieldEditAge: (),
                     permissions.FieldEditDateOfBirth: (),
                     permissions.FieldEditMRN: (),
                     permissions.FieldEditAddress: (),
@@ -152,7 +147,6 @@ WORKFLOW_TO_UPDATE = {
                 "preserve_transitions": True,
                 "permissions": {
                     # Field permissions (read-only)
-                    permissions.FieldEditAge: (),
                     permissions.FieldEditDateOfBirth: (),
                     permissions.FieldEditMRN: (),
                     permissions.FieldEditAddress: (),

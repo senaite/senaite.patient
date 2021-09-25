@@ -19,7 +19,6 @@
 # Some rights reserved, see README and LICENSE.
 
 import six
-
 from AccessControl import ClassSecurityInfo
 from bika.lims.fields import ExtensionField
 from Products.Archetypes.Field import ObjectField

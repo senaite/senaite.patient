@@ -24,6 +24,8 @@ from bika.lims.idserver import generateUniqueId
 from Products.Archetypes.Registry import registerWidget
 from Products.Archetypes.Widget import StringWidget
 from Products.Archetypes.Widget import TypesWidget
+from senaite.core.browser.widgets import DateTimeWidget
+from senaite.patient import api as patient_api
 from senaite.patient.config import AUTO_ID_MARKER
 
 
@@ -68,5 +70,66 @@ class TemporaryIdentifierWidget(TypesWidget):
         return value, {}
 
 
+class AgeDoBWidget(DateTimeWidget):
+    """A widget for the introduction of Age and/or Date of Birth.
+    When Age is introduced, the Date of Birth is calculated automatically.
+    """
+    security = ClassSecurityInfo()
+    _properties = DateTimeWidget._properties.copy()
+    _properties.update({
+        "show_time": False,
+        "default_age": True,
+        "macro": "senaite_patient_widgets/agedobwidget",
+    })
+
+    def get_current_age(self, dob):
+        """Returns a dict with keys "years", "months", "days"
+        """
+        if not api.is_date(dob):
+            return {}
+
+        delta = patient_api.get_relative_delta(dob)
+        return {
+            "years": delta.years,
+            "months": delta.months,
+            "days": delta.days,
+        }
+
+    def process_form(self, instance, field, form, empty_marker=None,
+                     emptyReturnsMarker=False, validating=True):
+
+        value = form.get(field.getName())
+
+        # Not interested in the hidden field, but in the age + dob specific
+        if isinstance(value, (list, tuple)):
+            value = value[0] or None
+
+        # Allow non-required fields
+        if not value:
+            return None, {}
+
+        # Grab the input for DoB first
+        dob = value.get("dob", "")
+        dob = patient_api.to_datetime(dob)
+
+        # Maybe user entered age instead of DoB
+        if value.get("selector") == "age":
+            # Validate the age entered
+            ymd = map(lambda p: value.get(p), ["years", "months", "days"])
+            if not any(ymd):
+                # No values set
+                return None
+
+            # Age in ymd format
+            ymd = filter(lambda p: p[0], zip(ymd, 'ymd'))
+            ymd = "".join(map(lambda p: "".join(p), ymd))
+
+            # Calculate the DoB
+            dob = patient_api.get_birth_date(ymd)
+
+        return dob, {}
+
+
 # Register widgets
 registerWidget(TemporaryIdentifierWidget, title="TemporaryIdentifierWidget")
+registerWidget(AgeDoBWidget, title="AgeDoBWidget")
