@@ -40,11 +40,6 @@
       <role name="LabManager"/>
       <role name="Manager"/>
     </permission>
-    <permission name="senaite.patient: Field: Edit Age" acquire="False">
-      <role name="LabClerk"/>
-      <role name="LabManager"/>
-      <role name="Manager"/>
-    </permission>
     <permission name="senaite.patient: Field: Edit Gender" acquire="False">
       <role name="LabClerk"/>
       <role name="LabManager"/>

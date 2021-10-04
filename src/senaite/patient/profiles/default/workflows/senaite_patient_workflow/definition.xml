@@ -27,7 +27,6 @@
   <permission>senaite.patient: Field: Edit Fullname</permission>
   <permission>senaite.patient: Field: Edit Gender</permission>
   <permission>senaite.patient: Field: Edit Date of Birth</permission>
-  <permission>senaite.patient: Field: Edit Age</permission>
   <permission>senaite.patient: Field: Edit Address</permission>
 
   <!-- senaite.patient: Transition permissions -->
@@ -50,7 +49,6 @@
     <permission-map name="senaite.patient: Field: Edit Fullname" acquired="True" />
     <permission-map name="senaite.patient: Field: Edit Gender" acquired="True" />
     <permission-map name="senaite.patient: Field: Edit Date of Birth" acquired="True" />
-    <permission-map name="senaite.patient: Field: Edit Age" acquired="True" />
     <permission-map name="senaite.patient: Field: Edit Address" acquired="True" />
     <!-- senaite.spatient Transition permissions -->
     <permission-map name="senaite.patient: Transition: Deactivate" acquired="True" />
@@ -71,7 +69,6 @@
     <permission-map name="senaite.patient: Field: Edit Fullname" acquired="False" />
     <permission-map name="senaite.patient: Field: Edit Gender" acquired="False" />
     <permission-map name="senaite.patient: Field: Edit Date of Birth" acquired="False" />
-    <permission-map name="senaite.patient: Field: Edit Age" acquired="False" />
     <permission-map name="senaite.patient: Field: Edit Address" acquired="False" />
     <!-- senaite.spatient Transition permissions -->
     <permission-map name="senaite.patient: Transition: Activate" acquired="True" />
