@@ -59,6 +59,7 @@ Variables:
     >>> request = self.request
     >>> setup = api.get_setup()
     >>> patients = portal.patients
+    >>> birthdate = DateTime("1980-02-25")
 
 We need to create some basic objects for the test:
 
@@ -78,7 +79,7 @@ Patient Sample Integration
 
 Create a new sample:
 
-    >>> sample = new_sample([MC, MS], client, contact, sampletype, MedicalRecordNumber={"value": "4711"}, PatientFullName="Clark Kent", Gender="m", DateOfBirth="1980-02-25")
+    >>> sample = new_sample([MC, MS], client, contact, sampletype, MedicalRecordNumber={"value": "4711"}, PatientFullName="Clark Kent", Gender="m", DateOfBirth=birthdate)
     >>> api.get_workflow_status_of(sample)
     'sample_due'
 
