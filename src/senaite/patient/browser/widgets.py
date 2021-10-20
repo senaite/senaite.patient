@@ -108,6 +108,12 @@ class AgeDoBWidget(DateTimeWidget):
         if not value:
             return None, {}
 
+        # handle DateTime object when creating partitions
+        if api.is_date(value):
+            # switch to birthdate display in widget
+            self.default_age = False
+            return value, {}
+
         # Grab the input for DoB first
         dob = value.get("dob", "")
         dob = patient_api.to_datetime(dob)
