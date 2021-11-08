@@ -17,6 +17,20 @@ class IPatientControlPanel(Interface):
         default=True,
     )
 
+    verify_temp_mrn = schema.Bool(
+        title=_(u"Allow to verify samples with a temporary MRN"),
+        description=_(u"If selected, users will be able to verify samples "
+                      u"that have a Patient assigned with a temporary Medical "
+                      u"Record Number (MRN).")
+    )
+
+    publish_temp_mrn = schema.Bool(
+        title=_(u"Allow to publish samples with a temporary MRN"),
+        description=_(u"If selected, users will be able to publish samples "
+                      u"that have a Patient assigned with a temporary Medical "
+                      u"Record Number (MRN).")
+    )
+
 
 class PatientControlPanelForm(RegistryEditForm):
     schema = IPatientControlPanel

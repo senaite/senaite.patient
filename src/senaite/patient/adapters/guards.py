@@ -18,6 +18,7 @@
 # Copyright 2020 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+from bika.lims import api
 from bika.lims.interfaces import IGuardAdapter
 from senaite.patient import check_installed
 from zope.interface import implements
@@ -42,4 +43,10 @@ class SampleGuardAdapter(object):
     def guard_verify(self):
         """Returns true if the Medical Record Number is not temporary
         """
-        return not self.context.isMedicalRecordTemporary()
+        temp_mrn = self.context.isMedicalRecordTemporary()
+        if temp_mrn:
+            # Check whether users can verify samples with a temporary MRN
+            if not api.get_registry_record("senaite.patient.verify_temp_mrn"):
+                return False
+
+        return True
