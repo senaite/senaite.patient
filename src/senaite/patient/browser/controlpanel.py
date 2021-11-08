@@ -14,6 +14,7 @@ class IPatientControlPanel(Interface):
     require_patient = schema.Bool(
         title=_(u"Require Patient"),
         description=_("Require Patients in Samples"),
+        required=False,
         default=True,
     )
 
@@ -21,14 +22,18 @@ class IPatientControlPanel(Interface):
         title=_(u"Allow to verify samples with a temporary MRN"),
         description=_(u"If selected, users will be able to verify samples "
                       u"that have a Patient assigned with a temporary Medical "
-                      u"Record Number (MRN).")
+                      u"Record Number (MRN)."),
+        required=False,
+        default=False,
     )
 
     publish_temp_mrn = schema.Bool(
         title=_(u"Allow to publish samples with a temporary MRN"),
         description=_(u"If selected, users will be able to publish samples "
                       u"that have a Patient assigned with a temporary Medical "
-                      u"Record Number (MRN).")
+                      u"Record Number (MRN)."),
+        required=False,
+        default=False,
     )
 
 

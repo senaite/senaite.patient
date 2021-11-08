@@ -37,6 +37,7 @@
   <include package=".content" />
   <include package=".monkeys" />
   <include package=".subscribers" />
+  <include package=".upgrade" />
 
   <!-- Default profile -->
   <genericsetup:registerProfile
