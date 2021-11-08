@@ -41,12 +41,22 @@ class SampleGuardAdapter(object):
         return True
 
     def guard_verify(self):
-        """Returns true if the Medical Record Number is not temporary
+        """Returns whether the sample can be verified
         """
         temp_mrn = self.context.isMedicalRecordTemporary()
         if temp_mrn:
             # Check whether users can verify samples with a temporary MRN
             if not api.get_registry_record("senaite.patient.verify_temp_mrn"):
+                return False
+
+        return True
+
+    def guard_publish(self):
+        """Returns whether the sample can be published
+        """
+        temp_mrn = self.context.isMedicalRecordTemporary()
+        if temp_mrn:
+            if not api.get_registry_record("senaite.patient.publish_temp_mrn"):
                 return False
 
         return True
