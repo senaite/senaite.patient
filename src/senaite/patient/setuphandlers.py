@@ -18,15 +18,11 @@
 # Copyright 2020 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-import time
-
-import transaction
 from bika.lims import api
-from bika.lims.catalog import CATALOG_ANALYSIS_REQUEST_LISTING
-from bika.lims.catalog.catalog_utilities import addZCTextIndex
 from plone.registry.interfaces import IRegistry
 from Products.DCWorkflow.Guard import Guard
-from Products.ZCatalog.ProgressHandler import ZLogHandler
+from senaite.core.catalog import SAMPLE_CATALOG
+from senaite.core.setuphandlers import setup_other_catalogs
 from senaite.core.workflow import SAMPLE_WORKFLOW
 from senaite.patient import PRODUCT_NAME
 from senaite.patient import logger
@@ -46,8 +42,8 @@ CATALOGS_BY_TYPE = [
 
 # Tuples of (catalog, index_name, index_type)
 INDEXES = [
-    (CATALOG_ANALYSIS_REQUEST_LISTING, "is_temporary_mrn", "BooleanIndex"),
-    (CATALOG_ANALYSIS_REQUEST_LISTING, "medical_record_number", "KeywordIndex"),
+    (SAMPLE_CATALOG, "is_temporary_mrn", "BooleanIndex"),
+    (SAMPLE_CATALOG, "medical_record_number", "KeywordIndex"),
     (PATIENT_CATALOG, "patient_mrn", "FieldIndex"),
     (PATIENT_CATALOG, "patient_email", "FieldIndex"),
     (PATIENT_CATALOG, "patient_fullname", "FieldIndex"),
@@ -56,9 +52,9 @@ INDEXES = [
 
 # Tuples of (catalog, column_name)
 COLUMNS = [
-    (CATALOG_ANALYSIS_REQUEST_LISTING, "isMedicalRecordTemporary"),
-    (CATALOG_ANALYSIS_REQUEST_LISTING, "getMedicalRecordNumberValue"),
-    (CATALOG_ANALYSIS_REQUEST_LISTING, "getPatientFullName"),
+    (SAMPLE_CATALOG, "isMedicalRecordTemporary"),
+    (SAMPLE_CATALOG, "getMedicalRecordNumberValue"),
+    (SAMPLE_CATALOG, "getPatientFullName"),
     (PATIENT_CATALOG, "mrn"),
 ]
 
@@ -175,7 +171,7 @@ def setup_handler(context):
     setup_navigation_types(portal)
 
     # Setup catalogs
-    setup_catalogs(portal)
+    setup_other_catalogs(portal)
 
     # Apply ID format to content types
     setup_id_formatting(portal)
@@ -273,93 +269,6 @@ def setup_id_formatting(portal, format_definition=None):
         ids.append(record)
     ids.append(format_definition)
     bs.setIDFormatting(ids)
-
-
-def setup_catalogs(portal):
-    """Setup catalogs
-    """
-    logger.info("Setup Catalogs ...")
-
-    # Setup catalogs by type
-    logger.info("Setup Catalogs by type ...")
-    for type_name, catalogs in CATALOGS_BY_TYPE:
-        at = api.get_tool("archetype_tool")
-        # get the current registered catalogs
-        current_catalogs = at.getCatalogsByType(type_name)
-        # get the desired catalogs this type should be in
-        desired_catalogs = map(api.get_tool, catalogs)
-        # check if the catalogs changed for this portal_type
-        if set(desired_catalogs).difference(current_catalogs):
-            # fetch the brains to reindex
-            brains = api.search({"portal_type": type_name})
-            # updated the catalogs
-            at.setCatalogsByType(type_name, catalogs)
-            logger.info("Assign '%s' type to Catalogs %s" %
-                        (type_name, catalogs))
-            for brain in brains:
-                obj = api.get_object(brain)
-                logger.info("Reindexing '%s'" % repr(obj))
-                obj.reindexObject()
-
-    # Setup catalog indexes
-    logger.info("Setup indexes ...")
-    to_index = {}
-    for catalog, name, meta_type in INDEXES:
-        c = api.get_tool(catalog)
-        indexes = c.indexes()
-        if name in indexes:
-            logger.info("Index '%s' already in Catalog [SKIP]" % name)
-            continue
-
-        logger.info("Adding Index '%s' for field '%s' to catalog '%s"
-                    % (meta_type, name, catalog))
-        if meta_type == "ZCTextIndex":
-            addZCTextIndex(c, name)
-        else:
-            c.addIndex(name, meta_type)
-
-        if catalog not in to_index:
-            to_index[catalog] = [name, ]
-        else:
-            to_index[catalog].append(name)
-
-        logger.info("Added Index '%s' for field '%s' to catalog [DONE]"
-                    % (meta_type, name))
-
-    for catalog, names in to_index.items():
-        start = time.time()
-        logger.info("Indexing new index/es from {}: {} ..."
-                    .format(catalog, ", ".join(names)))
-        handler = ZLogHandler(steps=100)
-        c = api.get_tool(catalog)
-        c.reindexIndex(names, None, handler)
-        end = time.time()
-        if (end-start) > MAX_SEC_THRESHOLD:
-            commit_transaction(portal)
-
-    # Setup catalog metadata columns
-    for catalog, name in COLUMNS:
-        c = api.get_tool(catalog)
-        if name not in c.schema():
-            logger.info("Adding Column '%s' to catalog '%s' ..."
-                        % (name, catalog))
-            c.addColumn(name)
-            logger.info("Added Column '%s' to catalog '%s' [DONE]"
-                        % (name, catalog))
-        else:
-            logger.info("Column '%s' already in catalog '%s'  [SKIP]"
-                        % (name, catalog))
-            continue
-    logger.info("Setup Catalogs [DONE]")
-
-
-def commit_transaction(portal):
-    start = time.time()
-    logger.info("Commit transaction ...")
-    transaction.commit()
-    end = time.time()
-    logger.info("Commit transaction ... Took {:.2f}s [DONE]"
-                .format(end - start))
 
 
 def setup_workflow(portal):
