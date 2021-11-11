@@ -27,7 +27,7 @@ from senaite.core.workflow import SAMPLE_WORKFLOW
 from senaite.patient import PRODUCT_NAME
 from senaite.patient import logger
 from senaite.patient import permissions
-from senaite.patient.config import PATIENT_CATALOG
+from senaite.patient.catalog import PATIENT_CATALOG
 from zope.component import getUtility
 
 PROFILE_ID = "profile-{}:default".format(PRODUCT_NAME)
@@ -40,10 +40,6 @@ MAX_SEC_THRESHOLD = 300
 INDEXES = [
     (SAMPLE_CATALOG, "is_temporary_mrn", "", "BooleanIndex"),
     (SAMPLE_CATALOG, "medical_record_number", "", "KeywordIndex"),
-    (PATIENT_CATALOG, "patient_mrn", "", "FieldIndex"),
-    (PATIENT_CATALOG, "patient_email", "", "FieldIndex"),
-    (PATIENT_CATALOG, "patient_fullname", "", "FieldIndex"),
-    (PATIENT_CATALOG, "patient_searchable_text", "", "ZCTextIndex"),
 ]
 
 # Tuples of (catalog, column_name)
@@ -51,7 +47,6 @@ COLUMNS = [
     (SAMPLE_CATALOG, "isMedicalRecordTemporary"),
     (SAMPLE_CATALOG, "getMedicalRecordNumberValue"),
     (SAMPLE_CATALOG, "getPatientFullName"),
-    (PATIENT_CATALOG, "mrn"),
 ]
 
 NAVTYPES = [
