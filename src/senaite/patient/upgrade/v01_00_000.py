@@ -18,13 +18,31 @@
 # Copyright 2020-2021 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-from senaite.patient import logger
-from senaite.patient.config import PRODUCT_NAME
-from senaite.patient.setuphandlers import PROFILE_ID
+from bika.lims import api
+from senaite.core.api.catalog import del_column
+from senaite.core.api.catalog import del_index
+from senaite.core.api.catalog import get_columns
+from senaite.core.api.catalog import get_indexes
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
+from senaite.patient import logger
+from senaite.patient.catalog import PATIENT_CATALOG
+from senaite.patient.config import PRODUCT_NAME
+from senaite.patient.setuphandlers import PROFILE_ID
+from senaite.patient.setuphandlers import setup_catalogs
 
 version = "1.0.0"
+
+DELETE_INDEXES = (
+    ("portal_catalog", "patient_mrn"),
+    ("portal_catalog", "patient_email"),
+    ("portal_catalog", "patient_fullname"),
+    ("portal_catalog", "patient_searchable_text"),
+)
+
+DELETE_COLUMNS = (
+    ("portal_catalog", "mrn"),
+)
 
 
 @upgradestep(PRODUCT_NAME, version)
@@ -47,5 +65,41 @@ def upgrade(tool):
     # Allow/Disallow to verify/publish samples with temporary MRN
     setup.runImportStepFromProfile(PROFILE_ID, "plone.app.registry")
 
+    # https://github.com/senaite/senaite.patient/pull/14
+    migrate_to_patient_catalog(portal)
+
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True
+
+
+def migrate_to_patient_catalog(portal):
+    """Migrate portal_catalog -> patient_catalog
+    """
+    logger.info("Migrate patient catalog...")
+
+    # 1. Setup catalogs
+    setup_catalogs(portal)
+
+    # 2. Clean up indexes
+    for catalog_id, idx_id in DELETE_INDEXES:
+        catalog = api.get_tool(catalog_id)
+        indexes = get_indexes(catalog)
+        if idx_id in indexes:
+            del_index(catalog, idx_id)
+            logger.info("Deleted index '%s' from catalog '%s'"
+                        % (idx_id, catalog_id))
+
+    # 3. Clean up columns
+    for catalog_id, column in DELETE_COLUMNS:
+        catalog = api.get_tool(catalog_id)
+        columns = get_columns(catalog)
+        if column in columns:
+            del_column(catalog, column)
+            logger.info("Deleted column '%s' from catalog '%s'"
+                        % (column, catalog_id))
+
+    # 4. Reindex patient catalog
+    patient_catalog = api.get_tool(PATIENT_CATALOG)
+    patient_catalog.clearFindAndRebuild()
+
+    logger.info("Migrate patient catalog [DONE]")
