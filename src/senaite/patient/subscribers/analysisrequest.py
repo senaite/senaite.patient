@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from bika.lims import api
-from DateTime import DateTime
 from senaite.patient import api as patient_api
 from senaite.patient import check_installed
 from senaite.patient import logger
