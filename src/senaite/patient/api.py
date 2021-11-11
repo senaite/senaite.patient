@@ -56,8 +56,6 @@ def get_patient_by_mrn(mrn, full_object=True, include_inactive=False):
 
 def get_patient_catalog():
     """Returns the patient catalog
-
-    Currently `portal_catalog`
     """
     return api.get_tool(PATIENT_CATALOG)
 
