@@ -36,11 +36,7 @@ PROFILE_ID = "profile-{}:default".format(PRODUCT_NAME)
 # Default: 300 (5 minutes)
 MAX_SEC_THRESHOLD = 300
 
-# Tuples of (type, [catalog])
-CATALOGS_BY_TYPE = [
-]
-
-# Tuples of (catalog, index_name, index_type)
+# Tuples of (catalog, index_name, index_attribute, index_type)
 INDEXES = [
     (SAMPLE_CATALOG, "is_temporary_mrn", "", "BooleanIndex"),
     (SAMPLE_CATALOG, "medical_record_number", "", "KeywordIndex"),
