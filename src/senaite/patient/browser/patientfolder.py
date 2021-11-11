@@ -4,11 +4,11 @@ import collections
 
 from bika.lims import api
 from bika.lims import senaiteMessageFactory as _
-from bika.lims.utils import get_link
 from bika.lims.utils import get_email_link
+from bika.lims.utils import get_link
 from senaite.app.listing.view import ListingView
 from senaite.patient import messageFactory as _sp
-from senaite.patient.config import PATIENT_CATALOG
+from senaite.patient.catalog import PATIENT_CATALOG
 
 
 class PatientFolderView(ListingView):
