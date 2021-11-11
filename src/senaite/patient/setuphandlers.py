@@ -42,12 +42,12 @@ CATALOGS_BY_TYPE = [
 
 # Tuples of (catalog, index_name, index_type)
 INDEXES = [
-    (SAMPLE_CATALOG, "is_temporary_mrn", "BooleanIndex"),
-    (SAMPLE_CATALOG, "medical_record_number", "KeywordIndex"),
-    (PATIENT_CATALOG, "patient_mrn", "FieldIndex"),
-    (PATIENT_CATALOG, "patient_email", "FieldIndex"),
-    (PATIENT_CATALOG, "patient_fullname", "FieldIndex"),
-    (PATIENT_CATALOG, "patient_searchable_text", "ZCTextIndex"),
+    (SAMPLE_CATALOG, "is_temporary_mrn", "", "BooleanIndex"),
+    (SAMPLE_CATALOG, "medical_record_number", "", "KeywordIndex"),
+    (PATIENT_CATALOG, "patient_mrn", "", "FieldIndex"),
+    (PATIENT_CATALOG, "patient_email", "", "FieldIndex"),
+    (PATIENT_CATALOG, "patient_fullname", "", "FieldIndex"),
+    (PATIENT_CATALOG, "patient_searchable_text", "", "ZCTextIndex"),
 ]
 
 # Tuples of (catalog, column_name)
@@ -171,7 +171,7 @@ def setup_handler(context):
     setup_navigation_types(portal)
 
     # Setup catalogs
-    setup_other_catalogs(portal)
+    setup_other_catalogs(portal, indexes=INDEXES, columns=COLUMNS)
 
     # Apply ID format to content types
     setup_id_formatting(portal)
