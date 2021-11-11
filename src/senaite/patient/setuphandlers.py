@@ -47,7 +47,7 @@ INDEXES = [
     (PATIENT_CATALOG, "patient_mrn", "FieldIndex"),
     (PATIENT_CATALOG, "patient_email", "FieldIndex"),
     (PATIENT_CATALOG, "patient_fullname", "FieldIndex"),
-    (PATIENT_CATALOG, "patient_searchable_text", "TextIndexNG3"),
+    (PATIENT_CATALOG, "patient_searchable_text", "ZCTextIndex"),
 ]
 
 # Tuples of (catalog, column_name)
