@@ -123,7 +123,7 @@ class TemporaryIdentifierWidgetController
 
       # map patient fields -> Sample fields
       record = {
-        "PatientFullName": data.Title,
+        "PatientFullName": data.fullname,
         "PatientAddress": address.join(", "),
         "DateOfBirth": @format_date(data.birthdate),
         "Age": data.age,
@@ -250,9 +250,7 @@ class TemporaryIdentifierWidgetController
 
     # Fields to include on search results
     fields = [
-      "Title"
-      "name"
-      "surname"
+      "fullname"
       "age"
       "birthdate"
       "gender"
