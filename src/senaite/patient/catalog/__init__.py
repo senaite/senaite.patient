@@ -17,3 +17,5 @@
 #
 # Copyright 2020 by it's authors.
 # Some rights reserved, see README and LICENSE.
+
+from senaite.patient.catalog.patient_catalog import CATALOG_ID as PATIENT_CATALOG  # noqa

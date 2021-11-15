@@ -2,6 +2,8 @@
 
 from datetime import datetime
 
+from six import string_types
+
 from bika.lims import api
 from bika.lims.api.mail import is_valid_email_address
 from DateTime import DateTime
@@ -12,11 +14,11 @@ from plone.supermodel import model
 from plone.supermodel.directives import fieldset
 from senaite.patient import api as patient_api
 from senaite.patient import messageFactory as _
+from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
-from six import string_types
 from zope import schema
-from zope.interface import implementer
 from zope.interface import Invalid
+from zope.interface import implementer
 from zope.interface import invariant
 
 
@@ -161,6 +163,7 @@ class IPatient(model.Schema):
 class Patient(Item):
     """Results Interpretation Template content
     """
+    _catalogs = [PATIENT_CATALOG]
 
     def Title(self):
         fullname = self.get_fullname()

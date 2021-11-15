@@ -18,6 +18,7 @@
 # Copyright 2020 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+from senaite.core.interfaces import ISenaiteCatalogObject
 from senaite.lims.interfaces import ISenaiteLIMS
 
 
@@ -26,4 +27,9 @@ class ISenaitePatientLayer(ISenaiteLIMS):
     This interface is referred in profiles/default/browserlayer.xml.
     All views and viewlets register against this layer will appear in the site
     only when the add-on installer has been run.
+    """
+
+
+class IPatientCatalog(ISenaiteCatalogObject):
+    """Marker interface for Patient Catalog
     """

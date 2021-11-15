@@ -43,10 +43,10 @@
       <script id="existing-identifier" type="text/x-handlebars-template">
         <div title="Existing identifier" i18n:attributes="title">
           <p i18n:translate="">
-            A record for <strong>{{identifier}}</strong> exists already.
+            A record for <strong>{{mrn}}</strong> exists already.
           </p>
           <div class="dialog-listing">
-            <div>{{Title}}</div>
+            <div>{{fullname}}</div>
             <div>{{address}}</div>
           </div>
           <p i18n:translate="">
@@ -60,7 +60,7 @@
             An <strong>inactive</strong> record for <strong>{{identifier}}</strong> exists already.
           </p>
           <div class="dialog-listing">
-            <div>{{Title}}</div>
+            <div>{{fullname}}</div>
             <div>{{address}}</div>
           </div>
           <p i18n:translate="">
