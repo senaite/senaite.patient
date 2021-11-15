@@ -250,6 +250,7 @@ class TemporaryIdentifierWidgetController
 
     # Fields to include on search results
     fields = [
+      "mrn"
       "fullname"
       "age"
       "birthdate"
