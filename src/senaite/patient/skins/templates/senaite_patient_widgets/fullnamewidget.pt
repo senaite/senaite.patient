@@ -7,10 +7,22 @@
   <body>
 
     <metal:view_macro define-macro="view">
-      <tal:values define="value      python: field.getAccessor(here)() or {};
+      <tal:values define="value      python: field.getAccessor(here)();
                           firstname python: value.get('firstname', '');
-                          lastname  python: value.get('lastname', '');">
-        <span tal:content="python: ''.join([firstname, lastname]).strip()"/>
+                          lastname  python: value.get('lastname', '');
+                          fullname python: filter(None, [firstname, lastname]);
+                          fullname python: ' '.join(fullname).strip();
+                          entry_mode python: field.widget.entry_mode or 'parts';
+                          view_format python: field.widget.view_format;
+                          fullname_mode python: entry_mode in ['full', 'fullname'];">
+        <tal:with_value tal:condition="value">
+          <span tal:condition="not:fullname_mode"
+                tal:content="python: view_format % value"/>
+          <span tal:condition="fullname_mode"
+                tal:content="fullname"/>
+        </tal:with_value>
+
+        <span tal:condition="not:value"/>
       </tal:values>
     </metal:view_macro>
 

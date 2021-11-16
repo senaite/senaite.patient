@@ -147,6 +147,7 @@ class FullnameWidget(TypesWidget):
     _properties.update({
         "macro": "senaite_patient_widgets/fullnamewidget",
         "entry_mode": "parts",
+        "view_format": "%(firstname)s %(lastname)s",
         "size": "15",
     })
 

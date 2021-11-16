@@ -23,7 +23,6 @@ from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
 from bika.lims.browser.widgets import SelectionWidget
 from bika.lims.fields import ExtDateTimeField
-from bika.lims.fields import ExtLinesField
 from bika.lims.fields import ExtStringField
 from bika.lims.interfaces import IAnalysisRequest
 from Products.Archetypes.Widget import StringWidget
@@ -90,6 +89,7 @@ PatientNameField = FullnameField(
     widget=FullnameWidget(
         label=_("Patient name"),
         entry_mode="parts",
+        view_format="%(firstname)s %(lastname)s",
         render_own_label=True,
         visible={
             "add": "edit",
