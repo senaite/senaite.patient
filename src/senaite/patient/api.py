@@ -25,6 +25,17 @@ def is_patient_required():
     return True
 
 
+def get_patient_name_entry_mode():
+    """Returns the entry mode for patient name
+    """
+    entry_mode = api.get_registry_record(
+        "senaite.patient.patient_entry_mode")
+    if not entry_mode:
+        # Default to firstname + fullname
+        entry_mode = "parts"
+    return entry_mode
+
+
 def get_patient_by_mrn(mrn, full_object=True, include_inactive=False):
     """Get a patient by Medical Record Number
 

@@ -19,3 +19,8 @@ GENDERS = (
     ("d", _("Diverse")),
     ("", _("Not Specified")),
 )
+
+NAME_ENTRY_MODES = (
+    ("parts", _("First name + last name")),
+    ("full", _("Fullname")),
+)
