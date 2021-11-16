@@ -23,6 +23,7 @@ from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
 from bika.lims.browser.widgets import SelectionWidget
 from bika.lims.fields import ExtDateTimeField
+from bika.lims.fields import ExtLinesField
 from bika.lims.fields import ExtStringField
 from bika.lims.interfaces import IAnalysisRequest
 from Products.Archetypes.Widget import StringWidget
@@ -30,8 +31,10 @@ from Products.CMFCore.permissions import View
 from senaite.patient import messageFactory as _
 from senaite.patient.api import is_patient_required
 from senaite.patient.browser.widgets import AgeDoBWidget
+from senaite.patient.browser.widgets import FullnameWidget
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.config import GENDERS
+from senaite.patient.content.fields import FullnameField
 from senaite.patient.content.fields import TemporaryIdentifierField
 from senaite.patient.interfaces import ISenaitePatientLayer
 from senaite.patient.permissions import FieldEditAddress
@@ -45,6 +48,7 @@ from zope.interface import implementer
 MAYBE_REQUIRED_FIELDS = [
     "MedicalRecordNumber",
     "PatientFullName",
+    "PatientName",
 ]
 
 MedicalRecordNumberField = TemporaryIdentifierField(
@@ -74,6 +78,21 @@ PatientFullNameField = ExtStringField(
         render_own_label=True,
         visible={
             'add': 'edit',
+        }
+    )
+)
+
+PatientNameField = FullnameField(
+    "PatientName",
+    required=True,
+    read_permission=View,
+    write_permission=FieldEditFullName,
+    widget=FullnameWidget(
+        label=_("Patient name"),
+        entry_mode="parts",
+        render_own_label=True,
+        visible={
+            "add": "edit",
         }
     )
 )
@@ -139,6 +158,7 @@ class AnalysisRequestSchemaExtender(object):
     def getFields(self):
         return [
             MedicalRecordNumberField,
+            PatientNameField,
             PatientFullNameField,
             PatientAddressField,
             DateOfBirthField,

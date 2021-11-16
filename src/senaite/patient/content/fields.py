@@ -23,6 +23,7 @@ from AccessControl import ClassSecurityInfo
 from bika.lims.fields import ExtensionField
 from Products.Archetypes.Field import ObjectField
 from senaite.patient import api as patient_api
+from senaite.patient.browser.widgets import FullnameWidget
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.config import AUTO_ID_MARKER
 from senaite.patient.config import PATIENT_CATALOG
@@ -59,3 +60,22 @@ class TemporaryIdentifierField(ExtensionField, ObjectField):
         if not mrn:
             return None
         return patient_api.get_patient_by_mrn(mrn, include_inactive=True)
+
+
+class FullnameField(ExtensionField, ObjectField):
+    """ObjectField extender that stores a dictionary with two keys ('firstname'
+    and 'lastname') that represent the fullname of a person
+    """
+    _properties = ObjectField._properties.copy()
+    _properties.update({
+        "type": "fullname",
+        "default": None,
+        "widget": FullnameWidget,
+    })
+    security = ClassSecurityInfo()
+
+    def get(self, instance, **kwargs):
+        val = super(FullnameField, self).get(instance, **kwargs)
+        if isinstance(val, six.string_types):
+            val = {"firstname": val, "lastname": ""}
+        return val

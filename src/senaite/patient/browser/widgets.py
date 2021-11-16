@@ -18,6 +18,7 @@
 # Copyright 2020 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+import six
 from AccessControl import ClassSecurityInfo
 from bika.lims import api
 from bika.lims.idserver import generateUniqueId
@@ -25,6 +26,7 @@ from Products.Archetypes.Registry import registerWidget
 from Products.Archetypes.Widget import StringWidget
 from Products.Archetypes.Widget import TypesWidget
 from senaite.core.browser.widgets import DateTimeWidget
+from senaite.core.browser.widgets import RecordsWidget
 from senaite.patient import api as patient_api
 from senaite.patient.config import AUTO_ID_MARKER
 
@@ -136,6 +138,48 @@ class AgeDoBWidget(DateTimeWidget):
         return dob, {}
 
 
+class FullnameWidget(TypesWidget):
+    """A widget for the introduction of person name, either fullname or the
+    combination of firstname + lastname
+    """
+    security = ClassSecurityInfo()
+    _properties = TypesWidget._properties.copy()
+    _properties.update({
+        "macro": "senaite_patient_widgets/fullnamewidget",
+        "entry_mode": "parts",
+        "size": "15",
+    })
+
+    def process_form(self, instance, field, form, empty_marker=None,
+                     emptyReturnsMarker=False, validating=True):
+
+        value = form.get(field.getName())
+        firstname = ""
+        lastname = ""
+
+        if isinstance(value, (list, tuple)):
+            value = value[0] or None
+
+        # handle string as fullname direct entry
+        if isinstance(value, six.string_types):
+            firstname = value.strip()
+
+        elif isinstance(value, dict):
+            firstname = value.get("firstname", "").strip()
+            lastname = value.get("lastname", "").strip()
+
+        # Allow non-required fields
+        if not any([firstname, lastname]):
+            return None, {}
+
+        output = {
+            "firstname": firstname,
+            "lastname": lastname,
+        }
+        return output, {}
+
+
 # Register widgets
 registerWidget(TemporaryIdentifierWidget, title="TemporaryIdentifierWidget")
 registerWidget(AgeDoBWidget, title="AgeDoBWidget")
+registerWidget(FullnameWidget, title="FullnameWidget")

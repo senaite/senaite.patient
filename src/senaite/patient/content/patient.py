@@ -64,6 +64,18 @@ class IPatient(model.Schema):
         required=False,
     )
 
+    firstname = schema.TextLine(
+        title=_(u"label_patient_firstname", default=u"Firstname"),
+        description=_(u"Patient firstname"),
+        required=False,
+    )
+
+    lastname = schema.TextLine(
+        title=_(u"label_patient_lastname", default=u"Lastname"),
+        description=_(u"Patient lastname"),
+        required=False,
+    )
+
     fullname = schema.TextLine(
         title=_(u"label_patient_fullname", default=u"Fullname"),
         description=_(u"Patient fullname"),
@@ -183,10 +195,9 @@ class Patient(Item):
         self.mrn = value
 
     def get_fullname(self):
-        fullname = self.fullname
-        if not fullname:
-            return ""
-        return fullname.strip()
+        # Create the fullname from firstname + lastname
+        full = filter(None, [self.firstname, self.lastname])
+        return " ".join(full).strip()
 
     def set_fullname(self, value):
         if not isinstance(value, string_types):
