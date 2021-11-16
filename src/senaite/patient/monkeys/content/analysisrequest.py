@@ -50,7 +50,7 @@ def getMedicalRecordNumberValue(self):  # noqa camelcase, but compliant with AT'
 def getPatientFullName(self):  # noqa camelcase
     """Returns the patient's full name
     """
-    return self.getField("PatientFullName").get(self)
+    return self.getField("PatientFullName").get_fullname(self)
 
 
 @check_installed(None)

@@ -79,3 +79,16 @@ class FullnameField(ExtensionField, ObjectField):
         if isinstance(val, six.string_types):
             val = {"firstname": val, "lastname": ""}
         return val
+
+    def get_firstname(self, instance):
+        val = self.get(instance) or {}
+        return val.get("firstname", "")
+
+    def get_lastname(self, instance):
+        val = self.get(instance) or {}
+        return val.get("lastname", "")
+
+    def get_fullname(self, instance):
+        firstname = self.get_firstname(instance)
+        lastname = self.get_lastname(instance)
+        return " ".join(filter(None, [firstname, lastname]))

@@ -47,7 +47,6 @@ from zope.interface import implementer
 MAYBE_REQUIRED_FIELDS = [
     "MedicalRecordNumber",
     "PatientFullName",
-    "PatientName",
 ]
 
 MedicalRecordNumberField = TemporaryIdentifierField(
@@ -67,22 +66,8 @@ MedicalRecordNumberField = TemporaryIdentifierField(
     )
 )
 
-PatientFullNameField = ExtStringField(
+PatientFullNameField = FullnameField(
     "PatientFullName",
-    required=True,
-    read_permission=View,
-    write_permission=FieldEditFullName,
-    widget=StringWidget(
-        label=_("Patient full name"),
-        render_own_label=True,
-        visible={
-            'add': 'edit',
-        }
-    )
-)
-
-PatientNameField = FullnameField(
-    "PatientName",
     required=True,
     read_permission=View,
     write_permission=FieldEditFullName,
@@ -158,7 +143,6 @@ class AnalysisRequestSchemaExtender(object):
     def getFields(self):
         return [
             MedicalRecordNumberField,
-            PatientNameField,
             PatientFullNameField,
             PatientAddressField,
             DateOfBirthField,

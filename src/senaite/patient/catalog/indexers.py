@@ -70,4 +70,5 @@ def patient_searchable_text(instance):
         instance.get_fullname(),
         instance.get_gender(),
     ]
+    searchable_text_tokens = filter(None, searchable_text_tokens)
     return u" ".join(searchable_text_tokens)

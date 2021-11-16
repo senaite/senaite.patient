@@ -26,7 +26,6 @@ from Products.Archetypes.Registry import registerWidget
 from Products.Archetypes.Widget import StringWidget
 from Products.Archetypes.Widget import TypesWidget
 from senaite.core.browser.widgets import DateTimeWidget
-from senaite.core.browser.widgets import RecordsWidget
 from senaite.patient import api as patient_api
 from senaite.patient.config import AUTO_ID_MARKER
 
@@ -165,7 +164,7 @@ class FullnameWidget(TypesWidget):
         if isinstance(value, six.string_types):
             firstname = value.strip()
 
-        elif isinstance(value, dict):
+        elif value:
             firstname = value.get("firstname", "").strip()
             lastname = value.get("lastname", "").strip()
 

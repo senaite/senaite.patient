@@ -129,7 +129,7 @@ Changing the patient data won't affect the values in a sample:
     >>> patient.get_fullname()
     u'Clark Kent'
 
-    >>> patient.set_fullname("Superman")
+    >>> patient.set_firstname("Superman")
 
     >>> patient.get_fullname()
     u'Superman'

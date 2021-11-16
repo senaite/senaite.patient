@@ -123,7 +123,8 @@ class TemporaryIdentifierWidgetController
 
       # map patient fields -> Sample fields
       record = {
-        "PatientFullName": data.fullname,
+        "PatientFullName.firstname": data.firstname,
+        "PatientFullName.lastname": data.lastname,
         "PatientAddress": address.join(", "),
         "DateOfBirth": @format_date(data.birthdate),
         "Age": data.age,
@@ -205,20 +206,32 @@ class TemporaryIdentifierWidgetController
   ###
   Returns the sibling field element with the specified name
   ###
-  get_sibling: (element, name) =>
+  get_sibling: (element, name, subfield='') =>
     field = name
     if @is_add_sample_form
       parent = element.closest("td[arnum]")
       sample_num = $(parent).attr "arnum"
       field = name+'-'+sample_num
-    document.querySelector('[name="'+field+'"]')
+
+    selector = '[name="'+field+'"]'
+    if subfield != ''
+      field = field+'.'+subfield
+      selector = '[name^="'+field+':"]'
+
+    document.querySelector(selector)
 
   ###
   Sets the value for an sibling field with specified base name
   ###
   set_sibling_value: (element, name, value) =>
     @debug "°°° TemporaryIdentifierWidget::set_sibling_value:name=#{ name },value=#{ value } °°°"
-    field = @get_sibling element, name
+    subfield = ''
+    if "." in name
+      split = name.split "."
+      name = split[0]
+      subfield = split[1]
+
+    field = @get_sibling element, name, subfield
     return unless field
     @debug ">>> #{ field.name } = #{ value } "
     field.value = value
@@ -251,7 +264,8 @@ class TemporaryIdentifierWidgetController
     # Fields to include on search results
     fields = [
       "mrn"
-      "fullname"
+      "firstname"
+      "lastname"
       "age"
       "birthdate"
       "gender"

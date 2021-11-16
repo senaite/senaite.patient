@@ -82,11 +82,9 @@ def update_patient(patient, **values):
     """Create a new patient
     """
     # set values explicitly
-    import pdb;pdb.set_trace()
     patient.set_mrn(values.get("mrn", api.get_id(patient)))
     patient.set_firstname(values.get("firstname", ""))
     patient.set_lastname(values.get("lastname", ""))
-    #patient.set_fullname(values.get("fullname", ""))
     patient.set_gender(values.get("gender", ""))
     patient.set_birthdate(values.get("birthdate"))
     patient.address = values.get("address")
