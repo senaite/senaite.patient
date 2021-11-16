@@ -68,6 +68,9 @@ def upgrade(tool):
     # https://github.com/senaite/senaite.patient/pull/14
     migrate_to_patient_catalog(portal)
 
+    # Firstname + lastname instead of fullname
+    fix_patients_fullname(portal)
+
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True
 
@@ -103,3 +106,22 @@ def migrate_to_patient_catalog(portal):
     patient_catalog.clearFindAndRebuild()
 
     logger.info("Migrate patient catalog [DONE]")
+
+
+def fix_patients_fullname(portal):
+    """Update the value of attribute 'firstname' with the value of 'fullname'
+    """
+    logger.info("Fixing patients full names ...")
+    for patient in portal.patients.objectValues():
+        if patient.get_firstname():
+            # This one has the value set already
+            continue
+
+        raw = patient.__dict__
+        firstname = raw.get("fullname", None)
+        if firstname:
+            patient.set_firstname(firstname)
+            del(patient.__dict__["fullname"])
+            patient.reindexObject()
+
+    logger.info("Fixing patients full names ... [DONE]")
