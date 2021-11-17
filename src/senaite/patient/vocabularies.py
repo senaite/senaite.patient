@@ -2,6 +2,7 @@
 
 from senaite.core.locales import COUNTRIES
 from senaite.patient.config import GENDERS
+from senaite.patient.config import NAME_ENTRY_MODES
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
@@ -39,3 +40,17 @@ class CountryVocabulary(object):
 
 
 CountryVocabularyFactory = CountryVocabulary()
+
+
+@implementer(IVocabularyFactory)
+class NameEntryModesVocabulary(object):
+
+    def __call__(self, context):
+        items = [
+            # value, token, title
+            SimpleTerm(value, value, title) for value, title in NAME_ENTRY_MODES
+        ]
+        return SimpleVocabulary(items)
+
+
+NameEntryModesVocabularyFactory = NameEntryModesVocabulary()

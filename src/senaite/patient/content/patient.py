@@ -64,9 +64,15 @@ class IPatient(model.Schema):
         required=False,
     )
 
-    fullname = schema.TextLine(
-        title=_(u"label_patient_fullname", default=u"Fullname"),
-        description=_(u"Patient fullname"),
+    firstname = schema.TextLine(
+        title=_(u"label_patient_firstname", default=u"Firstname"),
+        description=_(u"Patient firstname"),
+        required=False,
+    )
+
+    lastname = schema.TextLine(
+        title=_(u"label_patient_lastname", default=u"Lastname"),
+        description=_(u"Patient lastname"),
         required=False,
     )
 
@@ -182,16 +188,32 @@ class Patient(Item):
             raise ValueError("A patient with that MRN already exists!")
         self.mrn = value
 
-    def get_fullname(self):
-        fullname = self.fullname
-        if not fullname:
-            return ""
-        return fullname.strip()
+    def get_firstname(self):
+        firstname = self.firstname
+        if not firstname:
+            return u""
+        return firstname.strip()
 
-    def set_fullname(self, value):
+    def set_firstname(self, value):
         if not isinstance(value, string_types):
-            self.fullname = ""
-        self.fullname = api.safe_unicode(value)
+            self.firstname = ""
+        self.firstname = api.safe_unicode(value)
+
+    def get_lastname(self):
+        lastname = self.lastname
+        if not lastname:
+            return u""
+        return lastname.strip()
+
+    def set_lastname(self, value):
+        if not isinstance(value, string_types):
+            self.lastname = ""
+        self.lastname = api.safe_unicode(value)
+
+    def get_fullname(self):
+        # Create the fullname from firstname + lastname
+        full = filter(None, [self.firstname, self.lastname])
+        return " ".join(full).strip()
 
     def get_email(self):
         email = self.email

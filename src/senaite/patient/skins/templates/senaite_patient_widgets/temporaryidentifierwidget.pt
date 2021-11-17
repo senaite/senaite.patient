@@ -46,7 +46,7 @@
             A record for <strong>{{mrn}}</strong> exists already.
           </p>
           <div class="dialog-listing">
-            <div>{{fullname}}</div>
+            <div>{{firstname}} {{lastname}}</div>
             <div>{{address}}</div>
           </div>
           <p i18n:translate="">
@@ -57,10 +57,10 @@
       <script id="inactive-patient" type="text/x-handlebars-template">
         <div title="Existing identifier" i18n:attributes="title">
           <p i18n:translate="">
-            An <strong>inactive</strong> record for <strong>{{identifier}}</strong> exists already.
+            An <strong>inactive</strong> record for <strong>{{mrn}}</strong> exists already.
           </p>
           <div class="dialog-listing">
-            <div>{{fullname}}</div>
+            <div>{{firstname}} {{lastname}}</div>
             <div>{{address}}</div>
           </div>
           <p i18n:translate="">

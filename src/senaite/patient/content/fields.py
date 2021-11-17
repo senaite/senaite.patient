@@ -23,6 +23,7 @@ from AccessControl import ClassSecurityInfo
 from bika.lims.fields import ExtensionField
 from Products.Archetypes.Field import ObjectField
 from senaite.patient import api as patient_api
+from senaite.patient.browser.widgets import FullnameWidget
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.config import AUTO_ID_MARKER
 from senaite.patient.config import PATIENT_CATALOG
@@ -59,3 +60,35 @@ class TemporaryIdentifierField(ExtensionField, ObjectField):
         if not mrn:
             return None
         return patient_api.get_patient_by_mrn(mrn, include_inactive=True)
+
+
+class FullnameField(ExtensionField, ObjectField):
+    """ObjectField extender that stores a dictionary with two keys ('firstname'
+    and 'lastname') that represent the fullname of a person
+    """
+    _properties = ObjectField._properties.copy()
+    _properties.update({
+        "type": "fullname",
+        "default": None,
+        "widget": FullnameWidget,
+    })
+    security = ClassSecurityInfo()
+
+    def get(self, instance, **kwargs):
+        val = super(FullnameField, self).get(instance, **kwargs)
+        if isinstance(val, six.string_types):
+            val = {"firstname": val, "lastname": ""}
+        return val
+
+    def get_firstname(self, instance):
+        val = self.get(instance) or {}
+        return val.get("firstname", "")
+
+    def get_lastname(self, instance):
+        val = self.get(instance) or {}
+        return val.get("lastname", "")
+
+    def get_fullname(self, instance):
+        firstname = self.get_firstname(instance)
+        lastname = self.get_lastname(instance)
+        return " ".join(filter(None, [firstname, lastname]))

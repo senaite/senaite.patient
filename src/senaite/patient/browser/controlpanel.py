@@ -18,6 +18,14 @@ class IPatientControlPanel(Interface):
         default=True,
     )
 
+    patient_entry_mode = schema.Choice(
+        title=_(u"Patient name entry mode"),
+        description=_(u"Patient's name entry mode in Sample Add form"),
+        source="senaite.patient.vocabularies.name_entry_modes",
+        required=True,
+        default="parts",
+    )
+
     verify_temp_mrn = schema.Bool(
         title=_(u"Allow to verify samples with a temporary MRN"),
         description=_(u"If selected, users will be able to verify samples "

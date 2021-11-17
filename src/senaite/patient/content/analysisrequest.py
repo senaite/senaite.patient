@@ -28,10 +28,13 @@ from bika.lims.interfaces import IAnalysisRequest
 from Products.Archetypes.Widget import StringWidget
 from Products.CMFCore.permissions import View
 from senaite.patient import messageFactory as _
+from senaite.patient.api import get_patient_name_entry_mode
 from senaite.patient.api import is_patient_required
 from senaite.patient.browser.widgets import AgeDoBWidget
+from senaite.patient.browser.widgets import FullnameWidget
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.config import GENDERS
+from senaite.patient.content.fields import FullnameField
 from senaite.patient.content.fields import TemporaryIdentifierField
 from senaite.patient.interfaces import ISenaitePatientLayer
 from senaite.patient.permissions import FieldEditAddress
@@ -64,16 +67,18 @@ MedicalRecordNumberField = TemporaryIdentifierField(
     )
 )
 
-PatientFullNameField = ExtStringField(
+PatientFullNameField = FullnameField(
     "PatientFullName",
     required=True,
     read_permission=View,
     write_permission=FieldEditFullName,
-    widget=StringWidget(
-        label=_("Patient full name"),
+    widget=FullnameWidget(
+        label=_("Patient name"),
+        entry_mode="parts",
+        view_format="%(firstname)s %(lastname)s",
         render_own_label=True,
         visible={
-            'add': 'edit',
+            "add": "edit",
         }
     )
 )
@@ -161,4 +166,8 @@ class AnalysisRequestSchemaModifier(object):
         for fieldname in MAYBE_REQUIRED_FIELDS:
             field = schema.get(fieldname)
             field.required = required
+
+        entry_mode = get_patient_name_entry_mode()
+        fullname_field = schema.get("PatientFullName")
+        fullname_field.widget.entry_mode = entry_mode
         return schema

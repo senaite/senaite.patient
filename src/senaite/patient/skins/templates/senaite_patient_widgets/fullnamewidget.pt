@@ -1,0 +1,100 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="senaite.patient">
+  <body>
+
+    <metal:view_macro define-macro="view">
+      <tal:values define="value      python: field.getAccessor(here)();
+                          firstname python: value.get('firstname', '');
+                          lastname  python: value.get('lastname', '');
+                          fullname python: filter(None, [firstname, lastname]);
+                          fullname python: ' '.join(fullname).strip();
+                          entry_mode python: field.widget.entry_mode or 'parts';
+                          view_format python: field.widget.view_format;
+                          fullname_mode python: entry_mode in ['full', 'fullname'];">
+        <tal:with_value tal:condition="value">
+          <span tal:condition="not:fullname_mode"
+                tal:content="python: view_format % value"/>
+          <span tal:condition="fullname_mode"
+                tal:content="fullname"/>
+        </tal:with_value>
+
+        <span tal:condition="not:value"/>
+      </tal:values>
+    </metal:view_macro>
+
+    <metal:edit_macro define-macro="edit">
+      <tal:values define="value python:field.getEditAccessor(here)() or {};
+                          session_value python:here.session_restore_value(fieldName, value);
+                          cached_value python:request.get(fieldName, session_value);
+                          value python:cached_value or value;
+                          firstname python: value.get('firstname', '');
+                          lastname python: value.get('lastname', '');
+                          fullname python: filter(None, [firstname, lastname]);
+                          fullname python: ' '.join(fullname).strip();
+
+                          subfield_firstname string:${fieldName}.firstname:ignore_empty:record;
+                          subfield_lastname string:${fieldName}.lastname:ignore_empty:record;
+
+                          required field/required|nothing;
+                          required python: required and 'required' or None;
+
+                          entry_mode python: field.widget.entry_mode or 'parts';
+                          fullname_mode python: entry_mode in ['full', 'fullname'];
+                          i18n_domain field/widget/i18n_domain|context/i18n_domain|string:plone;
+                          size python: int(field.widget.size, 15)">
+
+        <div class="field FullnameWidget"
+             tal:attributes="data-required python:required and '1' or '0';
+                             data-fieldname string:${fieldName}">
+          <div class="fieldErrorBox" tal:condition="required"></div>
+
+          <div class="form form-inline">
+
+            <!-- Firstname + lastname input area -->
+            <div class="form-row" tal:condition="not:fullname_mode">
+              <div class="form-group col-md-6">
+                <input type="text"
+                       tal:attributes="id string:${subfield_firstname};
+                                       name string:${subfield_firstname};
+                                       value    firstname;
+                                       required required;
+                                       size     size;
+                                       placeholder python: here.translate(domain=i18n_domain, msgid='Firstname', default='Firstname');"/>
+              </div>
+              <div class="form-group col-md-6">
+                <input type="text"
+                       tal:attributes="id string:${subfield_lastname};
+                                       name string:${subfield_lastname};
+                                       value    lastname;
+                                       required required;
+                                       size     size;
+                                       placeholder python: here.translate(domain=i18n_domain, msgid='Lastname', default='Lastname');"/>
+              </div>
+            </div>
+
+            <!-- Fullname input area -->
+            <div class="form-group" tal:condition="fullname_mode">
+              <input type="text"
+                     tal:attributes="id string:${subfield_firstname};
+                                     name string:${subfield_firstname};
+                                     value    fullname;
+                                     required required;
+                                     size     python:size*2;
+                                     placeholder python: here.translate(domain=i18n_domain, msgid='Fullname', default='Fullname');"/>
+            </div>
+          </div>
+
+        </div>
+      </tal:values>
+    </metal:edit_macro>
+
+    <metal:search_macro define-macro="search">
+      <div metal:use-macro="context/widgets/string/macros/edit"></div>
+    </metal:search_macro>
+
+  </body>
+</html>

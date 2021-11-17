@@ -51,12 +51,15 @@ def get_patient_fields(instance):
     gender = instance.getField("Gender").get(instance)
     birthdate = instance.getField("DateOfBirth").get(instance)
     address = instance.getField("PatientAddress").get(instance)
-    fullname = instance.getField("PatientFullName").get(instance)
+    field = instance.getField("PatientFullName")
+    firstname = field.get_firstname(instance)
+    lastname = field.get_lastname(instance)
 
     return {
         "mrn": mrn,
         "gender": gender,
         "birthdate": birthdate,
         "address": address,
-        "fullname": fullname,
+        "firstname": firstname,
+        "lastname": lastname,
     }

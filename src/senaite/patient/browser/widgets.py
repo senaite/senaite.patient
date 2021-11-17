@@ -18,6 +18,7 @@
 # Copyright 2020 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+import six
 from AccessControl import ClassSecurityInfo
 from bika.lims import api
 from bika.lims.idserver import generateUniqueId
@@ -136,6 +137,49 @@ class AgeDoBWidget(DateTimeWidget):
         return dob, {}
 
 
+class FullnameWidget(TypesWidget):
+    """A widget for the introduction of person name, either fullname or the
+    combination of firstname + lastname
+    """
+    security = ClassSecurityInfo()
+    _properties = TypesWidget._properties.copy()
+    _properties.update({
+        "macro": "senaite_patient_widgets/fullnamewidget",
+        "entry_mode": "parts",
+        "view_format": "%(firstname)s %(lastname)s",
+        "size": "15",
+    })
+
+    def process_form(self, instance, field, form, empty_marker=None,
+                     emptyReturnsMarker=False, validating=True):
+
+        value = form.get(field.getName())
+        firstname = ""
+        lastname = ""
+
+        if isinstance(value, (list, tuple)):
+            value = value[0] or None
+
+        # handle string as fullname direct entry
+        if isinstance(value, six.string_types):
+            firstname = value.strip()
+
+        elif value:
+            firstname = value.get("firstname", "").strip()
+            lastname = value.get("lastname", "").strip()
+
+        # Allow non-required fields
+        if not any([firstname, lastname]):
+            return None, {}
+
+        output = {
+            "firstname": firstname,
+            "lastname": lastname,
+        }
+        return output, {}
+
+
 # Register widgets
 registerWidget(TemporaryIdentifierWidget, title="TemporaryIdentifierWidget")
 registerWidget(AgeDoBWidget, title="AgeDoBWidget")
+registerWidget(FullnameWidget, title="FullnameWidget")

@@ -30,6 +30,11 @@
       component="senaite.patient.vocabularies.CountryVocabularyFactory"
       name="senaite.patient.vocabularies.country" />
 
+  <!-- Patient name entry modes vocabulary -->
+  <utility
+      component="senaite.patient.vocabularies.NameEntryModesVocabularyFactory"
+      name="senaite.patient.vocabularies.name_entry_modes" />
+
   <!-- Package includes -->
   <include package=".adapters" />
   <include package=".browser" />
