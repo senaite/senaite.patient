@@ -44,7 +44,7 @@
   <property name="add_permission">cmf.AddPortalContent</property>
 
   <!-- Python class for content items of this sort -->
-  <property name="schema">senaite.patient.content.patient.IPatient</property>
+  <property name="schema">senaite.patient.content.patient.IPatientSchema</property>
   <property name="klass">senaite.patient.content.patient.Patient</property>
 
   <!-- Dexterity behaviours for this type -->

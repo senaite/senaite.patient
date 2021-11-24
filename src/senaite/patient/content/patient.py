@@ -16,13 +16,14 @@ from senaite.patient import api as patient_api
 from senaite.patient import messageFactory as _
 from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
+from senaite.patient.interfaces import IPatient
 from zope import schema
 from zope.interface import Invalid
 from zope.interface import implementer
 from zope.interface import invariant
 
 
-class IPatient(model.Schema):
+class IPatientSchema(model.Schema):
     """Patient Content
     """
 
@@ -165,7 +166,7 @@ class IPatient(model.Schema):
             raise Invalid(_("Patient email is invalid"))
 
 
-@implementer(IPatient)
+@implementer(IPatient, IPatientSchema)
 class Patient(Item):
     """Results Interpretation Template content
     """

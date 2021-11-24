@@ -20,7 +20,7 @@
 
 from bika.lims.interfaces import IAnalysisRequest
 from plone.indexer import indexer
-from senaite.patient.content.patient import IPatient
+from senaite.patient.interfaces import IPatient
 
 
 @indexer(IAnalysisRequest)

@@ -64,6 +64,8 @@ def upgrade(tool):
 
     # Allow/Disallow to verify/publish samples with temporary MRN
     setup.runImportStepFromProfile(PROFILE_ID, "plone.app.registry")
+    # Update schema interface
+    setup.runImportStepFromProfile(PROFILE_ID, "typeinfo")
 
     # https://github.com/senaite/senaite.patient/pull/14
     migrate_to_patient_catalog(portal)
