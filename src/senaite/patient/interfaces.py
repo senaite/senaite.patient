@@ -20,6 +20,7 @@
 
 from senaite.core.interfaces import ISenaiteCatalogObject
 from senaite.lims.interfaces import ISenaiteLIMS
+from zope.interface import interface
 
 
 class ISenaitePatientLayer(ISenaiteLIMS):
@@ -32,4 +33,9 @@ class ISenaitePatientLayer(ISenaiteLIMS):
 
 class IPatientCatalog(ISenaiteCatalogObject):
     """Marker interface for Patient Catalog
+    """
+
+
+class IPatient(interface.Interface):
+    """Marker interface for Patients
     """
