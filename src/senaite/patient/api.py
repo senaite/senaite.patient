@@ -44,7 +44,6 @@ def get_patient_by_mrn(mrn, full_object=True, include_inactive=False):
     :param include_inactive: Also find inactive patients
     :returns: Patient or None
     """
-    catalog = get_patient_catalog()
     query = {
         "portal_type": "Patient",
         "patient_mrn": mrn,
@@ -53,7 +52,7 @@ def get_patient_by_mrn(mrn, full_object=True, include_inactive=False):
     # Remove active index
     if include_inactive:
         query.pop("is_active", None)
-    results = catalog(query)
+    results = patient_search(query)
     count = len(results)
     if count == 0:
         return None

@@ -49,6 +49,9 @@ class PatientFolderView(ListingView):
             ("mrn", {
                 "title": _("Medical Record #"),
                 "index": "patient_mrn"}),
+            ("patient_id", {
+                "title": _("Patient ID"),
+                "index": "patient_id"}),
             ("fullname", {
                 "title": _("Fullname"),
                 "index": "patient_fullname"}),
@@ -93,21 +96,39 @@ class PatientFolderView(ListingView):
     def folderitem(self, obj, item, index):
         obj = api.get_object(obj)
         url = api.get_url(obj)
-        birthdate = obj.get_birthdate()
-        email = obj.get_email()
 
-        # get_link assumes non-unicode values
+        # MRN
         mrn = obj.get_mrn().encode("utf8")
-        fullname = obj.get_fullname().encode("utf8")
-
+        item["mrn"] = mrn
         item["replace"]["mrn"] = get_link(
             url, value=mrn)
-        item["replace"]["fullname"] = get_link(
-            url, value=fullname)
-        item["replace"]["email"] = get_email_link(
-            email, value=email)
 
+        # Patient ID
+        patient_id = obj.get_patient_id().encode("utf8")
+        item["patient_id"] = patient_id
+        if patient_id:
+            item["replace"]["patient_id"] = get_link(
+                url, value=patient_id)
+
+        # Fullname
+        fullname = obj.get_fullname().encode("utf8")
+        item["fullname"] = fullname
+        if fullname:
+            item["replace"]["fullname"] = get_link(
+                url, value=fullname)
+
+        # Email
+        email = obj.get_email()
+        item["email"] = email
+        if email:
+            item["replace"]["email"] = get_email_link(
+                email, value=email)
+
+        # Gender
         item["gender"] = obj.get_gender()
+
+        # Birthdate
+        birthdate = obj.get_birthdate()
         item["birthdate"] = self.ulocalized_time(birthdate, long_format=0)
 
         return item

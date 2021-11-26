@@ -217,6 +217,23 @@ class Patient(Item):
             raise ValueError("A patient with that MRN already exists!")
         self.mrn = value
 
+    def get_patient_id(self):
+        patient_id = self.patient_id
+        if not patient_id:
+            return u""
+        return self.patient_id
+
+    def set_patient_id(self, value):
+        value = value.strip()
+        if self.patient_id == value:
+            # noting changed
+            return
+        query = {"portal_type": "Patient", "patient_id": value}
+        results = patient_api.patient_search(query)
+        if len(results) > 0:
+            raise ValueError("A patient with that ID already exists!")
+        self.patient_id = value
+
     def get_firstname(self):
         firstname = self.firstname
         if not firstname:
