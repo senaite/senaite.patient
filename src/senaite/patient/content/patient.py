@@ -61,7 +61,7 @@ class IPatientSchema(model.Schema):
 
     patient_id = schema.TextLine(
         title=_(u"label_patient_id", default=u"ID"),
-        description=_(u"Patient ID"),
+        description=_(u"Unique Patient ID"),
         required=False,
     )
 
@@ -155,6 +155,34 @@ class IPatientSchema(model.Schema):
             data.mrn, full_object=False, include_inactive=True)
         if patient:
             raise Invalid(_("Patient Medical Record # must be unique"))
+
+    @invariant
+    def validate_patient_id(data):
+        """Checks if the patient ID is unique
+        """
+        pid = data.patient_id
+
+        # field is not required
+        if not pid:
+            return
+
+        # https://community.plone.org/t/dexterity-unique-field-validation
+        context = getattr(data, "__context__", None)
+        if context is not None:
+            if context.patient_id == pid:
+                # nothing changed
+                return
+
+        query = {
+            "portal_type": "Patient",
+            "patient_id": pid,
+            "is_active": True,
+        }
+
+        patient = patient_api.patient_search(query)
+
+        if patient:
+            raise Invalid(_("Patient ID must be unique"))
 
     @invariant
     def validate_email(data):
