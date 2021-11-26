@@ -71,6 +71,13 @@ def get_patient_catalog():
     return api.get_tool(PATIENT_CATALOG)
 
 
+def patient_search(query):
+    """Search the patient catalog
+    """
+    catalog = get_patient_catalog()
+    return catalog(query)
+
+
 def create_empty_patient():
     """Create a new empty patient in the patients folder
     """
