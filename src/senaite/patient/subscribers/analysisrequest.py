@@ -23,7 +23,8 @@ def on_object_edited(instance, event):
     if field_name in request.form:
         dob_field = instance.getField(field_name)
         dob = dob_field.widget.process_form(instance, dob_field, request.form)
-        dob_field.set(instance, dob[0])
+        if dob is not None:
+            dob_field.set(instance, dob[0])
 
     update_patient(instance)
 
