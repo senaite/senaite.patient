@@ -104,12 +104,13 @@
                tal:attributes="id string:${fieldName}_dob_controls">
             <div class="form-row">
               <div class="form-group">
-                <input type="text"
-                       class="datepicker_nofuture"
-                       tal:attributes="id string:${subfield_dob};
+                <input type="date"
+                       class="form-control form-control-sm"
+                       tal:attributes="python:widget.attrs();
+                                       id string:${subfield_dob};
                                        name string:${subfield_dob};
                                        required python:required and 'required' or None;
-                                       value python: widget.ulocalized_gmt0_time(value, context=context, request=request) if value else '';"/>
+                                       value python: widget.to_local_date(value, context=context, request=request) if value else '';"/>
               </div>
             </div>
 

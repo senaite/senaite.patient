@@ -133,6 +133,8 @@ class AgeDoBWidget(DateTimeWidget):
 
             # Calculate the DoB
             dob = patient_api.get_birth_date(ymd)
+        elif value.get("selector") == "dob":
+            self.default_age = False
 
         return dob, {}
 
