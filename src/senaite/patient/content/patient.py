@@ -61,7 +61,7 @@ class IPatientSchema(model.Schema):
 
     patient_id = schema.TextLine(
         title=_(u"label_patient_id", default=u"ID"),
-        description=_(u"Patient ID"),
+        description=_(u"Unique Patient ID"),
         required=False,
     )
 
@@ -157,6 +157,34 @@ class IPatientSchema(model.Schema):
             raise Invalid(_("Patient Medical Record # must be unique"))
 
     @invariant
+    def validate_patient_id(data):
+        """Checks if the patient ID is unique
+        """
+        pid = data.patient_id
+
+        # field is not required
+        if not pid:
+            return
+
+        # https://community.plone.org/t/dexterity-unique-field-validation
+        context = getattr(data, "__context__", None)
+        if context is not None:
+            if context.patient_id == pid:
+                # nothing changed
+                return
+
+        query = {
+            "portal_type": "Patient",
+            "patient_id": pid,
+            "is_active": True,
+        }
+
+        patient = patient_api.patient_search(query)
+
+        if patient:
+            raise Invalid(_("Patient ID must be unique"))
+
+    @invariant
     def validate_email(data):
         """Checks if the email is correct
         """
@@ -188,6 +216,23 @@ class Patient(Item):
                 value, full_object=False, include_inactive=True):
             raise ValueError("A patient with that MRN already exists!")
         self.mrn = value
+
+    def get_patient_id(self):
+        patient_id = self.patient_id
+        if not patient_id:
+            return u""
+        return self.patient_id
+
+    def set_patient_id(self, value):
+        value = value.strip()
+        if self.patient_id == value:
+            # noting changed
+            return
+        query = {"portal_type": "Patient", "patient_id": value}
+        results = patient_api.patient_search(query)
+        if len(results) > 0:
+            raise ValueError("A patient with that ID already exists!")
+        self.patient_id = value
 
     def get_firstname(self):
         firstname = self.firstname

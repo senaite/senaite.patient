@@ -12,6 +12,7 @@ CATALOG_TITLE = "Senaite Patient Catalog"
 
 INDEXES = BASE_INDEXES + [
     # id, indexed attribute, type
+    ("patient_id", "", "FieldIndex"),
     ("patient_mrn", "", "FieldIndex"),
     ("patient_email", "", "FieldIndex"),
     ("patient_fullname", "", "FieldIndex"),
@@ -21,6 +22,7 @@ INDEXES = BASE_INDEXES + [
 COLUMNS = BASE_COLUMNS + [
     # attribute name
     "mrn",
+    "patient_id",
 ]
 
 TYPES = [

@@ -4,6 +4,7 @@ Changelog
 1.0.0 (unreleased)
 ------------------
 
+- #18 Unique patient ID
 - #19 Convert DoB widget to native date input field
 - #17 Added marker interface for patients
 - #14 Compatibility with Senaite catalog migration
