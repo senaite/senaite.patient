@@ -44,48 +44,46 @@
 
                           entry_mode python: field.widget.entry_mode or 'parts';
                           fullname_mode python: entry_mode in ['full', 'fullname'];
-                          i18n_domain field/widget/i18n_domain|context/i18n_domain|string:plone;
-                          size python: int(field.widget.size, 15)">
+                          i18n_domain field/widget/i18n_domain|context/i18n_domain|string:plone;">
 
         <div class="field FullnameWidget"
              tal:attributes="data-required python:required and '1' or '0';
-                             data-fieldname string:${fieldName}">
+                    data-fieldname string:${fieldName}">
           <div class="fieldErrorBox" tal:condition="required"></div>
 
-          <div class="form form-inline">
+          <!-- Firstname + lastname input area -->
+          <div class="input-group" tal:condition="not:fullname_mode" style="width:260px;">
+            <input type="text"
+                   title="Firstname"
+                   style="max-width: 50%"
+                   placeholder="Firstname"
+                   class="form-control form-control-sm"
+                   i18n:attributes="title placeholder"
+                   tal:attributes="id string:${subfield_firstname};
+                                   name string:${subfield_firstname};
+                                   value    firstname;
+                                   required required;"/>
+            <input type="text"
+                   title="Lastname"
+                   style="max-width: 50%"
+                   class="form-control form-control-sm"
+                   placeholder="Lastname"
+                   i18n:attributes="title placeholder"
+                   tal:attributes="id string:${subfield_lastname};
+                                   name string:${subfield_lastname};
+                                   value lastname;
+                                   required required;"/>
+          </div>
 
-            <!-- Firstname + lastname input area -->
-            <div class="form-row" tal:condition="not:fullname_mode">
-              <div class="form-group col-md-6">
-                <input type="text"
-                       tal:attributes="id string:${subfield_firstname};
-                                       name string:${subfield_firstname};
-                                       value    firstname;
-                                       required required;
-                                       size     size;
-                                       placeholder python: here.translate(domain=i18n_domain, msgid='Firstname', default='Firstname');"/>
-              </div>
-              <div class="form-group col-md-6">
-                <input type="text"
-                       tal:attributes="id string:${subfield_lastname};
-                                       name string:${subfield_lastname};
-                                       value    lastname;
-                                       required required;
-                                       size     size;
-                                       placeholder python: here.translate(domain=i18n_domain, msgid='Lastname', default='Lastname');"/>
-              </div>
-            </div>
-
-            <!-- Fullname input area -->
-            <div class="form-group" tal:condition="fullname_mode">
-              <input type="text"
-                     tal:attributes="id string:${subfield_firstname};
-                                     name string:${subfield_firstname};
-                                     value    fullname;
-                                     required required;
-                                     size     python:size*2;
-                                     placeholder python: here.translate(domain=i18n_domain, msgid='Fullname', default='Fullname');"/>
-            </div>
+          <!-- Fullname input area -->
+          <div class="form-group" tal:condition="fullname_mode">
+            <input type="text"
+                   placeholder="Fullname"
+                   i18n:attributes="title placeholder"
+                   tal:attributes="id string:${subfield_firstname};
+                                   name string:${subfield_firstname};
+                                   value fullname;
+                                   required required;"/>
           </div>
 
         </div>
