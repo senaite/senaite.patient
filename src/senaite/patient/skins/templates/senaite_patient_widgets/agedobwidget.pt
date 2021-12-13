@@ -42,7 +42,7 @@
           <div class="fieldErrorBox" tal:condition="required"></div>
 
           <!-- Age / DoB toggle radio -->
-          <div class="form-group mb-0">
+          <div class="form-group mb-0 text-left">
             <!-- age selector -->
             <input
               type="radio"
