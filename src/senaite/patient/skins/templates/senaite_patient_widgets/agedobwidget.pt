@@ -20,9 +20,6 @@
 
     <metal:edit_macro define-macro="edit">
       <tal:values define="value python:field.getEditAccessor(here)() or None;
-                          session_value python:here.session_restore_value(fieldName, value);
-                          cached_value python:request.get(fieldName, session_value);
-                          value python:cached_value or value;
                           subfield_years string:${fieldName}.years:ignore_empty:record;
                           subfield_months string:${fieldName}.months:ignore_empty:record;
                           subfield_days string:${fieldName}.days:ignore_empty:record;
