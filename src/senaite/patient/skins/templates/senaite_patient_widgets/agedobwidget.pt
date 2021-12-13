@@ -38,94 +38,82 @@
 
         <div class="field AgeDoBWidget"
              tal:attributes="data-required python:required and '1' or '0';
-                             data-fieldname string:${fieldName}">
+                    data-fieldname string:${fieldName}">
           <div class="fieldErrorBox" tal:condition="required"></div>
 
           <!-- Age / DoB toggle radio -->
-          <div class="form form-inline">
-            <div class="form-group">
-              <input tal:attributes="id string:${fieldName}_age_selector;
-                                     name string:${subfield_selector}"
-                     tal:condition="age_selected"
-                     type="radio" value="age" checked/>
-              <input tal:attributes="id string:${fieldName}_age_selector;
-                                     name string:${subfield_selector}"
-                     tal:condition="not:age_selected"
-                     type="radio" value="age"/>&nbsp;
-              <label tal:attributes="for string:${fieldName}_age_selector;">Age</label>
-              &nbsp;&nbsp;
-              <input tal:attributes="id string:${fieldName}_dob_selector;
-                                     name string:${subfield_selector}"
-                     tal:condition="not:age_selected"
-                     type="radio" value="dob" checked/>
-              <input tal:attributes="id string:${fieldName}DateOfBirth_dob_selector;
-                                     name string:${subfield_selector}"
-                     tal:condition="age_selected"
-                     type="radio" value="dob"/>&nbsp;
-              <label tal:attributes="for string:${fieldName}_dob_selector">Date of Birth</label>
-              &nbsp;&nbsp;
-            </div>
+          <div class="form-group mb-0">
+            <!-- age selector -->
+            <input
+              type="radio"
+              value="age"
+              tal:attributes="id string:${fieldName}_age_selector;
+                    checked python:age_selected;
+                    name string:${subfield_selector}" />
+            <label tal:attributes="for string:${fieldName}_age_selector;">Age</label>
+
+            <!-- dob selector -->
+            <input
+              type="radio"
+              value="dob"
+              tal:attributes="id string:${fieldName}DateOfBirth_dob_selector;
+                    checked python:not age_selected;
+                    name string:${subfield_selector}" />
+            <label tal:attributes="for string:${fieldName}_dob_selector">Date of Birth</label>
+
           </div>
 
           <!-- Age input area -->
-          <div class="form form-inline"
+          <div class="input-group"
+               style="max-width: 260px;"
                tal:attributes="id string:${fieldName}_age_controls">
-            <div class="form-row">
-              <div class="form-group col-md-3">
-                <label tal:attributes="for string:${subfield_years}"
-                       i18n:translate="" class="small">Years</label>
-                <input type="number" size='2' min='0' max='150'
-                       class="form-control-sm"
-                       tal:attributes="id string:${subfield_years};
-                                       name string:${subfield_years};
-                                       value years;
-                                       required python:required and 'required' or None;"/>
-              </div>
-              <div class="form-group col-md-3">
-                <label tal:attributes="for string:${subfield_months}"
-                       i18n:translate="" class="small">Months</label>
-                <input type="number" size='2' value='' min='0' max='12'
-                       class="form-control-sm"
-                       tal:attributes="id string:${subfield_months};
-                                       name string:${subfield_months};
-                                       value months;"/>
-              </div>
-              <div class="form-group col-md-3">
-                <label tal:attributes="for string:${subfield_days}"
-                       i18n:translate="" class="small">Days</label>
-                <input type="number" size='2' value='' min='0' max='31'
-                       class="form-control-sm"
-                       tal:attributes="id string:${subfield_days};
-                                       name string:${subfield_days};
-                                       value days;"/>
-              </div>
-            </div>
+            <input type="number" min='0' max='150'
+                   class="form-control form-control-sm"
+                   title="Years"
+                   placeholder="Years"
+                   i18n:attributes="placeholder title"
+                   tal:attributes="id string:${subfield_years};
+                         name string:${subfield_years};
+                         value years;
+                         required python:required and 'required' or None;"/>
+            <input type="number" value='' min='0' max='12'
+                   class="form-control form-control-sm"
+                   title="Months"
+                   placeholder="Months"
+                   i18n:attributes="placeholder title"
+                   tal:attributes="id string:${subfield_months};
+                         name string:${subfield_months};
+                         value months;"/>
+            <input type="number" value='' min='0' max='31'
+                   class="form-control form-control-sm"
+                   title="Days"
+                   placeholder="Days"
+                   i18n:attributes="placeholder title"
+                   tal:attributes="id string:${subfield_days};
+                         name string:${subfield_days};
+                         value days;"/>
           </div>
 
           <!-- DoB input field -->
-          <div class="form form-inline"
+          <div class="form-group"
                tal:attributes="id string:${fieldName}_dob_controls">
-            <div class="form-row">
-              <div class="form-group">
-                <input type="date"
-                       class="form-control form-control-sm"
-                       tal:attributes="python:widget.attrs();
-                                       id string:${subfield_dob};
-                                       name string:${subfield_dob};
-                                       required python:required and 'required' or None;
-                                       value python: widget.get_date(value) if value else '';"/>
-              </div>
-            </div>
+            <input type="date"
+                   class="form-control form-control-sm"
+                   tal:attributes="python:widget.attrs();
+                         id string:${subfield_dob};
+                         name string:${subfield_dob};
+                         required python:required and 'required' or None;
+                         value python: widget.get_date(value) if value else '';"/>
 
             <!-- Field not visible for when the value is set automatically by
-            others through JS. When a value is set to this field, agedob widget
-            automatically updates the value from the dob_control and selects
-            the proper radiobutton. Note we don't use a hidden field here, cause
-            'onchange' is not triggered for hidden fields -->
+                 others through JS. When a value is set to this field, agedob widget
+                 automatically updates the value from the dob_control and selects
+                 the proper radiobutton. Note we don't use a hidden field here, cause
+                 'onchange' is not triggered for hidden fields -->
             <input type="text" style="display:none;visibility:hidden;"
                    tal:attributes="id string:${fieldName}-dob-fallback;
-                                   name string:${fieldName};
-                                   value string:${value}"/>
+                         name string:${fieldName};
+                         value string:${value}"/>
 
           </div>
         </div>
