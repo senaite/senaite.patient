@@ -61,12 +61,13 @@
 
           <!-- Age input area -->
           <div class="input-group"
-               style="max-width: 260px;"
+               style="max-width: 260px; flex-wrap: nowrap;"
                tal:attributes="id string:${fieldName}_age_controls">
             <input type="number" min='0' max='150'
                    class="form-control form-control-sm"
                    title="Years"
                    placeholder="Years"
+                   style="padding-right:0px;"
                    i18n:attributes="placeholder title"
                    tal:attributes="id string:${subfield_years};
                          name string:${subfield_years};
@@ -76,6 +77,7 @@
                    class="form-control form-control-sm"
                    title="Months"
                    placeholder="Months"
+                   style="padding-right:0px;"
                    i18n:attributes="placeholder title"
                    tal:attributes="id string:${subfield_months};
                          name string:${subfield_months};
@@ -84,6 +86,7 @@
                    class="form-control form-control-sm"
                    title="Days"
                    placeholder="Days"
+                   style="padding-right:0px;"
                    i18n:attributes="placeholder title"
                    tal:attributes="id string:${subfield_days};
                          name string:${subfield_days};
