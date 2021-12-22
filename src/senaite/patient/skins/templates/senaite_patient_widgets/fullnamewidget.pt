@@ -46,16 +46,15 @@
                           fullname_mode python: entry_mode in ['full', 'fullname'];
                           i18n_domain field/widget/i18n_domain|context/i18n_domain|string:plone;">
 
-        <div class="field FullnameWidget"
+        <div class="field FullnameWidget text-left"
              tal:attributes="data-required python:required and '1' or '0';
                     data-fieldname string:${fieldName}">
           <div class="fieldErrorBox" tal:condition="required"></div>
 
           <!-- Firstname + lastname input area -->
-          <div class="input-group" tal:condition="not:fullname_mode" style="width:260px;">
+          <div class="input-group flex-nowrap d-inline-flex w-auto" tal:condition="not:fullname_mode">
             <input type="text"
                    title="Firstname"
-                   style="max-width: 50%"
                    placeholder="Firstname"
                    class="form-control form-control-sm"
                    i18n:attributes="title placeholder"
@@ -65,7 +64,6 @@
                                    required required;"/>
             <input type="text"
                    title="Lastname"
-                   style="max-width: 50%"
                    class="form-control form-control-sm"
                    placeholder="Lastname"
                    i18n:attributes="title placeholder"
