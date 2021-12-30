@@ -298,12 +298,4 @@ class Patient(Item):
             dt = api.to_date(value, None)
             if dt is not None:
                 value = dt.asdatetime()
-        # Ensure the datetime object has no timezone set
-        # Happens when setting `DateOfBirth` of the Sample to the Patient
-        #
-        # TypeError: can't compare offset-naive and offset-aware datetimes
-        if isinstance(value, datetime):
-            value = value.replace(tzinfo=None)
-        else:
-            value = None
         self.birthdate = value
