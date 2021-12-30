@@ -7,11 +7,12 @@ from six import string_types
 from bika.lims import api
 from bika.lims.api.mail import is_valid_email_address
 from DateTime import DateTime
-from plone.app.z3cform.widget import DatetimeFieldWidget
 from plone.autoform import directives
 from plone.dexterity.content import Item
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
+from senaite.core.schema import DatetimeField
+from senaite.core.z3cform.widgets.datetimewidget import DatetimeWidget
 from senaite.patient import api as patient_api
 from senaite.patient import messageFactory as _
 from senaite.patient.catalog import PATIENT_CATALOG
@@ -132,9 +133,11 @@ class IPatientSchema(model.Schema):
         required=False,
     )
 
-    directives.widget(
-        "birthdate", DatetimeFieldWidget, klass=u"datepicker_nofuture")
-    birthdate = schema.Datetime(
+    directives.widget("birthdate",
+                      DatetimeWidget,
+                      datepicker_nofuture=True,
+                      show_time=False)
+    birthdate = DatetimeField(
         title=_(u"label_patient_birthdate", default=u"Birthdate"),
         description=_(u"Patient birthdate"),
         required=False,
