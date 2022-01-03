@@ -13,6 +13,7 @@
   <!-- Field permissions  -->
   <permission id="senaite.patient.permissions.FieldEditDateOfBirth" title="senaite.patient: Field: Edit Date of Birth"/>
   <permission id="senaite.patient.permissions.FieldEditMRN" title="senaite.patient: Field: Edit MRN"/>
+  <permission id="senaite.patient.permissions.FieldEditID" title="senaite.patient: Field: Edit ID"/>
   <permission id="senaite.patient.permissions.FieldEditAddress" title="senaite.patient: Field: Edit Address"/>
   <permission id="senaite.patient.permissions.FieldEditFullName" title="senaite.patient: Field: Edit Fullname"/>
   <permission id="senaite.patient.permissions.FieldEditGender" title="senaite.patient: Field: Edit Gender"/>

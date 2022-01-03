@@ -41,6 +41,7 @@ from senaite.patient.permissions import FieldEditAddress
 from senaite.patient.permissions import FieldEditDateOfBirth
 from senaite.patient.permissions import FieldEditFullName
 from senaite.patient.permissions import FieldEditGender
+from senaite.patient.permissions import FieldEditID
 from senaite.patient.permissions import FieldEditMRN
 from zope.component import adapts
 from zope.interface import implementer
@@ -64,6 +65,21 @@ MedicalRecordNumberField = TemporaryIdentifierField(
             "secondary": "disabled",
             "header_table": "prominent",
         },
+    )
+)
+
+PatientIDField = ExtStringField(
+    "PatientID",
+    read_permission=View,
+    write_permission=FieldEditID,
+    widget=StringWidget(
+        label=_("Patient ID"),
+        render_own_label=True,
+        visible={
+            "add": "edit",
+            "secondary": "disabled",
+            "header_table": "prominent",
+        }
     )
 )
 
@@ -91,7 +107,7 @@ PatientAddressField = ExtStringField(
         label=_("Place of residence"),
         render_own_label=True,
         visible={
-            'add': 'edit',
+            "add": "edit",
         }
     )
 )
@@ -108,7 +124,7 @@ DateOfBirthField = ExtDateTimeField(
         show_time=False,
         datepicker_nofuture=True,
         visible={
-            'add': 'edit',
+            "add": "edit",
         }
     ),
 )
@@ -124,7 +140,7 @@ GenderField = ExtStringField(
         label=_("Gender"),
         format="select",
         visible={
-            'add': 'edit',
+            "add": "edit",
         }
     ),
 )
@@ -146,6 +162,7 @@ class AnalysisRequestSchemaExtender(object):
     def getFields(self):
         return [
             MedicalRecordNumberField,
+            PatientIDField,
             PatientFullNameField,
             PatientAddressField,
             DateOfBirthField,

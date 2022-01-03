@@ -129,6 +129,7 @@ class TemporaryIdentifierWidgetController
         "DateOfBirth": @format_date(data.birthdate),
         "Age": data.age,
         "Gender": data.gender,
+        "PatientID": data.patient_id,
         "review_state": data.review_state,
       }
 
@@ -264,6 +265,7 @@ class TemporaryIdentifierWidgetController
     # Fields to include on search results
     fields = [
       "mrn"
+      "patient_id"
       "firstname"
       "lastname"
       "age"
