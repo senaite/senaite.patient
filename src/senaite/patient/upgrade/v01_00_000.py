@@ -95,8 +95,6 @@ def migrate_patient_item_to_container(portal):
     logger.info("Migrate patients to be folderish ...")
     patients = portal.patients
     for patient in patients.objectValues():
-        if api.is_folderish(patient):
-            continue
         pid = patient.getId()
         patients._delOb(pid)
         patient.__class__ = Patient
