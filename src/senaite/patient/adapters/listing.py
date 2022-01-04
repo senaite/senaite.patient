@@ -53,10 +53,16 @@ ADD_COLUMNS = [
         "index": "medical_record_number",
         "after": "getId",
     }),
+    ("PatientID", {
+        "title": _("Patient ID"),
+        "sortable": False,
+        "index": "patient_id",
+        "after": "MRN",
+    }),
     ("Patient", {
         "title": _("Patient"),
         "sortable": False,
-        "after": "getId",
+        "after": "PatientID",
     }),
 ]
 
@@ -95,6 +101,7 @@ class SamplesListingAdapter(object):
 
         item["MRN"] = obj.getMedicalRecordNumberValue
         item["Patient"] = obj.getPatientFullName
+        item["PatientID"] = obj.getPatientID
 
     @check_installed(None)
     def before_render(self):
