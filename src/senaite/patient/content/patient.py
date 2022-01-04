@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
-
 from six import string_types
 
 from bika.lims import api
 from bika.lims.api.mail import is_valid_email_address
 from DateTime import DateTime
-from plone.app.z3cform.widget import DatetimeFieldWidget
 from plone.autoform import directives
 from plone.dexterity.content import Item
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
+from senaite.core.schema import DatetimeField
+from senaite.core.z3cform.widgets.datetimewidget import DatetimeWidget
 from senaite.patient import api as patient_api
 from senaite.patient import messageFactory as _
 from senaite.patient.catalog import PATIENT_CATALOG
@@ -132,9 +131,11 @@ class IPatientSchema(model.Schema):
         required=False,
     )
 
-    directives.widget(
-        "birthdate", DatetimeFieldWidget, klass=u"datepicker_nofuture")
-    birthdate = schema.Datetime(
+    directives.widget("birthdate",
+                      DatetimeWidget,
+                      datepicker_nofuture=True,
+                      show_time=False)
+    birthdate = DatetimeField(
         title=_(u"label_patient_birthdate", default=u"Birthdate"),
         description=_(u"Patient birthdate"),
         required=False,
@@ -295,12 +296,4 @@ class Patient(Item):
             dt = api.to_date(value, None)
             if dt is not None:
                 value = dt.asdatetime()
-        # Ensure the datetime object has no timezone set
-        # Happens when setting `DateOfBirth` of the Sample to the Patient
-        #
-        # TypeError: can't compare offset-naive and offset-aware datetimes
-        if isinstance(value, datetime):
-            value = value.replace(tzinfo=None)
-        else:
-            value = None
         self.birthdate = value
