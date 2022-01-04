@@ -18,7 +18,9 @@
 # Copyright 2020-2021 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+import transaction
 from bika.lims import api
+from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
 from senaite.core.api.catalog import del_column
 from senaite.core.api.catalog import del_index
 from senaite.core.api.catalog import get_columns
@@ -28,6 +30,7 @@ from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
 from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import PRODUCT_NAME
+from senaite.patient.content.patient import Patient
 from senaite.patient.setuphandlers import PROFILE_ID
 from senaite.patient.setuphandlers import setup_catalogs
 
@@ -68,6 +71,9 @@ def upgrade(tool):
     setup.runImportStepFromProfile(PROFILE_ID, "typeinfo")
     setup.runImportStepFromProfile(PROFILE_ID, "workflow")
 
+    # https://github.com/senaite/senaite.patient/pull/24
+    migrate_patient_item_to_container(portal)
+
     # https://github.com/senaite/senaite.patient/pull/14
     migrate_to_patient_catalog(portal)
 
@@ -76,6 +82,30 @@ def upgrade(tool):
 
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True
+
+
+def migrate_patient_item_to_container(portal):
+    """Migrate patient objects to be folderish
+
+    Base class changed from Item -> Container
+
+    https://community.plone.org/t/changing-dx-content-type-base-class-from-item-to-container
+    http://blog.redturtle.it/2013/02/25/migrating-dexterity-items-to-dexterity-containers
+    """
+    logger.info("Migrate patients to be folderish ...")
+    patients = portal.patients
+    for patient in patients.objectValues():
+        if api.is_folderish(patient):
+            continue
+        pid = patient.getId()
+        patients._delOb(pid)
+        patient.__class__ = Patient
+        patients._setOb(pid, patient)
+        BTreeFolder2Base._initBTrees(patients[pid])
+        patients[pid].reindexObject()
+
+    transaction.commit()
+    logger.info("Migrate patients to be folderish [DONE]")
 
 
 def migrate_to_patient_catalog(portal):
