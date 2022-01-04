@@ -6,7 +6,7 @@ from bika.lims import api
 from bika.lims.api.mail import is_valid_email_address
 from DateTime import DateTime
 from plone.autoform import directives
-from plone.dexterity.content import Item
+from plone.dexterity.content import Container
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
 from senaite.core.schema import DatetimeField
@@ -196,7 +196,7 @@ class IPatientSchema(model.Schema):
 
 
 @implementer(IPatient, IPatientSchema)
-class Patient(Item):
+class Patient(Container):
     """Results Interpretation Template content
     """
     _catalogs = [PATIENT_CATALOG]

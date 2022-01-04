@@ -4,6 +4,7 @@ Changelog
 1.0.0 (unreleased)
 ------------------
 
+- #24 Migrate patient objects to be folderish
 - #23 Integrate new DX date field and widget
 - #18 Unique patient ID
 - #19 Convert DoB widget to native date input field
