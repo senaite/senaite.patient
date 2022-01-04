@@ -101,6 +101,7 @@ class SamplesListingAdapter(object):
 
         item["MRN"] = obj.getMedicalRecordNumberValue
         item["Patient"] = obj.getPatientFullName
+        item["PatientID"] = obj.getPatientID
 
     @check_installed(None)
     def before_render(self):
