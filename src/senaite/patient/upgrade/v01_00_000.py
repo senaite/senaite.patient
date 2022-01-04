@@ -89,6 +89,7 @@ def migrate_patient_item_to_container(portal):
     Base class changed from Item -> Container
 
     https://community.plone.org/t/changing-dx-content-type-base-class-from-item-to-container
+    http://blog.redturtle.it/2013/02/25/migrating-dexterity-items-to-dexterity-containers
     """
     logger.info("Migrate patients to be folderish ...")
     patients = portal.patients
