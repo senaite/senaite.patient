@@ -70,7 +70,7 @@ def upgrade(tool):
     # Update schema interface
     setup.runImportStepFromProfile(PROFILE_ID, "typeinfo")
 
-    #
+    # https://github.com/senaite/senaite.patient/pull/24
     migrate_patient_item_to_container(portal)
 
     # https://github.com/senaite/senaite.patient/pull/14
