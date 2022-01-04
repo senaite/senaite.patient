@@ -66,6 +66,7 @@ def upgrade(tool):
     setup.runImportStepFromProfile(PROFILE_ID, "plone.app.registry")
     # Update schema interface
     setup.runImportStepFromProfile(PROFILE_ID, "typeinfo")
+    setup.runImportStepFromProfile(PROFILE_ID, "workflow")
 
     # https://github.com/senaite/senaite.patient/pull/14
     migrate_to_patient_catalog(portal)
