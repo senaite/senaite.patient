@@ -54,6 +54,13 @@ def getPatientFullName(self):  # noqa camelcase
 
 
 @check_installed(None)
+def getPatientID(self):  # noqa camelcase
+    """Returns the patient's ID
+    """
+    return self.getField("PatientID").get(self)
+
+
+@check_installed(None)
 def getGender(self):  # noqa camelcase
     """Returns the patient's gender
     """
