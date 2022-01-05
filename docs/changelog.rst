@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0.0 (unreleased)
+1.0.0 (2022-01-05)
 ------------------
 
 - #25 Add Patient ID in samples

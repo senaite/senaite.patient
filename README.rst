@@ -4,14 +4,15 @@ Patients for SENAITE
 About
 -----
 
-**NOT READY FOR PRODUCTION**
-
 SENAITE.PATIENT adds Patient handling to `SENAITE LIMS`_.
+
+NOTE: This Add-on requires `senaite.lims >= 2.1.0`
+
 
 License
 -------
 
-**SENAITE.PATIENT** Copyright (C) 2020 RIDING BYTES & NARALABS
+**SENAITE.PATIENT** Copyright (C) 2020-2022 RIDING BYTES & NARALABS
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the `GNU General Public License version 2`_ as published
