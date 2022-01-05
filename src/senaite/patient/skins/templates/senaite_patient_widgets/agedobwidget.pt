@@ -66,7 +66,7 @@
                      class="form-control form-control-sm"
                      title="Years"
                      placeholder="Years"
-                     i18n:attributes="placeholder title"
+                     i18n:attributes="placeholder label_years"
                      tal:attributes="id string:${subfield_years};
                            name string:${subfield_years};
                            value years;
@@ -75,7 +75,7 @@
                      class="form-control form-control-sm"
                      title="Months"
                      placeholder="Months"
-                     i18n:attributes="placeholder title"
+                     i18n:attributes="placeholder label_months"
                      tal:attributes="id string:${subfield_months};
                            name string:${subfield_months};
                            value months;"/>
@@ -83,7 +83,7 @@
                      class="form-control form-control-sm"
                      title="Days"
                      placeholder="Days"
-                     i18n:attributes="placeholder title"
+                     i18n:attributes="placeholder label_days"
                      tal:attributes="id string:${subfield_days};
                            name string:${subfield_days};
                            value days;"/>

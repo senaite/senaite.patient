@@ -15,7 +15,7 @@ msgstr ""
 "Language-Code: en\n"
 "Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
+"Domain: senaite.patient\n"
 
 #: senaite/patient/profiles/default/workflows/senaite_patient_workflow/definition.xml
 msgid "Activate"
@@ -344,7 +344,6 @@ msgstr ""
 msgid "label_years"
 msgstr ""
 
-#. Default: "Firstname"
 #: senaite/patient/skins/templates/senaite_patient_widgets/fullnamewidget.pt:78
 msgid "placeholder"
 msgstr ""

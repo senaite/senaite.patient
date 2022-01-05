@@ -57,7 +57,7 @@
                    title="Firstname"
                    placeholder="Firstname"
                    class="form-control form-control-sm"
-                   i18n:attributes="title placeholder"
+                   i18n:attributes="placeholder label_firstname"
                    tal:attributes="id string:${subfield_firstname};
                                    name string:${subfield_firstname};
                                    value    firstname;
@@ -66,7 +66,7 @@
                    title="Lastname"
                    class="form-control form-control-sm"
                    placeholder="Lastname"
-                   i18n:attributes="title placeholder"
+                   i18n:attributes="placeholder label_lastname"
                    tal:attributes="id string:${subfield_lastname};
                                    name string:${subfield_lastname};
                                    value lastname;
