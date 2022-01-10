@@ -247,10 +247,11 @@ class Patient(Container):
         if self.patient_id == value:
             # noting changed
             return
-        query = {"portal_type": "Patient", "patient_id": value}
-        results = patient_api.patient_search(query)
-        if len(results) > 0:
-            raise ValueError("A patient with that ID already exists!")
+        if value:
+            query = {"portal_type": "Patient", "patient_id": value}
+            results = patient_api.patient_search(query)
+            if len(results) > 0:
+                raise ValueError("A patient with that ID already exists!")
         self.patient_id = value
 
     def get_firstname(self):

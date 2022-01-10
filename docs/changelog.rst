@@ -4,8 +4,7 @@ Changelog
 1.1.0 (unreleased)
 ------------------
 
-- no changes yet
-
+- #27 Fix cannot create samples with empty Patient ID
 
 1.0.0 (2022-01-05)
 ------------------
