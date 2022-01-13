@@ -4,7 +4,9 @@ Changelog
 1.1.0 (unreleased)
 ------------------
 
+- #28 Remember age/dob selection on context
 - #27 Fix cannot create samples with empty Patient ID
+
 
 1.0.0 (2022-01-05)
 ------------------
