@@ -30,7 +30,7 @@
                           years python:current_age.get('years') or '';
                           months python:current_age.get('months') or '';
                           days python:current_age.get('days') or '';
-                          age_selected python:widget.default_age;">
+                          age_selected python:widget.get_age_selected(context);">
 
         <div class="field AgeDoBWidget text-left"
              tal:attributes="data-required python:required and '1' or '0';
