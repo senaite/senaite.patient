@@ -79,9 +79,19 @@ class AgeDoBWidget(DateTimeWidget):
     _properties = DateTimeWidget._properties.copy()
     _properties.update({
         "show_time": False,
-        "default_age": True,
+        "default_age": False,
         "macro": "senaite_patient_widgets/agedobwidget",
     })
+
+    def get_age_selected(self, context):
+        name = self.getName()
+        attr = "_%s_age_selected" % name
+        return getattr(context, attr, False)
+
+    def set_age_selected(self, context, value):
+        name = self.getName()
+        attr = "_%s_age_selected" % name
+        setattr(context, attr, bool(value))
 
     def get_current_age(self, dob):
         """Returns a dict with keys "years", "months", "days"
@@ -111,16 +121,19 @@ class AgeDoBWidget(DateTimeWidget):
 
         # handle DateTime object when creating partitions
         if api.is_date(value):
-            # switch to birthdate display in widget
-            self.default_age = False
+            self.set_age_selected(instance, False)
             return value, {}
 
         # Grab the input for DoB first
         dob = value.get("dob", "")
         dob = patient_api.to_datetime(dob)
+        age_selected = value.get("selector") == "age"
+
+        # remember what was slected
+        self.set_age_selected(instance, age_selected)
 
         # Maybe user entered age instead of DoB
-        if value.get("selector") == "age":
+        if age_selected:
             # Validate the age entered
             ymd = map(lambda p: value.get(p), ["years", "months", "days"])
             if not any(ymd):
@@ -133,9 +146,6 @@ class AgeDoBWidget(DateTimeWidget):
 
             # Calculate the DoB
             dob = patient_api.get_birth_date(ymd)
-            self.default_age = True
-        elif value.get("selector") == "dob":
-            self.default_age = False
 
         return dob, {}
 
