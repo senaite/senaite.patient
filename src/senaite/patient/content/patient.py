@@ -20,13 +20,15 @@
 
 from six import string_types
 
+from AccessControl import ClassSecurityInfo
 from bika.lims import api
 from bika.lims.api.mail import is_valid_email_address
-from DateTime import DateTime
 from plone.autoform import directives
 from plone.dexterity.content import Container
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
+from Products.CMFCore import permissions
+from senaite.core.api import dtime
 from senaite.core.schema import DatetimeField
 from senaite.core.z3cform.widgets.datetimewidget import DatetimeWidget
 from senaite.patient import api as patient_api
@@ -219,6 +221,26 @@ class Patient(Container):
     """
     _catalogs = [PATIENT_CATALOG]
 
+    security = ClassSecurityInfo()
+
+    @security.private
+    def accessor(self, fieldname):
+        """Return the field accessor for the fieldname
+        """
+        schema = api.get_schema(self)
+        if fieldname not in schema:
+            return None
+        return schema[fieldname].get
+
+    @security.private
+    def mutator(self, fieldname):
+        """Return the field mutator for the fieldname
+        """
+        schema = api.get_schema(self)
+        if fieldname not in schema:
+            return None
+        return schema[fieldname].set
+
     def Title(self):
         fullname = self.get_fullname()
         return fullname.encode("utf8")
@@ -297,22 +319,20 @@ class Patient(Container):
                 value = k
         self.gender = value
 
+    @security.protected(permissions.View)
     def get_birthdate(self):
-        if not self.birthdate:
-            return None
-        return self.birthdate
-
-    def set_birthdate(self, value):
-        """Set birthdate field
-
-        Tries to convert value to datetime before set.
+        """Returns the birthday with the field accessor
         """
-        if isinstance(value, DateTime):
-            # convert DateTime -> datetime
-            value = value.asdatetime()
-        elif isinstance(value, string_types):
-            # convert string to datetime
-            dt = api.to_date(value, None)
-            if dt is not None:
-                value = dt.asdatetime()
-        self.birthdate = value
+        accessor = self.accessor("birthdate")
+        return accessor(self)
+
+    @security.protected(permissions.ModifyPortalContent)
+    def set_birthdate(self, value):
+        """Set birthdate by the field accessor
+        """
+        dt = dtime.to_dt(value)
+        if dtime.is_date(dt):
+            # strip off timezone to avoid UnknownTimeZoneError
+            value = dtime.to_dt(dt.strftime("%Y-%m-%d"))
+        mutator = self.mutator("birthdate")
+        return mutator(self, value)
