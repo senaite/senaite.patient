@@ -19,6 +19,7 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims import api
+from senaite.core.api import dtime
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
@@ -62,12 +63,17 @@ def migrate_birthdates(portal):
     logger.info("Migrate patient birthdate timezones ...")
     catalog = api.get_tool(PATIENT_CATALOG)
     results = catalog({"portal_type": "Patient"})
+    timezone = dtime.get_os_timezone()
     for brain in results:
         patient = api.get_object(brain)
         birthdate = patient.birthdate
         if birthdate:
             # clean existing time and timezone
             date = birthdate.strftime("%Y-%m-%d")
+            # append current OS timezone if possible
+            if timezone:
+                date = date + " %s" % timezone
             patient.set_birthdate(date)
+            patient.reindexObject()
 
     logger.info("Migrate patient birthdate timezones [DONE]")
