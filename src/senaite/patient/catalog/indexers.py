@@ -46,7 +46,7 @@ def patient_mrn(instance):
 
 @indexer(IPatient)
 def patient_fullname(instance):
-    """Index client fullname
+    """Index fullname
     """
     fullname = instance.get_fullname()
     return fullname
@@ -54,10 +54,18 @@ def patient_fullname(instance):
 
 @indexer(IPatient)
 def patient_email(instance):
-    """Index client email
+    """Index email
     """
     email = instance.get_email()
     return email
+
+
+@indexer(IPatient)
+def patient_birthdate(instance):
+    """Index birthdate
+    """
+    birthdate = instance.get_birthdate()
+    return birthdate
 
 
 @indexer(IPatient)

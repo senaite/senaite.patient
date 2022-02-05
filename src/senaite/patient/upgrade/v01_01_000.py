@@ -18,10 +18,13 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+from bika.lims import api
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
+from senaite.patient.config import PATIENT_CATALOG
 from senaite.patient.config import PRODUCT_NAME
+from senaite.patient.setuphandlers import setup_catalogs
 
 version = "1.1.0"
 
@@ -43,5 +46,28 @@ def upgrade(tool):
 
     # -------- ADD YOUR STUFF BELOW --------
 
+    # add dateindex for birthdates
+    setup_catalogs(portal)
+
+    # migrate birthdates w/o time but with valid timezone
+    migrate_birthdates(portal)
+
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True
+
+
+def migrate_birthdates(portal):
+    """Migrate all birthdates from patients to be timezone aware
+    """
+    logger.info("Migrate patient birthdate timezones ...")
+    catalog = api.get_tool(PATIENT_CATALOG)
+    results = catalog({"portal_type": "Patient"})
+    for brain in results:
+        patient = api.get_object(brain)
+        birthdate = patient.birthdate
+        if birthdate:
+            # clean existing time and timezone
+            date = birthdate.strftime("%Y-%m-%d")
+            patient.set_birthdate(date)
+
+    logger.info("Migrate patient birthdate timezones [DONE]")

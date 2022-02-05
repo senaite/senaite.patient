@@ -79,7 +79,8 @@ class PatientFolderView(ListingView):
             ("gender", {
                 "title": _("Gender"), }),
             ("birthdate", {
-                "title": _("Birthdate"), }),
+                "title": _("Birthdate"),
+                "index": "patient_birthdate"}),
         ))
 
         self.review_states = [

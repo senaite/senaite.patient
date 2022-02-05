@@ -34,6 +34,7 @@ INDEXES = BASE_INDEXES + [
     ("patient_mrn", "", "FieldIndex"),
     ("patient_email", "", "FieldIndex"),
     ("patient_fullname", "", "FieldIndex"),
+    ("patient_birthdate", "", "DateIndex"),
     ("patient_searchable_text", "", "ZCTextIndex"),
 ]
 

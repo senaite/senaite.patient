@@ -9,6 +9,7 @@
   <!-- Patient Indexes -->
   <adapter name="patient_mrn" factory=".indexers.patient_mrn" />
   <adapter name="patient_email" factory=".indexers.patient_email" />
+  <adapter name="patient_birthdate" factory=".indexers.patient_birthdate" />
   <adapter name="patient_fullname" factory=".indexers.patient_fullname" />
   <adapter name="patient_searchable_text" factory=".indexers.patient_searchable_text" />
 

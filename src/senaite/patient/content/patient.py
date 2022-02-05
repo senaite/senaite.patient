@@ -330,9 +330,5 @@ class Patient(Container):
     def set_birthdate(self, value):
         """Set birthdate by the field accessor
         """
-        dt = dtime.to_dt(value)
-        if dtime.is_date(dt):
-            # strip off timezone to avoid UnknownTimeZoneError
-            value = dtime.to_dt(dt.strftime("%Y-%m-%d"))
         mutator = self.mutator("birthdate")
         return mutator(self, value)
