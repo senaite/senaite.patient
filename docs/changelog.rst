@@ -4,6 +4,7 @@ Changelog
 1.1.0 (unreleased)
 ------------------
 
+- #29 Avoid UnknownTimeZoneError when creating patient from Sample
 - #28 Remember age/dob selection on context
 - #27 Fix cannot create samples with empty Patient ID
 
