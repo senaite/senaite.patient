@@ -18,12 +18,25 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+import re
+
 from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
 from plone.app.registry.browser.controlpanel import RegistryEditForm
+from plone.autoform import directives
 from plone.z3cform import layout
+from senaite.core.schema.registry import DataGridRow
+from senaite.core.z3cform.widgets.datagrid import DataGridWidgetFactory
 from senaite.patient import messageFactory as _
+from senaite.patient.api import patient_search
+from senaite.patient.config import IDENTIFIERS
 from zope import schema
 from zope.interface import Interface
+from zope.interface import Invalid
+from zope.interface import invariant
+from zope.interface import provider
+from zope.schema.interfaces import IContextAwareDefaultFactory
+
+
 
 
 class IPatientControlPanel(Interface):
