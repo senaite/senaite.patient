@@ -70,6 +70,8 @@ class PatientFolderView(ListingView):
             ("patient_id", {
                 "title": _("Patient ID"),
                 "index": "patient_id"}),
+            ("identifiers", {
+                "title": _("Identifiers"), }),
             ("fullname", {
                 "title": _("Fullname"),
                 "index": "patient_fullname"}),
@@ -112,6 +114,34 @@ class PatientFolderView(ListingView):
         """
         super(PatientFolderView, self).before_render()
 
+    def get_identifier_types(self):
+        """Returns a dict of all identifier types
+        """
+        out = dict()
+        types = api.get_registry_record("senaite.patient.identifiers")
+        for t in types:
+            out[t.get("key")] = t.get("value")
+        return out
+
+    def get_identifier_tags(self, identifiers):
+        """Generate a list of identifier tags
+
+        A tag is a string with the following format:
+
+          <title>:<id>
+
+        :returns: list of identifier tags
+        """
+        tags = []
+        types = self.get_identifier_types()
+        for i in identifiers:
+            key = i["key"]
+            value = i["value"]
+            title = types.get(key, key)
+            tag = "{}:{}".format(title, value)
+            tags.append(tag)
+        return tags
+
     def folderitem(self, obj, item, index):
         obj = api.get_object(obj)
         url = api.get_url(obj)
@@ -128,6 +158,11 @@ class PatientFolderView(ListingView):
         if patient_id:
             item["replace"]["patient_id"] = get_link(
                 url, value=patient_id)
+
+        # Patient Identifiers
+        identifiers = obj.getIdentifiers()
+        item["identifiers"] = "<br>".join(
+            self.get_identifier_tags(identifiers))
 
         # Fullname
         fullname = obj.get_fullname().encode("utf8")
