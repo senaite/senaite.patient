@@ -22,8 +22,6 @@ from archetypes.schemaextender.interfaces import IBrowserLayerAwareExtender
 from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
 from bika.lims.browser.widgets import SelectionWidget
-from bika.lims.fields import ExtDateTimeField
-from bika.lims.fields import ExtStringField
 from bika.lims.interfaces import IAnalysisRequest
 from Products.Archetypes.Widget import StringWidget
 from Products.CMFCore.permissions import View
@@ -34,6 +32,8 @@ from senaite.patient.browser.widgets import AgeDoBWidget
 from senaite.patient.browser.widgets import FullnameWidget
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.config import GENDERS
+from senaite.patient.content import ExtDateTimeField
+from senaite.patient.content import ExtStringField
 from senaite.patient.content.fields import FullnameField
 from senaite.patient.content.fields import TemporaryIdentifierField
 from senaite.patient.interfaces import ISenaitePatientLayer
