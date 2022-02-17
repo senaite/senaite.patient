@@ -325,13 +325,24 @@ class Patient(Container):
         accessor = self.accessor("identifiers")
         return accessor(self)
 
+    def get_identifier_items(self):
+        """Returns a list of identifier tuples
+        """
+        identifiers = self.getIdentifiers()
+        return list(map(lambda i: (i["key"], i["value"]), identifiers))
+
+    def get_identifier_ids(self):
+        """Returns a list of identifier IDs
+        """
+        identifiers = self.getIdentifiers()
+        return list(map(lambda i: i["value"], identifiers))
+
     @security.protected(permissions.ModifyPortalContent)
     def setIdentifiers(self, value):
         """Set birthdate by the field accessor
         """
         mutator = self.mutator("identifiers")
         return mutator(self, value)
-
 
     def get_firstname(self):
         firstname = self.firstname
