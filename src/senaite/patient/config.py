@@ -42,3 +42,11 @@ NAME_ENTRY_MODES = (
     ("parts", _("First name + last name")),
     ("full", _("Fullname")),
 )
+
+
+IDENTIFIERS = (
+    ("passport_id", _("Passport ID")),
+    ("national_id", _("National ID")),
+    ("driver_id", _("Driver ID")),
+    ("voter_id", _("Voter ID")),
+)

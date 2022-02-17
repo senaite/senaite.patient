@@ -20,11 +20,31 @@
 
 from senaite.core.locales import COUNTRIES
 from senaite.patient.config import GENDERS
+from senaite.patient.config import IDENTIFIERS
 from senaite.patient.config import NAME_ENTRY_MODES
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
+
+
+@implementer(IVocabularyFactory)
+class IdentifierVocabulary(object):
+
+    def __call__(self, context):
+
+        items = []
+        for identifier in IDENTIFIERS:
+            value = identifier[0]
+            token = identifier[0]
+            title = identifier[1]
+            # value, token, title
+            term = SimpleTerm(value, token, title)
+            items.append(term)
+        return SimpleVocabulary(sorted(items, key=lambda t: t.title))
+
+
+IdentiierVocabularyFactory = IdentifierVocabulary()
 
 
 @implementer(IVocabularyFactory)
