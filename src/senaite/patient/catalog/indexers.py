@@ -38,6 +38,21 @@ def medical_record_number(instance):
 
 
 @indexer(IPatient)
+def patient_identifier_keys(instance):
+    """Return patient identifier keys
+    """
+    identifiers = instance.getIdentifiers()
+    return map(lambda i: i.get("key"), identifiers)
+
+@indexer(IPatient)
+def patient_identifier_values(instance):
+    """Return patient identifier values
+    """
+    identifiers = instance.getIdentifiers()
+    return map(lambda i: i.get("value"), identifiers)
+
+
+@indexer(IPatient)
 def patient_mrn(instance):
     """Index Medical Record #
     """
