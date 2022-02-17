@@ -50,13 +50,19 @@ class IIdentifiersSchema(Interface):
     """
 
     key = schema.Choice(
-        title=_("Identifier key"),
+        title=_("Type"),
+        description=_(
+            u"The type of identifier that holds the ID"
+        ),
         source="senaite.patient.vocabularies.identifiers",
         required=True,
     )
 
     value = schema.TextLine(
-        title=_(u"Identifier value"),
+        title=_(u"ID"),
+        description=_(
+            u"The identification number of the selected identifier"
+        ),
         required=True,
     )
 
@@ -311,6 +317,21 @@ class Patient(Container):
             if len(results) > 0:
                 raise ValueError("A patient with that ID already exists!")
         self.patient_id = value
+
+    @security.protected(permissions.View)
+    def getIdentifiers(self):
+        """Returns the birthday with the field accessor
+        """
+        accessor = self.accessor("identifiers")
+        return accessor(self)
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setIdentifiers(self, value):
+        """Set birthdate by the field accessor
+        """
+        mutator = self.mutator("identifiers")
+        return mutator(self, value)
+
 
     def get_firstname(self):
         firstname = self.firstname

@@ -26,6 +26,7 @@ from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
+from bika.lims import api
 
 
 @implementer(IVocabularyFactory)
@@ -33,13 +34,15 @@ class IdentifierVocabulary(object):
 
     def __call__(self, context):
 
+        identifiers = api.get_registry_record("senaite.patient.identifiers")
+
         items = []
-        for identifier in IDENTIFIERS:
-            value = identifier[0]
-            token = identifier[0]
-            title = identifier[1]
+        for identifier in identifiers:
+            # note: the key will get the submitted value
+            keyword = identifier.get("key")
+            title = identifier.get("value")
             # value, token, title
-            term = SimpleTerm(value, token, title)
+            term = SimpleTerm(keyword, keyword, title)
             items.append(term)
         return SimpleVocabulary(sorted(items, key=lambda t: t.title))
 
