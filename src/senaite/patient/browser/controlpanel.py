@@ -37,6 +37,27 @@ from zope.interface import provider
 from zope.schema.interfaces import IContextAwareDefaultFactory
 
 
+@provider(IContextAwareDefaultFactory)
+def default_identifiers(context):
+    return [{u"key": i[0], u"value": i[1]} for i in IDENTIFIERS]
+
+
+class IIdentifier(Interface):
+    key = schema.TextLine(
+        title=_(u"Key"),
+        description=_(
+            u"The key will be stored in the database and must be unique"
+        ),
+        required=True,
+    )
+
+    value = schema.TextLine(
+        title=_(u"Value"),
+        description=_(
+            u"The value will be displayed in the identifers selection"
+        ),
+        required=True,
+    )
 
 
 class IPatientControlPanel(Interface):
@@ -47,6 +68,22 @@ class IPatientControlPanel(Interface):
         description=_("Require Patients in Samples"),
         required=False,
         default=True,
+    )
+
+    directives.widget(
+        "identifiers",
+        DataGridWidgetFactory,
+        auto_append=True)
+    identifiers = schema.List(
+        title=_(u"Identifiers"),
+        description=_(
+            u"List of identifiers that can be selected for a patient."
+        ),
+        value_type=DataGridRow(
+            title=u"Identifier",
+            schema=IIdentifier),
+        required=False,
+        defaultFactory=default_identifiers,
     )
 
     patient_entry_mode = schema.Choice(
@@ -74,6 +111,33 @@ class IPatientControlPanel(Interface):
         required=False,
         default=False,
     )
+
+    @invariant
+    def validate_identifiers(data):
+        """Checks if the keyword is unique and valid
+        """
+        keys = []
+        for identifier in data.identifiers:
+            key = identifier.get("key")
+            # check if the key contains invalid characters
+            if re.findall(r"[^A-Za-z\w\d\-\_]", key):
+                raise Invalid(_("Key contains invalid characters"))
+            # check if the key is unique
+            if key in keys:
+                raise Invalid(_("Key is not unique"))
+
+            keys.append(key)
+
+        # check if a used key is removed
+        old_identifiers = data.__context__.identifiers
+        old_keys = map(lambda i: i.get("key"), old_identifiers)
+        removed = list(set(old_keys).difference(keys))
+
+        if removed:
+            # check if there are patients that use one of the removed keys
+            brains = patient_search({"patient_identifier_keys": removed})
+            if brains:
+                raise Invalid(_("Can not delete identifiers that are in use"))
 
 
 class PatientControlPanelForm(RegistryEditForm):
