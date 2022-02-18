@@ -126,6 +126,16 @@ class IPatientSchema(model.Schema):
         default=[],
     )
 
+    email_report = schema.Bool(
+        title=_(
+            u"label_patient_email_report",
+            default=u"Email results report"),
+        description=_(
+            u"Add the patient email as CC recipient to new samples"),
+        required=False,
+        default=False,
+    )
+
     firstname = schema.TextLine(
         title=_(u"label_patient_firstname", default=u"Firstname"),
         description=_(u"Patient firstname"),
@@ -246,6 +256,20 @@ class IPatientSchema(model.Schema):
 
         if patient:
             raise Invalid(_("Patient ID must be unique"))
+
+    @invariant
+    def validate_patient_email_report(data):
+        """Checks if an email is set
+        """
+        value = data.email_report
+        if not value:
+            return
+
+        # https://community.plone.org/t/dexterity-unique-field-validation
+        context = getattr(data, "__context__", None)
+        if context is not None:
+            if not context.getEmail():
+                raise Invalid(_("Please set a valid email Address first"))
 
     @invariant
     def validate_email(data):
@@ -371,11 +395,27 @@ class Patient(Container):
         full = filter(None, [self.firstname, self.lastname])
         return " ".join(full).strip()
 
+    @security.protected(permissions.View)
     def get_email(self):
-        email = self.email
+        # BBB: Remove
+        return self.getEmail()
+
+    @security.protected(permissions.View)
+    def getEmail(self):
+        """Returns the email with the field accessor
+        """
+        accessor = self.accessor("email")
+        email = accessor(self)
         if not email:
             return u""
         return email.strip()
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setEmail(self, value):
+        """Set email by the field accessor
+        """
+        mutator = self.mutator("email")
+        return mutator(self, value)
 
     def get_gender(self):
         genders = dict(GENDERS)
