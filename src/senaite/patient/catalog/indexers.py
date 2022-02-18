@@ -76,6 +76,14 @@ def patient_email(instance):
 
 
 @indexer(IPatient)
+def patient_email_report(instance):
+    """Index email
+    """
+    email_report = instance.getEmailReport()
+    return email_report
+
+
+@indexer(IPatient)
 def patient_birthdate(instance):
     """Index birthdate
     """
