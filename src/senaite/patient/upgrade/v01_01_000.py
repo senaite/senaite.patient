@@ -48,6 +48,7 @@ def upgrade(tool):
 
     # -------- ADD YOUR STUFF BELOW --------
     setup.runImportStepFromProfile(profile, "controlpanel")
+    setup.runImportStepFromProfile(profile, "plone.app.registry")
 
     # add dateindex for birthdates
     setup_catalogs(portal)
