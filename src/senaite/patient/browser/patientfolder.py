@@ -165,7 +165,7 @@ class PatientFolderView(ListingView):
                 url, value=fullname)
 
         # Email
-        email = obj.get_email()
+        email = obj.getEmail()
         item["email"] = email
         if email:
             item["replace"]["email"] = get_email_link(

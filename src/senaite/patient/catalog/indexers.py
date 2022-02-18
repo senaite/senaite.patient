@@ -71,7 +71,7 @@ def patient_fullname(instance):
 def patient_email(instance):
     """Index email
     """
-    email = instance.get_email()
+    email = instance.getEmail()
     return email
 
 
@@ -88,7 +88,7 @@ def patient_searchable_text(instance):
     """Index for searchable text queries
     """
     searchable_text_tokens = [
-        instance.get_email(),
+        instance.getEmail(),
         instance.get_mrn(),
         instance.get_fullname(),
         instance.get_gender(),

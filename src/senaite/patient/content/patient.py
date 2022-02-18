@@ -410,11 +410,6 @@ class Patient(Container):
         return " ".join(full).strip()
 
     @security.protected(permissions.View)
-    def get_email(self):
-        # BBB: Remove
-        return self.getEmail()
-
-    @security.protected(permissions.View)
     def getEmail(self):
         """Returns the email with the field accessor
         """
