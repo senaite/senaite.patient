@@ -27,11 +27,6 @@ Needed Imports:
 
 Functional Helpers:
 
-    >>> def start_server():
-    ...     from Testing.ZopeTestCase.utils import startZServer
-    ...     ip, port = startZServer()
-    ...     return "http://{}:{}/{}".format(ip, port, portal.id)
-
     >>> def timestamp(format="%Y-%m-%d"):
     ...     return DateTime().strftime(format)
 
