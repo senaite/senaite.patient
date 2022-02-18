@@ -28,7 +28,16 @@ from senaite.patient import logger
 def on_object_created(instance, event):
     """Event handler when a sample was created
     """
-    update_patient(instance)
+    patient = update_patient(instance)
+
+    # no patient created when the MRN is temporary
+    if not patient:
+        return
+
+    # append patient email to sample CC emails
+    if patient.getEmailReport():
+        email = patient.getEmail()
+        add_cc_email(instance, email)
 
 
 @check_installed(None)
@@ -47,6 +56,20 @@ def on_object_edited(instance, event):
     update_patient(instance)
 
 
+def add_cc_email(sample, email):
+    """add CC email recipient to sample
+    """
+    # get existing CC emails
+    emails = sample.getCCEmails().split(",")
+    # nothing to do
+    if email in emails:
+        return
+    emails.append(email)
+    # remove whitespaces
+    emails = map(lambda e: e.strip(), emails)
+    sample.setCCEmails(",".join(emails))
+
+
 def update_patient(instance):
     if instance.isMedicalRecordTemporary():
         return
@@ -61,6 +84,8 @@ def update_patient(instance):
         # XXX: Sync the values back from Sample -> Patient?
         values = get_patient_fields(instance)
         patient_api.update_patient(patient, **values)
+
+    return patient
 
 
 def get_patient_fields(instance):
