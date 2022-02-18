@@ -205,3 +205,35 @@ def get_relative_delta(from_date, to_date=None):
         raise TypeError("Type not supported: to_date")
 
     return relativedelta(to_date, from_date)
+
+
+def tuplify_identifiers(identifiers):
+    """Convert identifiers to a list of key/value tuples
+
+    :param identifiers: List of identifier dictionaries
+    :returns: List of tuples
+    """
+    out = []
+    for identifier in identifiers:
+        key = identifier.get("key")
+        value = identifier.get("value")
+        out.append((key, value, ))
+    return out
+
+
+def to_identifier_type_name(identifier_type_key):
+    """Convert an identifier type ID to the human readable name
+
+    :param identifier_type_key: The keyword of the identifier
+    :returns: Indetifiert type name
+    """
+    records = api.get_registry_record("senaite.patient.identifiers")
+
+    name = identifier_type_key
+    for record in records:
+        key = record.get("key")
+        if key != identifier_type_key:
+            continue
+        name = record.get("value")
+
+    return name

@@ -28,8 +28,10 @@ from plone.dexterity.content import Container
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
 from Products.CMFCore import permissions
-from senaite.core.api import dtime
 from senaite.core.schema import DatetimeField
+from senaite.core.schema.fields import DataGridField
+from senaite.core.schema.fields import DataGridRow
+from senaite.core.z3cform.widgets.datagrid import DataGridWidgetFactory
 from senaite.core.z3cform.widgets.datetimewidget import DatetimeWidget
 from senaite.patient import api as patient_api
 from senaite.patient import messageFactory as _
@@ -37,9 +39,32 @@ from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
 from senaite.patient.interfaces import IPatient
 from zope import schema
+from zope.interface import Interface
 from zope.interface import Invalid
 from zope.interface import implementer
 from zope.interface import invariant
+
+
+class IIdentifiersSchema(Interface):
+    """Schema definition for identifier records field
+    """
+
+    key = schema.Choice(
+        title=_("Type"),
+        description=_(
+            u"The type of identifier that holds the ID"
+        ),
+        source="senaite.patient.vocabularies.identifiers",
+        required=True,
+    )
+
+    value = schema.TextLine(
+        title=_(u"ID"),
+        description=_(
+            u"The identification number of the selected identifier"
+        ),
+        required=True,
+    )
 
 
 class IPatientSchema(model.Schema):
@@ -82,6 +107,23 @@ class IPatientSchema(model.Schema):
         title=_(u"label_patient_id", default=u"ID"),
         description=_(u"Unique Patient ID"),
         required=False,
+    )
+
+    directives.widget(
+        "identifiers",
+        DataGridWidgetFactory,
+        auto_append=True)
+    identifiers = DataGridField(
+        title=_(u"Patient Identifiers"),
+        description=_(
+            u"Define one or more identifers for this patient"
+        ),
+        value_type=DataGridRow(
+            title=u"Identifier",
+            schema=IIdentifiersSchema),
+        required=False,
+        missing_value=[],
+        default=[],
     )
 
     firstname = schema.TextLine(
@@ -275,6 +317,32 @@ class Patient(Container):
             if len(results) > 0:
                 raise ValueError("A patient with that ID already exists!")
         self.patient_id = value
+
+    @security.protected(permissions.View)
+    def getIdentifiers(self):
+        """Returns the birthday with the field accessor
+        """
+        accessor = self.accessor("identifiers")
+        return accessor(self)
+
+    def get_identifier_items(self):
+        """Returns a list of identifier tuples
+        """
+        identifiers = self.getIdentifiers()
+        return list(map(lambda i: (i["key"], i["value"]), identifiers))
+
+    def get_identifier_ids(self):
+        """Returns a list of identifier IDs
+        """
+        identifiers = self.getIdentifiers()
+        return list(map(lambda i: i["value"], identifiers))
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setIdentifiers(self, value):
+        """Set birthdate by the field accessor
+        """
+        mutator = self.mutator("identifiers")
+        return mutator(self, value)
 
     def get_firstname(self):
         firstname = self.firstname

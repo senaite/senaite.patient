@@ -28,6 +28,7 @@ from senaite.patient.config import PRODUCT_NAME
 from senaite.patient.setuphandlers import setup_catalogs
 
 version = "1.1.0"
+profile = "profile-{0}:default".format(PRODUCT_NAME)
 
 
 @upgradestep(PRODUCT_NAME, version)
@@ -46,6 +47,8 @@ def upgrade(tool):
                                                    version))
 
     # -------- ADD YOUR STUFF BELOW --------
+    setup.runImportStepFromProfile(profile, "controlpanel")
+    setup.runImportStepFromProfile(profile, "plone.app.registry")
 
     # add dateindex for birthdates
     setup_catalogs(portal)

@@ -27,6 +27,8 @@ from bika.lims.utils import get_link
 from senaite.app.listing.view import ListingView
 from senaite.patient import messageFactory as _sp
 from senaite.patient.catalog import PATIENT_CATALOG
+from senaite.patient.api import to_identifier_type_name
+from senaite.patient.api import tuplify_identifiers
 
 
 class PatientFolderView(ListingView):
@@ -70,6 +72,8 @@ class PatientFolderView(ListingView):
             ("patient_id", {
                 "title": _("Patient ID"),
                 "index": "patient_id"}),
+            ("identifiers", {
+                "title": _("Identifiers"), }),
             ("fullname", {
                 "title": _("Fullname"),
                 "index": "patient_fullname"}),
@@ -112,6 +116,25 @@ class PatientFolderView(ListingView):
         """
         super(PatientFolderView, self).before_render()
 
+    def get_identifier_tags(self, identifiers, klass="badge badge-light"):
+        """Generate a list of identifier HTML tags
+
+        A tag is a string with the following format:
+
+          <title>:<id>
+
+        :returns: list of identifier tags
+        """
+        tags = []
+        records = tuplify_identifiers(identifiers)
+        for k, v in records:
+            title = to_identifier_type_name(k)
+            text = "{}: {}".format(title, v)
+            tag = "<span class='{}'>{}</span>".format(
+                klass, text)
+            tags.append(tag)
+        return tags
+
     def folderitem(self, obj, item, index):
         obj = api.get_object(obj)
         url = api.get_url(obj)
@@ -128,6 +151,11 @@ class PatientFolderView(ListingView):
         if patient_id:
             item["replace"]["patient_id"] = get_link(
                 url, value=patient_id)
+
+        # Patient Identifiers
+        identifiers = obj.getIdentifiers()
+        item["identifiers"] = "<br>".join(
+            self.get_identifier_tags(identifiers))
 
         # Fullname
         fullname = obj.get_fullname().encode("utf8")

@@ -19,8 +19,9 @@
 # Some rights reserved, see README and LICENSE.
 
 import six
+
 from AccessControl import ClassSecurityInfo
-from bika.lims.fields import ExtensionField
+from archetypes.schemaextender.field import ExtensionField
 from Products.Archetypes.Field import ObjectField
 from senaite.patient import api as patient_api
 from senaite.patient.browser.widgets import FullnameWidget

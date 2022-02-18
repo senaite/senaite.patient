@@ -20,6 +20,11 @@
   <!-- Import senaite.patient permissions -->
   <include file="permissions.zcml" />
 
+  <!-- Identifier Vocabulary -->
+  <utility
+      component="senaite.patient.vocabularies.IdentiierVocabularyFactory"
+      name="senaite.patient.vocabularies.identifiers" />
+
   <!-- Gender Vocabulary -->
   <utility
       component="senaite.patient.vocabularies.GenderVocabularyFactory"

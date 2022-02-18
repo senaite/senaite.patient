@@ -32,6 +32,8 @@ INDEXES = BASE_INDEXES + [
     # id, indexed attribute, type
     ("patient_id", "", "FieldIndex"),
     ("patient_mrn", "", "FieldIndex"),
+    ("patient_identifier_keys", "", "KeywordIndex"),
+    ("patient_identifier_values", "", "KeywordIndex"),
     ("patient_email", "", "FieldIndex"),
     ("patient_fullname", "", "FieldIndex"),
     ("patient_birthdate", "", "DateIndex"),

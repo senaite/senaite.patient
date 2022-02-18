@@ -22,13 +22,10 @@ Needed Imports:
     >>> from plone.app.testing import TEST_USER_ID
     >>> from plone.app.testing import TEST_USER_PASSWORD
     >>> from bika.lims.api.security import get_roles_for_permission
+    >>> from senaite.patient.api import tuplify_identifiers
+    >>> from senaite.patient.api import to_identifier_type_name
 
 Functional Helpers:
-
-    >>> def start_server():
-    ...     from Testing.ZopeTestCase.utils import startZServer
-    ...     ip, port = startZServer()
-    ...     return "http://{}:{}/{}".format(ip, port, portal.id)
 
     >>> def timestamp(format="%Y-%m-%d"):
     ...     return DateTime().strftime(format)
@@ -136,3 +133,34 @@ Changing the patient data won't affect the values in a sample:
 
     >>> sample.getPatientFullName()
     'Clark Kent'
+
+
+Patient Identifiers
+...................
+
+Identifiers allow to add multiple IDs for a patient. Each identifier consists
+from a type, e.g. *Drivers License* and the actal ID, e.g. *123456789*.
+
+The types of identifiers can be configured in the patient controlpanel, which
+stores the values in the registry:
+
+    >>> reg_key = "senaite.patient.identifiers"
+    >>> record = api.get_registry_record(reg_key)
+    >>> tuplify_identifiers(record)
+    [(u'passport_id', u'Passport ID'), (u'national_id', u'National ID'), (u'driver_id', u'Driver ID'), (u'voter_id', u'Voter ID')]
+
+Let's add a passport ID for our patient:
+
+    >>> identifiers = [{"key": "passport_id", "value": "123456789"}]
+    >>> patient.setIdentifiers(identifiers)
+    >>> record = patient.getIdentifiers()
+    >>> tuplify_identifiers(record)
+    [('passport_id', '123456789')]
+
+Converting the identifier keyword into the title:
+
+    >>> to_identifier_type_name("passport_id")
+    u'Passport ID'
+
+    >>> to_identifier_type_name("driver_id")
+    u'Driver ID'

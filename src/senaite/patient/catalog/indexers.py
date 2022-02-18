@@ -38,6 +38,21 @@ def medical_record_number(instance):
 
 
 @indexer(IPatient)
+def patient_identifier_keys(instance):
+    """Return patient identifier keys
+    """
+    identifiers = instance.getIdentifiers()
+    return map(lambda i: i.get("key"), identifiers)
+
+@indexer(IPatient)
+def patient_identifier_values(instance):
+    """Return patient identifier values
+    """
+    identifiers = instance.getIdentifiers()
+    return map(lambda i: i.get("value"), identifiers)
+
+
+@indexer(IPatient)
 def patient_mrn(instance):
     """Index Medical Record #
     """
@@ -77,6 +92,7 @@ def patient_searchable_text(instance):
         instance.get_mrn(),
         instance.get_fullname(),
         instance.get_gender(),
+        " ".join(instance.get_identifier_ids()),
     ]
     searchable_text_tokens = filter(None, searchable_text_tokens)
     return u" ".join(searchable_text_tokens)

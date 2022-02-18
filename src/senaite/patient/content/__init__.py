@@ -17,3 +17,17 @@
 #
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
+
+from archetypes.schemaextender.field import ExtensionField
+from Products.Archetypes.public import StringField
+from senaite.core.browser.fields.datetime import DateTimeField
+
+
+class ExtDateTimeField(ExtensionField, DateTimeField):
+    """Extended DateTime Field
+    """
+
+
+class ExtStringField(ExtensionField, StringField):
+    """Extended String Field
+    """
