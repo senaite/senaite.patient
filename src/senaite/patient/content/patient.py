@@ -258,18 +258,26 @@ class IPatientSchema(model.Schema):
             raise Invalid(_("Patient ID must be unique"))
 
     @invariant
-    def validate_patient_email_report(data):
+    def validate_email_report(data):
         """Checks if an email is set
         """
         value = data.email_report
         if not value:
             return
 
-        # https://community.plone.org/t/dexterity-unique-field-validation
-        context = getattr(data, "__context__", None)
-        if context is not None:
-            if not context.getEmail():
-                raise Invalid(_("Please set a valid email Address first"))
+        # check if a valid email is in the request
+        # Note: Workaround for missing `data.email`
+        request = api.get_request()
+        email = request.form.get("form.widgets.email")
+        if email and is_valid_email_address(email):
+            return
+
+        # mark the request to avoid multiple raising
+        key = "_v_email_report_checked"
+        if getattr(request, key, False):
+            return
+        setattr(request, key, True)
+        raise Invalid(_("Please set a valid email address first"))
 
     @invariant
     def validate_email(data):
