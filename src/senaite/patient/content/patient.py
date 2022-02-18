@@ -368,6 +368,20 @@ class Patient(Container):
         mutator = self.mutator("identifiers")
         return mutator(self, value)
 
+    @security.protected(permissions.View)
+    def getEmailReport(self):
+        """Returns the email report option
+        """
+        accessor = self.accessor("email_report")
+        return accessor(self)
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setEmailReport(self, value):
+        """Set the email report option
+        """
+        mutator = self.mutator("email_report")
+        return mutator(self, value)
+
     def get_firstname(self):
         firstname = self.firstname
         if not firstname:
