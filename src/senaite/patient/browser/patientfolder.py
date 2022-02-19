@@ -77,6 +77,9 @@ class PatientFolderView(ListingView):
             ("fullname", {
                 "title": _("Fullname"),
                 "index": "patient_fullname"}),
+            ("email_report", {
+                "title": _("Email Report"),
+                "index": "patient_email_report"}),
             ("email", {
                 "title": _("Email"),
                 "index": "patient_email"}),
@@ -165,11 +168,15 @@ class PatientFolderView(ListingView):
                 url, value=fullname)
 
         # Email
-        email = obj.get_email()
+        email = obj.getEmail()
         item["email"] = email
         if email:
             item["replace"]["email"] = get_email_link(
                 email, value=email)
+
+        # Email Report
+        email_report = obj.getEmailReport()
+        item["email_report"] = _("Yes") if email_report else _("No")
 
         # Gender
         item["gender"] = obj.get_gender()

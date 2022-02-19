@@ -126,6 +126,16 @@ class IPatientSchema(model.Schema):
         default=[],
     )
 
+    email_report = schema.Bool(
+        title=_(
+            u"label_patient_email_report",
+            default=u"Email results report"),
+        description=_(
+            u"Add the patient email as CC recipient to new samples"),
+        required=False,
+        default=False,
+    )
+
     firstname = schema.TextLine(
         title=_(u"label_patient_firstname", default=u"Firstname"),
         description=_(u"Patient firstname"),
@@ -248,6 +258,28 @@ class IPatientSchema(model.Schema):
             raise Invalid(_("Patient ID must be unique"))
 
     @invariant
+    def validate_email_report(data):
+        """Checks if an email is set
+        """
+        value = data.email_report
+        if not value:
+            return
+
+        # check if a valid email is in the request
+        # Note: Workaround for missing `data.email`
+        request = api.get_request()
+        email = request.form.get("form.widgets.email")
+        if email and is_valid_email_address(email):
+            return
+
+        # mark the request to avoid multiple raising
+        key = "_v_email_report_checked"
+        if getattr(request, key, False):
+            return
+        setattr(request, key, True)
+        raise Invalid(_("Please set a valid email address first"))
+
+    @invariant
     def validate_email(data):
         """Checks if the email is correct
         """
@@ -344,6 +376,20 @@ class Patient(Container):
         mutator = self.mutator("identifiers")
         return mutator(self, value)
 
+    @security.protected(permissions.View)
+    def getEmailReport(self):
+        """Returns the email report option
+        """
+        accessor = self.accessor("email_report")
+        return accessor(self)
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setEmailReport(self, value):
+        """Set the email report option
+        """
+        mutator = self.mutator("email_report")
+        return mutator(self, value)
+
     def get_firstname(self):
         firstname = self.firstname
         if not firstname:
@@ -371,11 +417,22 @@ class Patient(Container):
         full = filter(None, [self.firstname, self.lastname])
         return " ".join(full).strip()
 
-    def get_email(self):
-        email = self.email
+    @security.protected(permissions.View)
+    def getEmail(self):
+        """Returns the email with the field accessor
+        """
+        accessor = self.accessor("email")
+        email = accessor(self)
         if not email:
             return u""
         return email.strip()
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setEmail(self, value):
+        """Set email by the field accessor
+        """
+        mutator = self.mutator("email")
+        return mutator(self, value)
 
     def get_gender(self):
         genders = dict(GENDERS)
