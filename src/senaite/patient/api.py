@@ -117,12 +117,12 @@ def update_patient(patient, **values):
     """Create a new patient
     """
     # set values explicitly
-    patient.set_mrn(values.get("mrn", api.get_id(patient)))
-    patient.set_patient_id(values.get("patient_id", ""))
-    patient.set_firstname(values.get("firstname", ""))
-    patient.set_lastname(values.get("lastname", ""))
-    patient.set_gender(values.get("gender", ""))
-    patient.set_birthdate(values.get("birthdate"))
+    patient.setMRN(values.get("mrn", api.get_id(patient)))
+    patient.setPatientID(values.get("patient_id", ""))
+    patient.setFirstname(values.get("firstname", ""))
+    patient.setLastname(values.get("lastname", ""))
+    patient.setGender(values.get("gender", ""))
+    patient.setBirthdate(values.get("birthdate"))
     patient.address = values.get("address")
     # reindex the new values
     patient.reindexObject()
