@@ -315,35 +315,48 @@ class Patient(Container):
             return None
         return schema[fieldname].set
 
+    @security.protected(permissions.View)
     def Title(self):
-        fullname = self.get_fullname()
+        fullname = self.getFullname()
         return fullname.encode("utf8")
 
-    def get_mrn(self):
-        return self.mrn
+    @security.protected(permissions.View)
+    def getMRN(self):
+        """Returns the MRN with the field accessor
+        """
+        accessor = self.accessor("mrn")
+        value = accessor(self)
+        if not value:
+            return u""
+        return value
 
-    def set_mrn(self, value):
+    @security.protected(permissions.ModifyPortalContent)
+    def setMRN(self, value):
+        """Set MRN by the field accessor
+        """
         value = value.strip()
-        if self.mrn == value:
-            # noting changed
-            return
         if patient_api.get_patient_by_mrn(
                 value, full_object=False, include_inactive=True):
             raise ValueError("A patient with that MRN already exists!")
-        self.mrn = value
+        mutator = self.mutator("mrn")
+        return mutator(self, value)
 
-    def get_patient_id(self):
-        patient_id = self.patient_id
-        if not patient_id:
+    @security.protected(permissions.View)
+    def getPatientID(self):
+        """Returns the Patient ID with the field accessor
+        """
+        accessor = self.accessor("patient_id")
+        value = accessor(self)
+        if not value:
             return u""
-        return self.patient_id
+        return value
 
-    def set_patient_id(self, value):
-        value = value.strip()
-        if self.patient_id == value:
-            # noting changed
-            return
+    @security.protected(permissions.ModifyPortalContent)
+    def setPatientID(self, value):
+        """Set Patient ID by the field accessor
+        """
         if value:
+            value = value.strip()
             query = {"portal_type": "Patient", "patient_id": value}
             results = patient_api.patient_search(query)
             if len(results) > 0:
@@ -390,29 +403,34 @@ class Patient(Container):
         mutator = self.mutator("email_report")
         return mutator(self, value)
 
-    def get_firstname(self):
+    @security.protected(permissions.View)
+    def getFirstname(self):
         firstname = self.firstname
         if not firstname:
             return u""
         return firstname.strip()
 
-    def set_firstname(self, value):
+    @security.protected(permissions.ModifyPortalContent)
+    def setFirstname(self, value):
         if not isinstance(value, string_types):
             self.firstname = ""
         self.firstname = api.safe_unicode(value)
 
-    def get_lastname(self):
+    @security.protected(permissions.View)
+    def getLastname(self):
         lastname = self.lastname
         if not lastname:
             return u""
         return lastname.strip()
 
-    def set_lastname(self, value):
+    @security.protected(permissions.ModifyPortalContent)
+    def setLastname(self, value):
         if not isinstance(value, string_types):
             self.lastname = ""
         self.lastname = api.safe_unicode(value)
 
-    def get_fullname(self):
+    @security.protected(permissions.View)
+    def getFullname(self):
         # Create the fullname from firstname + lastname
         full = filter(None, [self.firstname, self.lastname])
         return " ".join(full).strip()
@@ -434,25 +452,34 @@ class Patient(Container):
         mutator = self.mutator("email")
         return mutator(self, value)
 
-    def get_gender(self):
+    @security.protected(permissions.View)
+    def getGender(self):
+        """Returns the gender with the field accessor
+        """
+        accessor = self.accessor("gender")
         genders = dict(GENDERS)
-        return genders.get(self.gender)
+        value = accessor(self)
+        return genders.get(value)
 
-    def set_gender(self, value):
+    @security.protected(permissions.ModifyPortalContent)
+    def setGender(self, value):
+        """Set birthdate by the field accessor
+        """
         for k, v in GENDERS:
             if value == v:
                 value = k
-        self.gender = value
+        mutator = self.mutator("gender")
+        return mutator(self, value)
 
     @security.protected(permissions.View)
-    def get_birthdate(self):
+    def getBirthdate(self):
         """Returns the birthday with the field accessor
         """
         accessor = self.accessor("birthdate")
         return accessor(self)
 
     @security.protected(permissions.ModifyPortalContent)
-    def set_birthdate(self, value):
+    def setBirthdate(self, value):
         """Set birthdate by the field accessor
         """
         mutator = self.mutator("birthdate")

@@ -143,17 +143,20 @@ class PatientFolderView(ListingView):
         url = api.get_url(obj)
 
         # MRN
-        mrn = obj.get_mrn().encode("utf8")
-        item["mrn"] = mrn
-        item["replace"]["mrn"] = get_link(
-            url, value=mrn)
+        mrn = obj.getMRN() or obj.getId()
+        if mrn:
+            mrn = api.safe_unicode(mrn).encode("utf8")
+            item["mrn"] = mrn
+            item["replace"]["mrn"] = get_link(
+                url, value=mrn)
 
         # Patient ID
-        patient_id = obj.get_patient_id().encode("utf8")
-        item["patient_id"] = patient_id
-        if patient_id:
+        pid = obj.getPatientID()
+        if pid:
+            pid = api.safe_unicode(pid).encode("utf8")
+            item["patient_id"] = pid
             item["replace"]["patient_id"] = get_link(
-                url, value=patient_id)
+                url, value=pid)
 
         # Patient Identifiers
         identifiers = obj.getIdentifiers()
@@ -161,16 +164,17 @@ class PatientFolderView(ListingView):
             self.get_identifier_tags(identifiers))
 
         # Fullname
-        fullname = obj.get_fullname().encode("utf8")
-        item["fullname"] = fullname
+        fullname = obj.getFullname()
         if fullname:
+            fullname = api.safe_unicode(fullname).encode("utf8")
+            item["fullname"] = fullname
             item["replace"]["fullname"] = get_link(
                 url, value=fullname)
 
         # Email
         email = obj.getEmail()
-        item["email"] = email
         if email:
+            item["email"] = email
             item["replace"]["email"] = get_email_link(
                 email, value=email)
 
@@ -179,10 +183,11 @@ class PatientFolderView(ListingView):
         item["email_report"] = _("Yes") if email_report else _("No")
 
         # Gender
-        item["gender"] = obj.get_gender()
+        item["gender"] = obj.getGender()
 
         # Birthdate
-        birthdate = obj.get_birthdate()
-        item["birthdate"] = self.ulocalized_time(birthdate, long_format=0)
+        birthdate = obj.getBirthdate()
+        if birthdate:
+            item["birthdate"] = self.ulocalized_time(birthdate, long_format=0)
 
         return item

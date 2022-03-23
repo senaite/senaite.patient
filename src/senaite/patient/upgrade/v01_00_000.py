@@ -151,7 +151,7 @@ def fix_patients_fullname(portal):
         raw = patient.__dict__
         firstname = raw.get("fullname", None)
         if firstname:
-            patient.set_firstname(firstname)
+            patient.setFirstname(firstname)
             del(patient.__dict__["fullname"])
             patient.reindexObject()
 

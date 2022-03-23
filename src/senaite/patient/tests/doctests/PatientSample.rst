@@ -123,12 +123,12 @@ When a new patient MRN was referenced in a sample, a new patient is created:
 
 Changing the patient data won't affect the values in a sample:
 
-    >>> patient.get_fullname()
+    >>> patient.getFullname()
     u'Clark Kent'
 
-    >>> patient.set_firstname("Superman")
+    >>> patient.setFirstname("Superman")
 
-    >>> patient.get_fullname()
+    >>> patient.getFullname()
     u'Superman'
 
     >>> sample.getPatientFullName()

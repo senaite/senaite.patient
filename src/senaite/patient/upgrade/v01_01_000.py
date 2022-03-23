@@ -76,7 +76,7 @@ def migrate_birthdates(portal):
             # append current OS timezone if possible
             if timezone:
                 date = date + " %s" % timezone
-            patient.set_birthdate(date)
+            patient.setBirthdate(date)
             patient.reindexObject()
 
     logger.info("Migrate patient birthdate timezones [DONE]")
