@@ -44,6 +44,7 @@ def patient_identifier_keys(instance):
     identifiers = instance.getIdentifiers()
     return map(lambda i: i.get("key"), identifiers)
 
+
 @indexer(IPatient)
 def patient_identifier_values(instance):
     """Return patient identifier values
@@ -95,12 +96,14 @@ def patient_birthdate(instance):
 def patient_searchable_text(instance):
     """Index for searchable text queries
     """
+    identifier_ids = instance.get_identifier_ids()
+    identifier_ids = map(lambda id: id.encode("utf-8"), identifier_ids)
     searchable_text_tokens = [
         instance.getEmail(),
         instance.getMRN(),
         instance.getFullname(),
         instance.getGender(),
-        " ".join(instance.get_identifier_ids()),
+        " ".join(identifier_ids),
     ]
     searchable_text_tokens = filter(None, searchable_text_tokens)
-    return u" ".join(searchable_text_tokens)
+    return " ".join(searchable_text_tokens)

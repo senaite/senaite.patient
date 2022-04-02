@@ -19,6 +19,7 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims import api
+from Products.ZCatalog.ProgressHandler import ZLogHandler
 from senaite.core.api import dtime
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
@@ -50,6 +51,9 @@ def upgrade(tool):
     setup.runImportStepFromProfile(profile, "controlpanel")
     setup.runImportStepFromProfile(profile, "plone.app.registry")
 
+    # fix non-unicode values
+    fix_unicode_issues(portal)
+
     # add dateindex for birthdates
     setup_catalogs(portal)
 
@@ -58,6 +62,43 @@ def upgrade(tool):
 
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True
+
+
+def fix_unicode_issues(portal):
+    """Ensure that field values from Patient objects are stored as unicode, and
+    reindex catalogs to ensure the indexes contain encoded strings.
+    To keep the safest convention, as with ATs:
+      - field values are stored as unicode
+      - accessors return encoded strings
+      - catalog indexes store encoded strings
+    """
+    # Clear senaite_patient_catalog
+    patient_catalog = api.get_tool(PATIENT_CATALOG)
+    patient_catalog.manage_catalogClear()
+
+    # Unindex getFullname index from portal_catalog
+    portal_catalog = api.get_tool("portal_catalog")
+    portal_catalog.clearIndex("getFullname")
+
+    # Walk through all Patients, reset the values to ensure the value is stored
+    # as unicode and reindex them encoded (because of accessors)
+    for patient in portal.patients.objectValues():
+        patient.setEmail(patient.email)
+        patient.setMRN(patient.mrn)
+        patient.setPatientID(patient.patient_id)
+        patient.setGender(patient.gender)
+        patient.setFirstname(patient.firstname)
+        patient.setLastname(patient.lastname)
+        patient.reindexObject()
+
+    # Reindex indexes
+   # handler = ZLogHandler()
+    #indexes = patient_catalog.indexes()
+    #patient_catalog.reindexIndex(indexes, None, handler)
+
+    # Reindex portal_catalog's getFullName index
+    handler = ZLogHandler()
+    portal_catalog.reindexIndex(["getFullname"], None, handler)
 
 
 def migrate_birthdates(portal):
