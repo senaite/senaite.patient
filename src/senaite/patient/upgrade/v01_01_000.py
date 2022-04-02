@@ -91,11 +91,6 @@ def fix_unicode_issues(portal):
         patient.setLastname(patient.lastname)
         patient.reindexObject()
 
-    # Reindex indexes
-   # handler = ZLogHandler()
-    #indexes = patient_catalog.indexes()
-    #patient_catalog.reindexIndex(indexes, None, handler)
-
     # Reindex portal_catalog's getFullName index
     handler = ZLogHandler()
     portal_catalog.reindexIndex(["getFullname"], None, handler)
