@@ -335,6 +335,9 @@ class Patient(Container):
     def setMRN(self, value):
         """Set MRN by the field accessor
         """
+        # XXX These checks will be quite common on setters linked to `required`
+        # fields. We could add a decorator or, if we use our own implementation
+        # of BaseField, take this into consideration in the `get(self)` func.
         if not value:
             raise ValueError("Value is missing or empty")
 
