@@ -224,8 +224,12 @@ class IPatientSchema(model.Schema):
                 # nothing changed
                 return
 
+        if not data.mrn:
+            raise Invalid(_("Patient Medical Record is missing or empty"))
+
         patient = patient_api.get_patient_by_mrn(
             data.mrn, full_object=False, include_inactive=True)
+
         if patient:
             raise Invalid(_("Patient Medical Record # must be unique"))
 
@@ -331,10 +335,23 @@ class Patient(Container):
     def setMRN(self, value):
         """Set MRN by the field accessor
         """
+        if not value:
+            raise ValueError("Value is missing or empty")
+
+        if not isinstance(value, string_types):
+            raise ValueError("Type is not supported: {}".format(repr(value)))
+
         value = value.strip()
-        if patient_api.get_patient_by_mrn(
-                value, full_object=False, include_inactive=True):
-            raise ValueError("A patient with that MRN already exists!")
+        accessor = self.accessor("mrn")
+        if accessor(self) == api.safe_unicode(value):
+            # Value has not changed
+            return
+
+        # Check if a patient with this same MRN already exists
+        if patient_api.get_patient_by_mrn(value, full_object=False,
+                                                 include_inactive=True):
+            raise ValueError("Value is not unique: {}".format(value))
+
         mutator = self.mutator("mrn")
         return mutator(self, api.safe_unicode(value))
 
