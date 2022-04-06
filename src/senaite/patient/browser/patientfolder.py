@@ -132,7 +132,8 @@ class PatientFolderView(ListingView):
         records = tuplify_identifiers(identifiers)
         for k, v in records:
             title = to_identifier_type_name(k)
-            text = "{}: {}".format(title, v)
+            value = api.safe_unicode(v).encode("utf8")
+            text = "{}: {}".format(title, value)
             tag = "<span class='{}'>{}</span>".format(
                 klass, text)
             tags.append(tag)
