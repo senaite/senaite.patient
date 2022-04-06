@@ -80,9 +80,15 @@ def fix_unicode_issues(portal):
     portal_catalog = api.get_tool("portal_catalog")
     portal_catalog.clearIndex("getFullname")
 
+    invalid = []
+
     # Walk through all Patients, reset the values to ensure the value is stored
     # as unicode and reindex them encoded (because of accessors)
     for patient in portal.patients.objectValues():
+        # skip invalid patients
+        if not patient.mrn:
+            invalid.append(patient)
+            continue
         patient.setEmail(patient.email)
         patient.setMRN(patient.mrn)
         patient.setPatientID(patient.patient_id)
@@ -94,6 +100,11 @@ def fix_unicode_issues(portal):
     # Reindex portal_catalog's getFullName index
     handler = ZLogHandler()
     portal_catalog.reindexIndex(["getFullname"], None, handler)
+
+    if len(invalid) > 0:
+        logger.error("Skipped %d patients w/o MRN set:" % len(invalid))
+        for obj in invalid:
+            logger.info("----> %s" % api.get_url(obj))
 
 
 def migrate_birthdates(portal):
