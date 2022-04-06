@@ -119,6 +119,11 @@ class PatientFolderView(ListingView):
         """
         super(PatientFolderView, self).before_render()
 
+    def to_utf8(self, s):
+        """Ensure UTF8 encoded string
+        """
+        return api.safe_unicode(s).encode("utf8")
+
     def get_identifier_tags(self, identifiers, klass="badge badge-light"):
         """Generate a list of identifier HTML tags
 
@@ -132,9 +137,8 @@ class PatientFolderView(ListingView):
         records = tuplify_identifiers(identifiers)
         for k, v in records:
             title = to_identifier_type_name(k)
-            text = "{}: {}".format(title, v)
-            tag = "<span class='{}'>{}</span>".format(
-                klass, text)
+            text = "{}: {}".format(self.to_utf8(title), self.to_utf8(v))
+            tag = "<span class='{}'>{}</span>".format(klass, text)
             tags.append(tag)
         return tags
 

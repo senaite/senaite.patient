@@ -4,6 +4,7 @@ Changelog
 1.1.0 (unreleased)
 ------------------
 
+- #34 Fix UnicodeDecodeError when storing Patients with special characters
 - #31 Allow patient to receive result reports
 - #30 Add Patient Identifiers
 - #29 Avoid UnknownTimeZoneError when creating patient from Sample

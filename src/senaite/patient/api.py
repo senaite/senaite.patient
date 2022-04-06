@@ -64,7 +64,7 @@ def get_patient_by_mrn(mrn, full_object=True, include_inactive=False):
     """
     query = {
         "portal_type": "Patient",
-        "patient_mrn": mrn,
+        "patient_mrn": api.safe_unicode(mrn).encode("utf8"),
         "is_active": True,
     }
     # Remove active index

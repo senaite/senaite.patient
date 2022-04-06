@@ -224,8 +224,12 @@ class IPatientSchema(model.Schema):
                 # nothing changed
                 return
 
+        if not data.mrn:
+            raise Invalid(_("Patient Medical Record is missing or empty"))
+
         patient = patient_api.get_patient_by_mrn(
             data.mrn, full_object=False, include_inactive=True)
+
         if patient:
             raise Invalid(_("Patient Medical Record # must be unique"))
 
@@ -317,51 +321,66 @@ class Patient(Container):
 
     @security.protected(permissions.View)
     def Title(self):
-        fullname = self.getFullname()
-        return fullname.encode("utf8")
+        return self.getFullname()
 
     @security.protected(permissions.View)
     def getMRN(self):
         """Returns the MRN with the field accessor
         """
         accessor = self.accessor("mrn")
-        value = accessor(self)
-        if not value:
-            return u""
-        return value
+        value = accessor(self) or ""
+        return value.encode("utf-8")
 
     @security.protected(permissions.ModifyPortalContent)
     def setMRN(self, value):
         """Set MRN by the field accessor
         """
+        # XXX These checks will be quite common on setters linked to `required`
+        # fields. We could add a decorator or, if we use our own implementation
+        # of BaseField, take this into consideration in the `get(self)` func.
+        if not value:
+            raise ValueError("Value is missing or empty")
+
+        if not isinstance(value, string_types):
+            raise ValueError("Type is not supported: {}".format(repr(value)))
+
         value = value.strip()
-        if patient_api.get_patient_by_mrn(
-                value, full_object=False, include_inactive=True):
-            raise ValueError("A patient with that MRN already exists!")
+        accessor = self.accessor("mrn")
+        if accessor(self) == api.safe_unicode(value):
+            # Value has not changed
+            return
+
+        # Check if a patient with this same MRN already exists
+        if patient_api.get_patient_by_mrn(value, full_object=False,
+                                          include_inactive=True):
+            raise ValueError("Value is not unique: {}".format(value))
+
         mutator = self.mutator("mrn")
-        return mutator(self, value)
+        return mutator(self, api.safe_unicode(value))
 
     @security.protected(permissions.View)
     def getPatientID(self):
         """Returns the Patient ID with the field accessor
         """
         accessor = self.accessor("patient_id")
-        value = accessor(self)
-        if not value:
-            return u""
-        return value
+        value = accessor(self) or ""
+        return value.encode("utf-8")
 
     @security.protected(permissions.ModifyPortalContent)
     def setPatientID(self, value):
         """Set Patient ID by the field accessor
         """
+        if not isinstance(value, string_types):
+            value = u""
         if value:
             value = value.strip()
             query = {"portal_type": "Patient", "patient_id": value}
             results = patient_api.patient_search(query)
             if len(results) > 0:
                 raise ValueError("A patient with that ID already exists!")
-        self.patient_id = value
+
+        mutator = self.mutator("patient_id")
+        mutator(self, api.safe_unicode(value.strip()))
 
     @security.protected(permissions.View)
     def getIdentifiers(self):
@@ -405,52 +424,52 @@ class Patient(Container):
 
     @security.protected(permissions.View)
     def getFirstname(self):
-        firstname = self.firstname
-        if not firstname:
-            return u""
-        return firstname.strip()
+        accessor = self.accessor("firstname")
+        value = accessor(self) or ""
+        return value.encode("utf-8")
 
     @security.protected(permissions.ModifyPortalContent)
     def setFirstname(self, value):
         if not isinstance(value, string_types):
-            self.firstname = ""
-        self.firstname = api.safe_unicode(value)
+            value = u""
+        mutator = self.mutator("firstname")
+        mutator(self, api.safe_unicode(value.strip()))
 
     @security.protected(permissions.View)
     def getLastname(self):
-        lastname = self.lastname
-        if not lastname:
-            return u""
-        return lastname.strip()
+        accessor = self.accessor("lastname")
+        value = accessor(self) or ""
+        return value.encode("utf-8")
 
     @security.protected(permissions.ModifyPortalContent)
     def setLastname(self, value):
         if not isinstance(value, string_types):
-            self.lastname = ""
-        self.lastname = api.safe_unicode(value)
+            value = u""
+        mutator = self.mutator("lastname")
+        mutator(self, api.safe_unicode(value.strip()))
 
     @security.protected(permissions.View)
     def getFullname(self):
         # Create the fullname from firstname + lastname
-        full = filter(None, [self.firstname, self.lastname])
-        return " ".join(full).strip()
+        full = filter(None, [self.getFirstname(), self.getLastname()])
+        return " ".join(full)
 
     @security.protected(permissions.View)
     def getEmail(self):
         """Returns the email with the field accessor
         """
         accessor = self.accessor("email")
-        email = accessor(self)
-        if not email:
-            return u""
-        return email.strip()
+        value = accessor(self) or ""
+        return value.encode("utf-8")
 
     @security.protected(permissions.ModifyPortalContent)
     def setEmail(self, value):
         """Set email by the field accessor
         """
+        if not isinstance(value, string_types):
+            value = u""
         mutator = self.mutator("email")
-        return mutator(self, value)
+        mutator(self, api.safe_unicode(value.strip()))
 
     @security.protected(permissions.View)
     def getGender(self):
@@ -459,7 +478,8 @@ class Patient(Container):
         accessor = self.accessor("gender")
         genders = dict(GENDERS)
         value = accessor(self)
-        return genders.get(value)
+        value = genders.get(value)
+        return value.encode("utf-8")
 
     @security.protected(permissions.ModifyPortalContent)
     def setGender(self, value):
@@ -469,7 +489,7 @@ class Patient(Container):
             if value == v:
                 value = k
         mutator = self.mutator("gender")
-        return mutator(self, value)
+        mutator(self, api.safe_unicode(value))
 
     @security.protected(permissions.View)
     def getBirthdate(self):
