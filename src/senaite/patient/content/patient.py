@@ -352,7 +352,7 @@ class Patient(Container):
 
         # Check if a patient with this same MRN already exists
         if patient_api.get_patient_by_mrn(value, full_object=False,
-                                                 include_inactive=True):
+                                          include_inactive=True):
             raise ValueError("Value is not unique: {}".format(value))
 
         mutator = self.mutator("mrn")
