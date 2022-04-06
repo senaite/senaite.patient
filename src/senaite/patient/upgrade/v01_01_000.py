@@ -86,6 +86,9 @@ def fix_unicode_issues(portal):
     # as unicode and reindex them encoded (because of accessors)
     for patient in portal.patients.objectValues():
         # skip invalid patients
+        # NOTE: This is obviously a bug in the data that should not happen!
+        #       Anyhow, we we do not want this upgrade handler to fail on this
+        #       and investigate elsewhere.
         if not patient.mrn:
             invalid.append(patient)
             continue
