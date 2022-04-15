@@ -51,6 +51,9 @@ def upgrade(tool):
     setup.runImportStepFromProfile(profile, "controlpanel")
     setup.runImportStepFromProfile(profile, "plone.app.registry")
 
+    # migrate addresses
+    migrate_patient_addresses(portal)
+
     # fix non-unicode values
     fix_unicode_issues(portal)
 
@@ -62,6 +65,30 @@ def upgrade(tool):
 
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True
+
+
+def migrate_patient_addresses(portal):
+    """Migrate patient addresses to new DX field
+    """
+    logger.info("Migrate patient addresses ...")
+    catalog = api.get_tool(PATIENT_CATALOG)
+    results = catalog({"portal_type": "Patient"})
+    for brain in results:
+        patient = api.get_object(brain)
+        address = getattr(patient, "address", "")
+        city = getattr(patient, "city", "")
+        zipcode = getattr(patient, "zipcode", "")
+        country = getattr(patient, "country", "")
+        if any([address, city, zipcode, country]):
+            value = {
+                "type": "physical",
+                "addresss": address,
+                "city": city,
+                "zip": zipcode,
+                "country": country,
+            }
+            patient.setAddress(value)
+    logger.info("Migrate patient addresses [DONE]")
 
 
 def fix_unicode_issues(portal):

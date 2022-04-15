@@ -28,7 +28,11 @@ from plone.dexterity.content import Container
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
 from Products.CMFCore import permissions
+from senaite.core.schema import AddressField
 from senaite.core.schema import DatetimeField
+from senaite.core.schema.addressfield import OTHER_ADDRESS
+from senaite.core.schema.addressfield import PHYSICAL_ADDRESS
+from senaite.core.schema.addressfield import POSTAL_ADDRESS
 from senaite.core.schema.fields import DataGridField
 from senaite.core.schema.fields import DataGridRow
 from senaite.core.z3cform.widgets.datagrid import DataGridWidgetFactory
@@ -93,7 +97,7 @@ class IPatientSchema(model.Schema):
     fieldset(
         "address",
         label=u"Address",
-        fields=["city", "zipcode", "address", "country"])
+        fields=["address"])
 
     # Default
 
@@ -177,30 +181,13 @@ class IPatientSchema(model.Schema):
     )
 
     # Address
-
-    address = schema.Text(
-        title=_(u"label_patient_address", default=u"Address"),
-        description=_(u"Patient address"),
-        required=False,
-    )
-
-    city = schema.TextLine(
-        title=_(u"label_patient_city", default=u"City"),
-        description=_(u"Patient city"),
-        required=False,
-    )
-
-    zipcode = schema.TextLine(
-        title=_(u"label_patient_zipcode", default=u"ZIP"),
-        description=_(u"Patient ZIP Code"),
-        required=False,
-    )
-
-    country = schema.Choice(
-        title=_(u"label_patient_country", default=u"Country"),
-        description=_(u"Patient country"),
-        source="senaite.patient.vocabularies.country",
-        required=False,
+    address = AddressField(
+        title=_("Address"),
+        address_types=[
+            PHYSICAL_ADDRESS,
+            POSTAL_ADDRESS,
+            OTHER_ADDRESS,
+        ]
     )
 
     directives.widget("birthdate",
@@ -503,4 +490,18 @@ class Patient(Container):
         """Set birthdate by the field accessor
         """
         mutator = self.mutator("birthdate")
+        return mutator(self, value)
+
+    @security.protected(permissions.View)
+    def getAddress(self):
+        """Returns the address with the field accessor
+        """
+        accessor = self.accessor("address")
+        return accessor(self)
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setAddress(self, value):
+        """Set address by the field accessor
+        """
+        mutator = self.mutator("address")
         return mutator(self, value)

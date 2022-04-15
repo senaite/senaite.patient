@@ -80,11 +80,15 @@ def update_patient(instance):
     patient = patient_api.get_patient_by_mrn(mrn, include_inactive=True)
     if patient is None:
         logger.info("Creating new Patient with MRN #: {}".format(mrn))
-        patient = patient_api.create_empty_patient()
-        # XXX: Sync the values back from Sample -> Patient?
         values = get_patient_fields(instance)
-        patient_api.update_patient(patient, **values)
-
+        try:
+            patient = patient_api.create_temporary_patient()
+            patient_api.update_patient(patient, **values)
+            patient_api.safe_temporary_patient(patient)
+        except ValueError as exc:
+            logger.error("%s" % exc)
+            logger.error("Failed to create patient for values: %r" % values)
+            raise exc
     return patient
 
 
@@ -99,6 +103,12 @@ def get_patient_fields(instance):
     field = instance.getField("PatientFullName")
     firstname = field.get_firstname(instance)
     lastname = field.get_lastname(instance)
+
+    if address:
+        address = {
+            "type": "physical",
+            "address": api.safe_unicode(address),
+        }
 
     return {
         "mrn": mrn,

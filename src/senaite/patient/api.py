@@ -95,21 +95,29 @@ def patient_search(query):
     return catalog(query)
 
 
-def create_empty_patient():
-    """Create a new empty patient in the patients folder
+def create_temporary_patient():
+    """Create a new temporary patient object
+
+    :returns: temporary patient object
     """
     tid = tmpID()
-    portal = api.get_portal()
-    container = portal.patients
     portal_type = "Patient"
     portal_types = api.get_tool("portal_types")
     fti = portal_types.getTypeInfo(portal_type)
     factory = getUtility(IFactory, fti.factory)
-    obj = factory(tid)
-    obj._setPortalTypeName(fti.getId())
-    notify(ObjectCreatedEvent(obj))
-    container._setObject(tid, obj)
-    patient = container.get(obj.getId())
+    patient = factory(tid)
+    patient._setPortalTypeName(fti.getId())
+    return patient
+
+
+def safe_temporary_patient(patient):
+    """Safe temporary patient to the patients folder
+    """
+    portal = api.get_portal()
+    container = portal.patients
+    notify(ObjectCreatedEvent(patient))
+    container._setObject(patient.id, patient)
+    patient = container.get(patient.getId())
     return patient
 
 
@@ -123,7 +131,7 @@ def update_patient(patient, **values):
     patient.setLastname(values.get("lastname", ""))
     patient.setGender(values.get("gender", ""))
     patient.setBirthdate(values.get("birthdate"))
-    patient.address = values.get("address")
+    patient.setAddress(values.get("address"))
     # reindex the new values
     patient.reindexObject()
 
