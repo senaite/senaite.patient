@@ -94,7 +94,11 @@ def fix_unicode_issues(portal):
             continue
         patient.setEmail(patient.email)
         patient.setMRN(patient.mrn)
-        patient.setPatientID(patient.patient_id)
+        try:
+            patient.setPatientID(patient.patient_id)
+        except ValueError:
+            # flush duplicate IDs
+            patient.setPatientID("")
         patient.setGender(patient.gender)
         patient.setFirstname(patient.firstname)
         patient.setLastname(patient.lastname)
