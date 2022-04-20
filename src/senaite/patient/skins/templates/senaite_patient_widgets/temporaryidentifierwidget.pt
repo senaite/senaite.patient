@@ -47,7 +47,7 @@
           </p>
           <div class="dialog-listing">
             <div>{{firstname}} {{lastname}}</div>
-            <div>{{address}}</div>
+            <div>{{address_line}}</div>
           </div>
           <p i18n:translate="">
             Do you want to apply these changes?
@@ -61,7 +61,7 @@
           </p>
           <div class="dialog-listing">
             <div>{{firstname}} {{lastname}}</div>
-            <div>{{address}}</div>
+            <div>{{address_line}}</div>
           </div>
           <p i18n:translate="">
             Activate this Patient first or choose a different identifier

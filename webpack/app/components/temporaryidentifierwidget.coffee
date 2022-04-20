@@ -113,19 +113,23 @@ class TemporaryIdentifierWidgetController
     .done (data) ->
       return unless data
 
-      # Address blocks
+      # Generate a physical address line
+      physical_address = data.address[0]
       address = [
-        data.address,
-        data.zipcode,
-        data.city,
-        data.country
-      ].filter((value) -> value)
+        physical_address.address,
+        physical_address.zip,
+        physical_address.city,
+        physical_address.country
+      ].filter((value) -> value).join(", ")
+
+      # Write back the physical address line for the template
+      data.address_line = address
 
       # map patient fields -> Sample fields
       record = {
         "PatientFullName.firstname": data.firstname,
         "PatientFullName.lastname": data.lastname,
-        "PatientAddress": address.join(", "),
+        "PatientAddress": address,
         "DateOfBirth": @format_date(data.birthdate),
         "Age": data.age,
         "Gender": data.gender,
@@ -273,9 +277,6 @@ class TemporaryIdentifierWidgetController
       "gender"
       "email"
       "address"
-      "zipcode"
-      "city"
-      "country"
       "review_state"
     ]
 
