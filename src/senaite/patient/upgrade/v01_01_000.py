@@ -50,6 +50,7 @@ def upgrade(tool):
     # -------- ADD YOUR STUFF BELOW --------
     setup.runImportStepFromProfile(profile, "controlpanel")
     setup.runImportStepFromProfile(profile, "plone.app.registry")
+    setup.runImportStepFromProfile(profile, "workflow")
 
     # migrate addresses
     migrate_patient_addresses(portal)
@@ -62,6 +63,9 @@ def upgrade(tool):
 
     # migrate birthdates w/o time but with valid timezone
     migrate_birthdates(portal)
+
+    # do not allow access to patients root folder other than lab personnel
+    update_patient_role_mappings(portal)
 
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True
@@ -82,7 +86,7 @@ def migrate_patient_addresses(portal):
         if any([address, city, zipcode, country]):
             value = {
                 "type": "physical",
-                "addresss": address,
+                "address": address,
                 "city": city,
                 "zip": zipcode,
                 "country": country,
@@ -161,3 +165,17 @@ def migrate_birthdates(portal):
             patient.reindexObject()
 
     logger.info("Migrate patient birthdate timezones [DONE]")
+
+
+def update_patient_role_mappings(portal):
+    """Updates the role mappings of patients root folder to prevent access to
+    non-laboratory users
+    """
+    logger.info("Fixing permissions for patient's root folder ...")
+    wf_tool = api.get_tool("portal_workflow")
+    wf_id = "senaite_patient_folder_workflow"
+    workflow = wf_tool.getWorkflowById(wf_id)
+    folder = portal.patients
+    workflow.updateRoleMappingsFor(folder)
+    folder.reindexObjectSecurity()
+    logger.info("Fixing permissions for patient's root folder [DONE]")
