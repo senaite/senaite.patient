@@ -24,28 +24,35 @@
       <role name="Manager"/>
     </permission>
 
-    <!-- Field permissions -->
+    <!-- Permissions for Sample fields
+    User who creates the object (Owner) has all rights granted by default
+    -->
     <permission name="senaite.patient: Field: Edit MRN" acquire="False">
+      <role name="Owner"/>
       <role name="LabClerk"/>
       <role name="LabManager"/>
       <role name="Manager"/>
     </permission>
     <permission name="senaite.patient: Field: Edit Fullname" acquire="False">
+      <role name="Owner"/>
       <role name="LabClerk"/>
       <role name="LabManager"/>
       <role name="Manager"/>
     </permission>
     <permission name="senaite.patient: Field: Edit Date of Birth" acquire="False">
+      <role name="Owner"/>
       <role name="LabClerk"/>
       <role name="LabManager"/>
       <role name="Manager"/>
     </permission>
     <permission name="senaite.patient: Field: Edit Gender" acquire="False">
+      <role name="Owner"/>
       <role name="LabClerk"/>
       <role name="LabManager"/>
       <role name="Manager"/>
     </permission>
     <permission name="senaite.patient: Field: Edit Address" acquire="False">
+      <role name="Owner"/>
       <role name="LabClerk"/>
       <role name="LabManager"/>
       <role name="Manager"/>
