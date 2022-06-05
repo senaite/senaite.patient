@@ -44,7 +44,21 @@
     <permission-map name="Delete objects" acquired="True" />
     <permission-map name="List folder contents" acquired="True" />
     <permission-map name="Modify portal content" acquired="True" />
-    <permission-map name="View" acquired="True" />
+
+    <permission-map name="View" acquired="False">
+      <!-- All except Anonymous and Client -->
+      <permission-role>Analyst</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>Preserver</permission-role>
+      <permission-role>RegulatoryInspector</permission-role>
+      <permission-role>Sampler</permission-role>
+      <permission-role>SamplingCoordinator</permission-role>
+      <!-- Plone roles -->
+      <permission-role>Manager</permission-role>
+      <permission-role>Owner</permission-role>
+      <permission-role>Site Administrator</permission-role>
+    </permission-map>
     <!-- senaite.patient permissions -->
     <permission-map name="senaite.patient: Field: Edit MRN" acquired="True" />
     <permission-map name="senaite.patient: Field: Edit ID" acquired="True" />
