@@ -18,8 +18,6 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-from six import string_types
-
 from AccessControl import ClassSecurityInfo
 from bika.lims import api
 from bika.lims.api.mail import is_valid_email_address
@@ -28,6 +26,7 @@ from plone.dexterity.content import Container
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
 from Products.CMFCore import permissions
+from senaite.core.behaviors import IClientShareable
 from senaite.core.schema import AddressField
 from senaite.core.schema import DatetimeField
 from senaite.core.schema.addressfield import OTHER_ADDRESS
@@ -42,10 +41,11 @@ from senaite.patient import messageFactory as _
 from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
 from senaite.patient.interfaces import IPatient
+from six import string_types
 from zope import schema
+from zope.interface import implementer
 from zope.interface import Interface
 from zope.interface import Invalid
-from zope.interface import implementer
 from zope.interface import invariant
 
 
@@ -280,7 +280,7 @@ class IPatientSchema(model.Schema):
             raise Invalid(_("Patient email is invalid"))
 
 
-@implementer(IPatient, IPatientSchema)
+@implementer(IPatient, IPatientSchema, IClientShareable)
 class Patient(Container):
     """Results Interpretation Template content
     """
