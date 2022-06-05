@@ -62,7 +62,7 @@
       <permission-role>Owner</permission-role>
     </permission-map>
     <permission-map name="View" acquired="False">
-      <!-- All except Anonymous and Client -->
+      <!-- All except Anonymous -->
       <permission-role>Client</permission-role>
       <permission-role>Analyst</permission-role>
       <permission-role>LabClerk</permission-role>
