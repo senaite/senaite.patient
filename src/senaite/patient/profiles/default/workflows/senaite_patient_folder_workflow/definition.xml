@@ -9,6 +9,7 @@
              i18n:domain="senaite.patient">
 
   <!-- PLONE permissions -->
+  <permission>Add portal content</permission>
   <permission>Access contents information</permission>
   <permission>Delete objects</permission>
   <permission>List folder contents</permission>
@@ -29,6 +30,7 @@
       <permission-role>SamplingCoordinator</permission-role>
       <!-- Plone roles -->
       <permission-role>Manager</permission-role>
+      <permission-role>Owner</permission-role>
       <permission-role>Site Administrator</permission-role>
     </permission-map>
     <permission-map name="Delete objects" acquired="False" />
@@ -45,13 +47,23 @@
       <permission-role>Manager</permission-role>
       <permission-role>Site Administrator</permission-role>
     </permission-map>
+    <permission-map name="Add portal content" acquired="False">
+      <permission-role>Client</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>LabManager</permission-role>
+      <!-- Plone roles -->
+      <permission-role>Manager</permission-role>
+    </permission-map>
     <permission-map name="Modify portal content" acquired="False">
       <permission-role>LabClerk</permission-role>
       <permission-role>LabManager</permission-role>
+      <!-- Plone roles -->
       <permission-role>Manager</permission-role>
+      <permission-role>Owner</permission-role>
     </permission-map>
     <permission-map name="View" acquired="False">
-      <!-- All except Anonymous and Client -->
+      <!-- All except Anonymous -->
+      <permission-role>Client</permission-role>
       <permission-role>Analyst</permission-role>
       <permission-role>LabClerk</permission-role>
       <permission-role>LabManager</permission-role>
@@ -61,6 +73,7 @@
       <permission-role>SamplingCoordinator</permission-role>
       <!-- Plone roles -->
       <permission-role>Manager</permission-role>
+      <permission-role>Owner</permission-role>
       <permission-role>Site Administrator</permission-role>
     </permission-map>
   </state>

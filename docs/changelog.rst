@@ -4,6 +4,7 @@ Changelog
 1.1.0 (unreleased)
 ------------------
 
+- #37 Allow client users to create samples and patients
 - #36 Do not display Patient root folder to users other than lab contact
 - #35 Integrate new DX address field for patients
 - #34 Fix UnicodeDecodeError when storing Patients with special characters

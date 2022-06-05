@@ -48,6 +48,7 @@ def upgrade(tool):
                                                    version))
 
     # -------- ADD YOUR STUFF BELOW --------
+    setup.runImportStepFromProfile(profile, "rolemap")
     setup.runImportStepFromProfile(profile, "controlpanel")
     setup.runImportStepFromProfile(profile, "plone.app.registry")
     setup.runImportStepFromProfile(profile, "workflow")
@@ -65,7 +66,10 @@ def upgrade(tool):
     migrate_birthdates(portal)
 
     # do not allow access to patients root folder other than lab personnel
-    update_patient_role_mappings(portal)
+    update_patient_folder_role_mappings(portal)
+
+    # allow client-specific and local roles on patient objects
+    update_patients_role_mappings(portal)
 
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True
@@ -167,7 +171,7 @@ def migrate_birthdates(portal):
     logger.info("Migrate patient birthdate timezones [DONE]")
 
 
-def update_patient_role_mappings(portal):
+def update_patient_folder_role_mappings(portal):
     """Updates the role mappings of patients root folder to prevent access to
     non-laboratory users
     """
@@ -179,3 +183,17 @@ def update_patient_role_mappings(portal):
     workflow.updateRoleMappingsFor(folder)
     folder.reindexObjectSecurity()
     logger.info("Fixing permissions for patient's root folder [DONE]")
+
+
+def update_patients_role_mappings(portal):
+    """Updates the role mappings of patient objects to allow client-specific
+    and local roles to have access
+    """
+    logger.info("Fixing permissions for patients ...")
+    wf_tool = api.get_tool("portal_workflow")
+    wf_id = "senaite_patient_workflow"
+    workflow = wf_tool.getWorkflowById(wf_id)
+    for patient in portal.patients.objectValues():
+        workflow.updateRoleMappingsFor(patient)
+        patient.reindexObjectSecurity()
+    logger.info("Fixing permissions for patients [DONE]")
