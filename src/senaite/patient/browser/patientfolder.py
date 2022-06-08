@@ -19,17 +19,16 @@
 # Some rights reserved, see README and LICENSE.
 
 import collections
+
 from bika.lims import api
 from bika.lims import senaiteMessageFactory as _
 from bika.lims.utils import get_email_link
 from bika.lims.utils import get_link
-from bika.lims.utils import get_link_for
 from senaite.app.listing.view import ListingView
-from senaite.core.behaviors import IClientShareableBehavior
 from senaite.patient import messageFactory as _sp
+from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.api import to_identifier_type_name
 from senaite.patient.api import tuplify_identifiers
-from senaite.patient.catalog import PATIENT_CATALOG
 
 
 class PatientFolderView(ListingView):
@@ -89,9 +88,6 @@ class PatientFolderView(ListingView):
             ("birthdate", {
                 "title": _("Birthdate"),
                 "index": "patient_birthdate"}),
-            ("shared_with", {
-                "title": _("Shared with"),
-            })
         ))
 
         self.review_states = [
@@ -197,11 +193,5 @@ class PatientFolderView(ListingView):
         birthdate = obj.getBirthdate()
         if birthdate:
             item["birthdate"] = self.ulocalized_time(birthdate, long_format=0)
-
-        # Shared with
-        behavior = IClientShareableBehavior(obj)
-        clients = filter(None, behavior.getClients())
-        clients = [get_link_for(client) for client in clients]
-        item["replace"]["shared_with"] = ", ".join(clients)
 
         return item
