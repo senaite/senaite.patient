@@ -76,7 +76,7 @@ class SimpleTestLayer(PloneSandboxLayer):
 SIMPLE_FIXTURE = SimpleTestLayer()
 SIMPLE_TESTING = FunctionalTesting(
     bases=(SIMPLE_FIXTURE, ),
-    name="senaite.storage:SimpleTesting"
+    name="senaite.patient:SimpleTesting"
 )
 
 
