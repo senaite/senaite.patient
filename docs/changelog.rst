@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.1.0 (unreleased)
+1.1.0 (2022-06-10)
 ------------------
 
 - #37 Allow client users to create samples and patients
