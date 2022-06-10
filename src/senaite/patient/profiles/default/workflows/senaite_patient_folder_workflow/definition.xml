@@ -22,6 +22,7 @@
     <permission-map name="Access contents information" acquired="False">
       <!-- All except Anonymous and Client -->
       <permission-role>Analyst</permission-role>
+      <permission-role>ClientGuest</permission-role>
       <permission-role>LabClerk</permission-role>
       <permission-role>LabManager</permission-role>
       <permission-role>Preserver</permission-role>
@@ -37,6 +38,7 @@
     <permission-map name="List folder contents" acquired="False">
       <!-- All except Anonymous and Client -->
       <permission-role>Analyst</permission-role>
+      <permission-role>ClientGuest</permission-role>
       <permission-role>LabClerk</permission-role>
       <permission-role>LabManager</permission-role>
       <permission-role>Preserver</permission-role>
@@ -63,8 +65,9 @@
     </permission-map>
     <permission-map name="View" acquired="False">
       <!-- All except Anonymous -->
-      <permission-role>Client</permission-role>
       <permission-role>Analyst</permission-role>
+      <permission-role>Client</permission-role>
+      <permission-role>ClientGuest</permission-role>
       <permission-role>LabClerk</permission-role>
       <permission-role>LabManager</permission-role>
       <permission-role>Preserver</permission-role>

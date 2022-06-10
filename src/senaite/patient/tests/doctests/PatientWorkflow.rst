@@ -75,7 +75,7 @@ Get the mapped workflow and status of the patient folder:
     >>> patients = portal.patients
 
     >>> api.get_workflows_for(patients)
-    ('senaite_one_state_workflow',)
+    ('senaite_patient_folder_workflow',)
 
     >>> api.get_workflow_status_of(patients)
     'active'
@@ -117,23 +117,23 @@ Field permission in **active** state:
 
     >>> from senaite.patient.permissions import FieldEditMRN
     >>> get_roles_for_permission(FieldEditMRN, patient)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditFullName
     >>> get_roles_for_permission(FieldEditFullName, patient)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditGender
     >>> get_roles_for_permission(FieldEditGender, patient)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditDateOfBirth
     >>> get_roles_for_permission(FieldEditDateOfBirth, patient)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditAddress
     >>> get_roles_for_permission(FieldEditAddress, patient)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
 Deactivating the patient
 
@@ -183,23 +183,23 @@ All patient fields are editable in `sample_due`:
 
     >>> from senaite.patient.permissions import FieldEditMRN
     >>> get_roles_for_permission(FieldEditMRN, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditFullName
     >>> get_roles_for_permission(FieldEditFullName, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditGender
     >>> get_roles_for_permission(FieldEditGender, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditDateOfBirth
     >>> get_roles_for_permission(FieldEditDateOfBirth, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditAddress
     >>> get_roles_for_permission(FieldEditAddress, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
 Receive the sample:
 
@@ -211,23 +211,23 @@ All patient fields are editable in `sample_received`:
 
     >>> from senaite.patient.permissions import FieldEditMRN
     >>> get_roles_for_permission(FieldEditMRN, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditFullName
     >>> get_roles_for_permission(FieldEditFullName, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditGender
     >>> get_roles_for_permission(FieldEditGender, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditDateOfBirth
     >>> get_roles_for_permission(FieldEditDateOfBirth, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditAddress
     >>> get_roles_for_permission(FieldEditAddress, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
 Set results and submit:
 
@@ -248,23 +248,23 @@ All patient fields are editable in `to_be_verified`:
 
     >>> from senaite.patient.permissions import FieldEditMRN
     >>> get_roles_for_permission(FieldEditMRN, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditFullName
     >>> get_roles_for_permission(FieldEditFullName, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditGender
     >>> get_roles_for_permission(FieldEditGender, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditDateOfBirth
     >>> get_roles_for_permission(FieldEditDateOfBirth, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
     >>> from senaite.patient.permissions import FieldEditAddress
     >>> get_roles_for_permission(FieldEditAddress, sample)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
 Verify the results:
 

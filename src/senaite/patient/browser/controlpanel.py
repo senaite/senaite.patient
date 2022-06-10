@@ -112,6 +112,13 @@ class IPatientControlPanel(Interface):
         default=False,
     )
 
+    share_patients = schema.Bool(
+        title=_(u"Share patient on sample creation"),
+        description=_(u"If selected, patients created or referred on sample "
+                      u"creation will automatically be shared across users "
+                      u"from same client the sample belongs to")
+    )
+
     @invariant
     def validate_identifiers(data):
         """Checks if the keyword is unique and valid

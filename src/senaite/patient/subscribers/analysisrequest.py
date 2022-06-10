@@ -19,6 +19,7 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims import api
+from senaite.core.behaviors import IClientShareableBehavior
 from senaite.patient import api as patient_api
 from senaite.patient import check_installed
 from senaite.patient import logger
@@ -38,6 +39,19 @@ def on_object_created(instance, event):
     if patient.getEmailReport():
         email = patient.getEmail()
         add_cc_email(instance, email)
+
+    # share patient with sample's client users if necessary
+    reg_key = "senaite.patient.share_patients"
+    if api.get_registry_record(reg_key, default=False):
+        client_uid = api.get_uid(instance.getClient())
+        behavior = IClientShareableBehavior(patient)
+        # Note we get Raw clients because if current user is a Client, she/he
+        # does not have enough privileges to wake-up clients other than the one
+        # she/he belongs to. Still, we need to keep the rest of shared clients
+        client_uids = behavior.getRawClients() or []
+        if client_uid not in client_uids:
+            client_uids.append(client_uid)
+            behavior.setClients(client_uids)
 
 
 @check_installed(None)
