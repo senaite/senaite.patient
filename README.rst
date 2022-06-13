@@ -6,7 +6,7 @@ About
 
 SENAITE.PATIENT adds Patient handling to `SENAITE LIMS`_.
 
-NOTE: This Add-on requires `senaite.lims >= 2.1.0`
+NOTE: This Add-on requires `senaite.lims >= 2.2.0`
 
 
 License
