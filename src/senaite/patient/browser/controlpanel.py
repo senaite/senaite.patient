@@ -112,6 +112,17 @@ class IPatientControlPanel(Interface):
         default=False,
     )
 
+    show_icon_temp_mrn = schema.Bool(
+        title=_(u"Display an alert icon on samples with a temporary MRN"),
+        description=_(
+            u"When selected, an alert icon is displayed in samples listing for "
+            u"samples that have a Patient assigned with a temporary Medical "
+            u"Record Number (MRN)."
+        ),
+        required=False,
+        default=True,
+    )
+
     share_patients = schema.Bool(
         title=_(u"Share patient on sample creation"),
         description=_(u"If selected, patients created or referred on sample "
