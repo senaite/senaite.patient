@@ -1,10 +1,11 @@
 Changelog
 =========
 
-1.2.0 (unreleased)
+1.2.0 (2022-06-13)
 ------------------
 
 - #40 Add setting to display/hide temporary MRN icon in samples listing
+- Fix source distribution package (missing Changelog.rst file)
 
 
 1.1.0 (2022-06-10)
