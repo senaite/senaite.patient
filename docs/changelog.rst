@@ -4,7 +4,7 @@ Changelog
 1.2.0 (unreleased)
 ------------------
 
-- no changes yet
+- #40 Add setting to display/hide temporary MRN icon in samples listing
 
 
 1.1.0 (2022-06-10)
