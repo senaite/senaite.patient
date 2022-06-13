@@ -18,17 +18,17 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+from bika.lims import api
 from plone.memoize.instance import memoize
-from senaite.patient import check_installed
-from senaite.patient import messageFactory as _
 from senaite.app.listing.interfaces import IListingView
 from senaite.app.listing.interfaces import IListingViewAdapter
-from senaite.app.listing.utils import add_review_state
 from senaite.app.listing.utils import add_column
+from senaite.app.listing.utils import add_review_state
+from senaite.patient import check_installed
+from senaite.patient import messageFactory as _
 from zope.component import adapts
 from zope.component import getMultiAdapter
 from zope.interface import implements
-
 
 # Statuses to add. List of dicts
 ADD_STATUSES = [{
@@ -90,9 +90,18 @@ class SamplesListingAdapter(object):
     def icon_tag(self, name, **kwargs):
         return self.senaite_theme.icon_tag(name, **kwargs)
 
+    @property
+    @memoize
+    def show_icon_temp_mrn(self):
+        """Returns whether an alert icon has to be displayed next to the sample
+        id when the Patient assigned to the sample has a temporary Medical
+        Record Number (MRN)
+        """
+        return api.get_registry_record("senaite.patient.show_icon_temp_mrn")
+
     @check_installed(None)
     def folder_item(self, obj, item, index):
-        if obj.isMedicalRecordTemporary:
+        if self.show_icon_temp_mrn and obj.isMedicalRecordTemporary:
             # Add an icon after the sample ID
             after_icons = item["after"].get("getId", "")
             kwargs = {"width": 16, "title": _("Temporary MRN")}
