@@ -4,6 +4,13 @@
     i18n_domain="senaite.patient">
 
   <genericsetup:upgradeStep
+      title="Upgrade to SENAITE PATIENT 1.3.0"
+      source="1.2.0"
+      destination="1.3.0"
+      handler="senaite.patient.upgrade.v01_03_000.upgrade"
+      profile="senaite.patient:default"/>
+
+  <genericsetup:upgradeStep
       title="Upgrade to SENAITE PATIENT 1.2.0"
       source="1.1.0"
       destination="1.2.0"
