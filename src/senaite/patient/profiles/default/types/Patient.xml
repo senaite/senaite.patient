@@ -61,18 +61,6 @@
   <alias from="sharing" to="@@sharing"/>
   <alias from="view" to="(selected layout)"/>
 
-  <!-- Patients Listing -->
-  <action title="Patients"
-          action_id="patients"
-          category="object"
-          condition_expr=""
-          description=""
-          icon_expr=""
-          link_target=""
-          url_expr="string:${folder_url}/patients" visible="True">
-    <permission value="View"/>
-  </action>
-
   <!-- View -->
   <action title="View"
           action_id="view"

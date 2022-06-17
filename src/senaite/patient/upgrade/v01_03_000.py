@@ -43,6 +43,18 @@ def upgrade(tool):
                                                    version))
 
     # -------- ADD YOUR STUFF BELOW --------
+    del_patients_action(portal)
 
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True
+
+
+def del_patients_action(portal):
+    logger.info("Removing patients action from inside patient type ...")
+    type_info = portal.portal_types.getTypeInfo("Patient")
+    action_id = "patients"
+    actions = map(lambda action: action.id, type_info._actions)
+    if action_id in actions:
+        index = actions.index(action_id)
+        type_info.deleteActions([index])
+    logger.info("Removing patients action from inside patient type [DONE]")
