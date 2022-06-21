@@ -4,6 +4,7 @@ Changelog
 1.2.0 (2022-06-13)
 ------------------
 
+- #42 Remove dependency to Products.TextIndexNG3 (test layer)
 - #41 Remove patients action link from inside Patient context
 - #40 Add setting to display/hide temporary MRN icon in samples listing
 - Fix source distribution package (missing Changelog.rst file)
