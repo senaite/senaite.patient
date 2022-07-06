@@ -123,11 +123,14 @@ class IPatientControlPanel(Interface):
         default=True,
     )
 
-    share_patients = schema.Bool(
+    share_strategy = schema.Choice(
         title=_(u"Share patient on sample creation"),
-        description=_(u"If selected, patients created or referred on sample "
-                      u"creation will automatically be shared across users "
-                      u"from same client the sample belongs to")
+        description=_(
+            u"Patients created or referred on sample creation will "
+            u"automatically be shared with other users in accordance with the "
+            u"selected strategy"
+        ),
+        source="senaite.patient.vocabularies.share_strategy",
     )
 
     @invariant

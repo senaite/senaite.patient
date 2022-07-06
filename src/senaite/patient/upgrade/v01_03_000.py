@@ -44,6 +44,7 @@ def upgrade(tool):
 
     # -------- ADD YOUR STUFF BELOW --------
     del_patients_action(portal)
+    setup.runImportStepFromProfile(profile, "plone.app.registry")
 
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True

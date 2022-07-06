@@ -21,6 +21,7 @@
 from senaite.core.api.geo import get_countries
 from senaite.patient.config import GENDERS
 from senaite.patient.config import NAME_ENTRY_MODES
+from senaite.patient.config import SHARE_STRATEGIES
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
@@ -93,3 +94,17 @@ class NameEntryModesVocabulary(object):
 
 
 NameEntryModesVocabularyFactory = NameEntryModesVocabulary()
+
+
+@implementer(IVocabularyFactory)
+class ShareStrategyVocabulary(object):
+
+    def __call__(self, context):
+        items = [
+            # value, token, title
+            SimpleTerm(value, value, title) for value, title in SHARE_STRATEGIES
+        ]
+        return SimpleVocabulary(items)
+
+
+ShareStrategyVocabularyFactory = ShareStrategyVocabulary()

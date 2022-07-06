@@ -40,6 +40,11 @@
       component="senaite.patient.vocabularies.NameEntryModesVocabularyFactory"
       name="senaite.patient.vocabularies.name_entry_modes" />
 
+  <!-- Sharing strategy vocabulary -->
+  <utility
+      component="senaite.patient.vocabularies.ShareStrategyVocabularyFactory"
+      name="senaite.patient.vocabularies.share_strategy" />
+
   <!-- Package includes -->
   <include package=".adapters" />
   <include package=".browser" />

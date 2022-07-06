@@ -41,17 +41,34 @@ def on_object_created(instance, event):
         add_cc_email(instance, email)
 
     # share patient with sample's client users if necessary
-    reg_key = "senaite.patient.share_patients"
-    if api.get_registry_record(reg_key, default=False):
-        client_uid = api.get_uid(instance.getClient())
-        behavior = IClientShareableBehavior(patient)
-        # Note we get Raw clients because if current user is a Client, she/he
-        # does not have enough privileges to wake-up clients other than the one
-        # she/he belongs to. Still, we need to keep the rest of shared clients
-        client_uids = behavior.getRawClients() or []
-        if client_uid not in client_uids:
-            client_uids.append(client_uid)
-            behavior.setClients(client_uids)
+    reg_key = "senaite.patient.share_strategy"
+    strategy = api.get_registry_record(reg_key)
+    if strategy:
+        client = instance.getClient()
+        share_patient(patient, client, strategy=strategy)
+
+
+def share_patient(patient, client, strategy=None):
+    """Shares the patient with client contacts in accordance with the sharing
+    strategy set in control panel
+    """
+    # Note we get raw objects (that can be either from Client or ClientsGroup
+    # types) because if current user is a Client, she/he does not have enough
+    # privileges to wake-up objects other than the client she/he belongs to.
+    # Still, we need to keep the rest of shared clients and clientgroups
+    behavior = IClientShareableBehavior(patient)
+    share_with = behavior.getRawSharedWith() or []
+
+    if strategy == "clients_groups":
+        # Share with contacts from clients from same groups
+        uids = client.getRawClientGroups()
+    else:
+        # Default strategy is to share with contacts from same client only
+        uids = [api.get_uid(client)]
+
+    uids = filter(lambda uid: uid not in share_with, uids)
+    share_with.extend(uids)
+    behavior.setSharedWith(uids)
 
 
 @check_installed(None)

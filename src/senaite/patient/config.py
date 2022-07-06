@@ -50,3 +50,9 @@ IDENTIFIERS = (
     (u"driver_id", _(u"Driver ID")),
     (u"voter_id", _(u"Voter ID")),
 )
+
+SHARE_STRATEGIES = (
+    (u"", _(u"Do not share")),
+    (u"client", _(u"Share with client users")),
+    (u"clients_groups", _(u"Share with client groups users")),
+)
