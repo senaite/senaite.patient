@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.3.0 (unreleased)
+------------------
+
+- #44 Added Sex as a different field from Gender
+
+
 1.2.0 (2022-06-13)
 ------------------
 
