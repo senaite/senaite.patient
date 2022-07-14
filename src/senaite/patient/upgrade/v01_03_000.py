@@ -18,6 +18,8 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+from bika.lims import api
+from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
@@ -48,7 +50,10 @@ def upgrade(tool):
     setup.runImportStepFromProfile(profile, "workflow")
 
     del_patients_action(portal)
-    update_sex(portal)
+
+    # Update the sex if possible
+    update_patients_sex(portal)
+    update_samples_sex(portal)
 
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True
@@ -65,17 +70,40 @@ def del_patients_action(portal):
     logger.info("Removing patients action from inside patient type [DONE]")
 
 
-def update_sex(portal):
+def update_patients_sex(portal):
     logger.info("Updating sex for patients without Sex assigned ...")
-    sexes = dict(SEXES).keys()
     for patient in portal.patients.objectValues():
-        if patient.getSex():
-            continue
+        # Update the sex if necessary
+        update_sex_with_gender(patient)
 
-        gender = patient.getGender()
-        if gender not in sexes:
-            continue
-
-        patient.setSex(gender)
+        # Flush the object from memory
+        patient._p_deactivate()
 
     logger.info("Updating sex for patients without Sex assigned [DONE]")
+
+
+def update_samples_sex(portal):
+    logger.info("Updating sex for samples without Sex assigned ...")
+    query = {"portal_type": "AnalysisRequest"}
+    brains = api.search(query, SAMPLE_CATALOG)
+    for brain in brains:
+        sample = api.get_object(brain)
+        update_sex_with_gender(sample)
+
+        # Flush the object from memory
+        sample._p_deactivate()
+
+    logger.info("Updating sex for samples without Sex assigned [DONE]")
+
+
+def update_sex_with_gender(obj):
+    if obj.getSex():
+        # Sex is set already, do nothing
+        return
+
+    sexes = dict(SEXES).keys()
+    gender = obj.getGender()
+    if gender not in sexes:
+        return
+
+    obj.setSex(gender)

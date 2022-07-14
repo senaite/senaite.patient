@@ -68,6 +68,13 @@ def getSex(self):  # noqa camelcase
 
 
 @check_installed(None)
+def setSex(self, value):  # noqa camelcase
+    """Sets the patient sex at birth
+    """
+    return self.getField("Sex").set(self, value)
+
+
+@check_installed(None)
 def getGender(self):  # noqa camelcase
     """Returns the patient's gender
     """

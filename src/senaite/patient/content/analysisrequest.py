@@ -137,9 +137,10 @@ SexField = ExtStringField(
     required=False,
     default="",
     read_permission=View,
-    write_permission=FieldEditGender,
+    write_permission=FieldEditSex,
     widget=SelectionWidget(
         label=_("Sex"),
+        description=_("Sex at birth"),
         format="select",
         visible={
             "add": "edit",
@@ -155,7 +156,7 @@ GenderField = ExtStringField(
     read_permission=View,
     write_permission=FieldEditGender,
     widget=SelectionWidget(
-        label=_("Gender"),
+        label=_("Gender Identity"),
         format="select",
         visible={
             "add": "edit",
