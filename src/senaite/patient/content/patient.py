@@ -155,15 +155,15 @@ class IPatientSchema(model.Schema):
 
     sex = schema.Choice(
         title=_(u"label_patient_sex", default=u"Sex"),
-        description=_(u"Patient sex"),
+        description=_(u"Patient sex at birth"),
         source="senaite.patient.vocabularies.sex",
         default="",
         required=True,
     )
 
     gender = schema.Choice(
-        title=_(u"label_patient_gender", default=u"Gender"),
-        description=_(u"Patient gender"),
+        title=_(u"label_patient_gender", default=u"Gender Identity"),
+        description=_(u"Patient gender identity"),
         source="senaite.patient.vocabularies.gender",
         default="",
         required=True,

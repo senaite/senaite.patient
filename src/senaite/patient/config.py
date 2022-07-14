@@ -38,8 +38,9 @@ SEXES = (
 )
 
 GENDERS = (
-    ("m", _("Male")),
-    ("f", _("Female")),
+    ("m", _("Man")),
+    ("f", _("Woman")),
+    ("t", _("Transgender")),
     ("d", _("Diverse")),
     ("", _("Not Specified")),
 )
