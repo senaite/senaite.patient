@@ -89,6 +89,7 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMRN: (),
                     permissions.FieldEditAddress: (),
                     permissions.FieldEditFullName: (),
+                    permissions.FieldEditSex: (),
                     permissions.FieldEditGender: (),
                 }
             },
@@ -100,6 +101,7 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMRN: (),
                     permissions.FieldEditAddress: (),
                     permissions.FieldEditFullName: (),
+                    permissions.FieldEditSex: (),
                     permissions.FieldEditGender: (),
                 }
             },
@@ -111,6 +113,7 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMRN: (),
                     permissions.FieldEditAddress: (),
                     permissions.FieldEditFullName: (),
+                    permissions.FieldEditSex: (),
                     permissions.FieldEditGender: (),
                 }
             },
@@ -122,6 +125,7 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMRN: (),
                     permissions.FieldEditAddress: (),
                     permissions.FieldEditFullName: (),
+                    permissions.FieldEditSex: (),
                     permissions.FieldEditGender: (),
                 }
             },
@@ -133,6 +137,7 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMRN: (),
                     permissions.FieldEditAddress: (),
                     permissions.FieldEditFullName: (),
+                    permissions.FieldEditSex: (),
                     permissions.FieldEditGender: (),
                 }
             },
@@ -144,6 +149,7 @@ WORKFLOW_TO_UPDATE = {
                     permissions.FieldEditMRN: (),
                     permissions.FieldEditAddress: (),
                     permissions.FieldEditFullName: (),
+                    permissions.FieldEditSex: (),
                     permissions.FieldEditGender: (),
                 }
             }

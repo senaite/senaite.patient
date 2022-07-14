@@ -141,6 +141,7 @@ TemporaryIdentifierWidgetController = (function() {
         "PatientAddress": address.join(", "),
         "DateOfBirth": this.format_date(data.birthdate),
         "Age": data.age,
+        "Sex": data.sex,
         "Gender": data.gender,
         "review_state": data.review_state
       };
@@ -311,7 +312,7 @@ TemporaryIdentifierWidgetController = (function() {
   TemporaryIdentifierWidgetController.prototype.search_mrn = function(mrn, catalog_name) {
     var deferred, fields, options;
     this.debug("°°° TemporaryIdentifierWidget::search_mrn:mrn=" + mrn + " °°°");
-    fields = ["Title", "name", "surname", "age", "birthdate", "gender", "email", "address", "zipcode", "city", "country", "review_state"];
+    fields = ["Title", "name", "surname", "age", "birthdate", "sex", "gender", "email", "address", "zipcode", "city", "country", "review_state"];
     deferred = $.Deferred();
     options = {
       url: this.get_portal_url() + "/@@API/read",

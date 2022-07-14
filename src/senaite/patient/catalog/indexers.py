@@ -102,7 +102,8 @@ def patient_searchable_text(instance):
         instance.getEmail(),
         instance.getMRN(),
         instance.getFullname(),
-        instance.getGender(),
+        instance.getSexText(),
+        instance.getGenderText(),
         " ".join(identifier_ids),
     ]
     searchable_text_tokens = filter(None, searchable_text_tokens)

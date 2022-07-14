@@ -61,6 +61,20 @@ def getPatientID(self):  # noqa camelcase
 
 
 @check_installed(None)
+def getSex(self):  # noqa camelcase
+    """Returns the patient's sex
+    """
+    return self.getField("Sex").get(self)
+
+
+@check_installed(None)
+def setSex(self, value):  # noqa camelcase
+    """Sets the patient sex at birth
+    """
+    return self.getField("Sex").set(self, value)
+
+
+@check_installed(None)
 def getGender(self):  # noqa camelcase
     """Returns the patient's gender
     """
@@ -78,7 +92,7 @@ def getDateOfBirth(self):  # noqa camelcase
 def getAge(self):  # noqa camelcase
     """Returns the patient's age when the sample was collected
     """
-    dob = getDateOfBirth()
+    dob = self.getDateOfBirth()
     sampled = self.getDateSampled()
     return get_age_ymd(dob, sampled)
 

@@ -111,6 +111,7 @@ def get_patient_fields(instance):
     """
     mrn = instance.getMedicalRecordNumberValue()
     patient_id = instance.getField("PatientID").get(instance)
+    sex = instance.getField("Sex").get(instance)
     gender = instance.getField("Gender").get(instance)
     birthdate = instance.getField("DateOfBirth").get(instance)
     address = instance.getField("PatientAddress").get(instance)
@@ -127,6 +128,7 @@ def get_patient_fields(instance):
     return {
         "mrn": mrn,
         "patient_id": patient_id,
+        "sex": sex,
         "gender": gender,
         "birthdate": birthdate,
         "address": address,

@@ -21,11 +21,19 @@
 from senaite.core.api.geo import get_countries
 from senaite.patient.config import GENDERS
 from senaite.patient.config import NAME_ENTRY_MODES
+from senaite.patient.config import SEXES
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 from bika.lims import api
+
+
+def to_simple_vocabulary(items):
+    """Returns a list of tuples (value, title) to a SimpleVocabulary
+    """
+    vocab = [SimpleTerm(value, value, title) for value, title in items]
+    return SimpleVocabulary(vocab)
 
 
 @implementer(IVocabularyFactory)
@@ -46,18 +54,24 @@ class IdentifierVocabulary(object):
         return SimpleVocabulary(sorted(items, key=lambda t: t.title))
 
 
-IdentiierVocabularyFactory = IdentifierVocabulary()
+IdentifierVocabularyFactory = IdentifierVocabulary()
+
+
+@implementer(IVocabularyFactory)
+class SexVocabulary(object):
+
+    def __call__(self, context):
+        return to_simple_vocabulary(SEXES)
+
+
+SexVocabularyFactory = SexVocabulary()
 
 
 @implementer(IVocabularyFactory)
 class GenderVocabulary(object):
 
     def __call__(self, context):
-        items = [
-            # value, token, title
-            SimpleTerm(value, value, title) for value, title in GENDERS
-        ]
-        return SimpleVocabulary(items)
+        return to_simple_vocabulary(GENDERS)
 
 
 GenderVocabularyFactory = GenderVocabulary()
@@ -85,11 +99,7 @@ CountryVocabularyFactory = CountryVocabulary()
 class NameEntryModesVocabulary(object):
 
     def __call__(self, context):
-        items = [
-            # value, token, title
-            SimpleTerm(value, value, title) for value, title in NAME_ENTRY_MODES
-        ]
-        return SimpleVocabulary(items)
+        return to_simple_vocabulary(NAME_ENTRY_MODES)
 
 
 NameEntryModesVocabularyFactory = NameEntryModesVocabulary()

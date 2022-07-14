@@ -32,6 +32,7 @@ from senaite.patient.browser.widgets import AgeDoBWidget
 from senaite.patient.browser.widgets import FullnameWidget
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.config import GENDERS
+from senaite.patient.config import SEXES
 from senaite.patient.content import ExtDateTimeField
 from senaite.patient.content import ExtStringField
 from senaite.patient.content.fields import FullnameField
@@ -41,6 +42,7 @@ from senaite.patient.permissions import FieldEditAddress
 from senaite.patient.permissions import FieldEditDateOfBirth
 from senaite.patient.permissions import FieldEditFullName
 from senaite.patient.permissions import FieldEditGender
+from senaite.patient.permissions import FieldEditSex
 from senaite.patient.permissions import FieldEditID
 from senaite.patient.permissions import FieldEditMRN
 from zope.component import adapts
@@ -129,6 +131,23 @@ DateOfBirthField = ExtDateTimeField(
     ),
 )
 
+SexField = ExtStringField(
+    "Sex",
+    vocabulary=SEXES,
+    required=False,
+    default="",
+    read_permission=View,
+    write_permission=FieldEditSex,
+    widget=SelectionWidget(
+        label=_("Sex"),
+        description=_("Sex at birth"),
+        format="select",
+        visible={
+            "add": "edit",
+        }
+    ),
+)
+
 GenderField = ExtStringField(
     "Gender",
     vocabulary=GENDERS,
@@ -137,7 +156,7 @@ GenderField = ExtStringField(
     read_permission=View,
     write_permission=FieldEditGender,
     widget=SelectionWidget(
-        label=_("Gender"),
+        label=_("Gender Identity"),
         format="select",
         visible={
             "add": "edit",
@@ -166,6 +185,7 @@ class AnalysisRequestSchemaExtender(object):
             PatientFullNameField,
             PatientAddressField,
             DateOfBirthField,
+            SexField,
             GenderField,
         ]
 

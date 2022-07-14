@@ -54,6 +54,12 @@ def get_patient_name_entry_mode():
     return entry_mode
 
 
+def is_gender_visible():
+    """Checks whether the gender is visible
+    """
+    return api.get_registry_record("senaite.patient.gender_visible")
+
+
 def get_patient_by_mrn(mrn, full_object=True, include_inactive=False):
     """Get a patient by Medical Record Number
 
@@ -129,6 +135,7 @@ def update_patient(patient, **values):
     patient.setPatientID(values.get("patient_id", ""))
     patient.setFirstname(values.get("firstname", ""))
     patient.setLastname(values.get("lastname", ""))
+    patient.setSex(values.get("sex", ""))
     patient.setGender(values.get("gender", ""))
     patient.setBirthdate(values.get("birthdate"))
     patient.setAddress(values.get("address"))
