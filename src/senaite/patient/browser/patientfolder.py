@@ -83,6 +83,8 @@ class PatientFolderView(ListingView):
             ("email", {
                 "title": _("Email"),
                 "index": "patient_email"}),
+            ("sex", {
+                "title": _("Sex"), }),
             ("gender", {
                 "title": _("Gender"), }),
             ("birthdate", {
@@ -186,8 +188,11 @@ class PatientFolderView(ListingView):
         email_report = obj.getEmailReport()
         item["email_report"] = _("Yes") if email_report else _("No")
 
+        # Sex
+        item["sex"] = obj.getSexText()
+
         # Gender
-        item["gender"] = obj.getGender()
+        item["gender"] = obj.getGenderText()
 
         # Birthdate
         birthdate = obj.getBirthdate()

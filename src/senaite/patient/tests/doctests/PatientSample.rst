@@ -76,7 +76,7 @@ Patient Sample Integration
 
 Create a new sample:
 
-    >>> sample = new_sample([MC, MS], client, contact, sampletype, MedicalRecordNumber={"value": "4711"}, PatientFullName="Clark Kent", Gender="m", DateOfBirth=birthdate)
+    >>> sample = new_sample([MC, MS], client, contact, sampletype, MedicalRecordNumber={"value": "4711"}, PatientFullName="Clark Kent", Sex="m", Gender="d", DateOfBirth=birthdate)
     >>> api.get_workflow_status_of(sample)
     'sample_due'
 
@@ -100,10 +100,15 @@ Get the patient's date of birth:
     >>> sample.getDateOfBirth().strftime("%Y-%m-%d")
     '1980-02-25'
 
+Get the patient's sex:
+
+    >>> sample.getSex()
+    'm'
+
 Get the patient's gender:
 
     >>> sample.getGender()
-    'm'
+    'd'
 
 Get the patient's address:
 

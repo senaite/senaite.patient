@@ -22,8 +22,13 @@
 
   <!-- Identifier Vocabulary -->
   <utility
-      component="senaite.patient.vocabularies.IdentiierVocabularyFactory"
+      component="senaite.patient.vocabularies.IdentifierVocabularyFactory"
       name="senaite.patient.vocabularies.identifiers" />
+
+  <!-- Sex Vocabulary -->
+  <utility
+      component="senaite.patient.vocabularies.SexVocabularyFactory"
+      name="senaite.patient.vocabularies.sex" />
 
   <!-- Gender Vocabulary -->
   <utility

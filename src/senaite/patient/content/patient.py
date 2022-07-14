@@ -40,6 +40,7 @@ from senaite.patient import api as patient_api
 from senaite.patient import messageFactory as _
 from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
+from senaite.patient.config import SEXES
 from senaite.patient.interfaces import IPatient
 from six import string_types
 from zope import schema
@@ -150,6 +151,14 @@ class IPatientSchema(model.Schema):
         title=_(u"label_patient_lastname", default=u"Lastname"),
         description=_(u"Patient lastname"),
         required=False,
+    )
+
+    sex = schema.Choice(
+        title=_(u"label_patient_sex", default=u"Sex"),
+        description=_(u"Patient sex"),
+        source="senaite.patient.vocabularies.sex",
+        default="",
+        required=True,
     )
 
     gender = schema.Choice(
@@ -459,12 +468,44 @@ class Patient(Container):
         mutator(self, api.safe_unicode(value.strip()))
 
     @security.protected(permissions.View)
+    def getSex(self):
+        """Returns the sex with the field accessor
+        """
+        accessor = self.accessor("sex")
+        return accessor(self)
+
+    @security.protected(permissions.View)
+    def getSexText(self):
+        """Returns the sex with the field accessor
+        """
+        sexes = dict(SEXES)
+        value = self.getSex()
+        value = sexes.get(value)
+        return value.encode("utf-8")
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setSex(self, value):
+        """Set sex by the field accessor
+        """
+        for k, v in SEXES:
+            if value == v:
+                value = k
+        mutator = self.mutator("sex")
+        mutator(self, api.safe_unicode(value))
+
+    @security.protected(permissions.View)
     def getGender(self):
         """Returns the gender with the field accessor
         """
         accessor = self.accessor("gender")
+        return accessor(self)
+
+    @security.protected(permissions.View)
+    def getGenderText(self):
+        """Returns the gender with the field accessor
+        """
         genders = dict(GENDERS)
-        value = accessor(self)
+        value = self.getGender()
         value = genders.get(value)
         return value.encode("utf-8")
 

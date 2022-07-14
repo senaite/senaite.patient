@@ -129,6 +129,7 @@ def update_patient(patient, **values):
     patient.setPatientID(values.get("patient_id", ""))
     patient.setFirstname(values.get("firstname", ""))
     patient.setLastname(values.get("lastname", ""))
+    patient.setSex(values.get("sex", ""))
     patient.setGender(values.get("gender", ""))
     patient.setBirthdate(values.get("birthdate"))
     patient.setAddress(values.get("address"))

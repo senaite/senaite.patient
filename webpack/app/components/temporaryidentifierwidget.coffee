@@ -132,6 +132,7 @@ class TemporaryIdentifierWidgetController
         "PatientAddress": address,
         "DateOfBirth": @format_date(data.birthdate),
         "Age": data.age,
+        "Sex": data.sex,
         "Gender": data.gender,
         "PatientID": data.patient_id,
         "review_state": data.review_state,
@@ -274,6 +275,7 @@ class TemporaryIdentifierWidgetController
       "lastname"
       "age"
       "birthdate"
+      "sex"
       "gender"
       "email"
       "address"

@@ -22,6 +22,7 @@ from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
 from senaite.patient.config import PRODUCT_NAME
+from senaite.patient.config import SEXES
 
 version = "1.3.0"
 profile = "profile-{0}:default".format(PRODUCT_NAME)
@@ -43,7 +44,11 @@ def upgrade(tool):
                                                    version))
 
     # -------- ADD YOUR STUFF BELOW --------
+    setup.runImportStepFromProfile(profile, "rolemap")
+    setup.runImportStepFromProfile(profile, "workflow")
+
     del_patients_action(portal)
+    update_sex(portal)
 
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True
@@ -58,3 +63,19 @@ def del_patients_action(portal):
         index = actions.index(action_id)
         type_info.deleteActions([index])
     logger.info("Removing patients action from inside patient type [DONE]")
+
+
+def update_sex(portal):
+    logger.info("Updating sex for patients without Sex assigned ...")
+    sexes = dict(SEXES).keys()
+    for patient in portal.patients.objectValues():
+        if patient.getSex():
+            continue
+
+        gender = patient.getGender()
+        if gender not in sexes:
+            continue
+
+        patient.setSex(gender)
+
+    logger.info("Updating sex for patients without Sex assigned [DONE]")

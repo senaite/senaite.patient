@@ -35,6 +35,14 @@
     ignoreOriginal="True"
     replacement=".content.analysisrequest.getPatientID" />
 
+  <!-- Sex -->
+  <monkey:patch
+      description="Patient's sex"
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="getSex"
+      ignoreOriginal="True"
+      replacement=".content.analysisrequest.getSex" />
+
   <!-- Gender -->
   <monkey:patch
     description="Patient's gender"

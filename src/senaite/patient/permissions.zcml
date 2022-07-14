@@ -16,6 +16,7 @@
   <permission id="senaite.patient.permissions.FieldEditID" title="senaite.patient: Field: Edit ID"/>
   <permission id="senaite.patient.permissions.FieldEditAddress" title="senaite.patient: Field: Edit Address"/>
   <permission id="senaite.patient.permissions.FieldEditFullName" title="senaite.patient: Field: Edit Fullname"/>
+  <permission id="senaite.patient.permissions.FieldEditSex" title="senaite.patient: Field: Edit Sex"/>
   <permission id="senaite.patient.permissions.FieldEditGender" title="senaite.patient: Field: Edit Gender"/>
 
 </configure>
