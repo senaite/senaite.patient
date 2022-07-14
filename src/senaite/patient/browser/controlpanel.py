@@ -94,6 +94,18 @@ class IPatientControlPanel(Interface):
         default="parts",
     )
 
+    gender_visible = schema.Bool(
+        title=_(u"Gender identity"),
+        description=_(
+            u"If selected, a field for the introduction of the patient's "
+            u"gender identity becomes visible in Sample registration form and "
+            u"view. The field for birth sex is always visible regardless of "
+            u"this setting."
+        ),
+        required=False,
+        default=True,
+    )
+
     verify_temp_mrn = schema.Bool(
         title=_(u"Allow to verify samples with a temporary MRN"),
         description=_(u"If selected, users will be able to verify samples "

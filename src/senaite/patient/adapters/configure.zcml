@@ -9,6 +9,13 @@
     factory=".guards.SampleGuardAdapter"
     name="senaite.patient.adapter.guard.sample" />
 
+  <!-- Visibility of Gender field -->
+  <adapter
+      factory=".widgetvisibility.GenderFieldVisibility"
+      provides="bika.lims.interfaces.IATWidgetVisibility"
+      for="*"
+      name="senaite.patient.adapter.widgetvisibility.gender" />
+
   <!-- Samples listing with additional filters and columns -->
   <subscriber
     for="bika.lims.browser.analysisrequest.AnalysisRequestsView
