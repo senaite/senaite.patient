@@ -4,6 +4,7 @@ Changelog
 1.3.0 (unreleased)
 ------------------
 
+- #45 Added configuration option for Age introduction
 - #44 Added Sex as a different field from Gender
 
 

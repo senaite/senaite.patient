@@ -38,7 +38,8 @@
           <div class="fieldErrorBox" tal:condition="required"></div>
 
           <!-- Age / DoB toggle radio -->
-          <div class="form-group mb-0">
+          <div class="form-group mb-0"
+               tal:condition="python:widget.is_age_supported(context)">
             <!-- age selector -->
             <input
               type="radio"
@@ -60,7 +61,8 @@
           </div>
 
           <!-- Age input area (keep outer container for visibility toggle) -->
-          <div tal:attributes="id string:${fieldName}_age_controls">
+          <div tal:attributes="id string:${fieldName}_age_controls"
+               tal:condition="python:widget.is_age_supported(context)">
             <div class="input-group flex-nowrap d-inline-flex w-auto">
               <input type="number" min='0' max='150'
                      class="form-control form-control-sm"
