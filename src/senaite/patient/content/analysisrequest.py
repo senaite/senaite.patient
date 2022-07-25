@@ -27,6 +27,7 @@ from Products.Archetypes.Widget import StringWidget
 from Products.CMFCore.permissions import View
 from senaite.patient import messageFactory as _
 from senaite.patient.api import get_patient_name_entry_mode
+from senaite.patient.api import is_age_supported
 from senaite.patient.api import is_patient_required
 from senaite.patient.browser.widgets import AgeDoBWidget
 from senaite.patient.browser.widgets import FullnameWidget
@@ -120,7 +121,6 @@ DateOfBirthField = ExtDateTimeField(
     read_permission=View,
     write_permission=FieldEditDateOfBirth,
     widget=AgeDoBWidget(
-        label=_("Age / Date of birth"),
         render_own_label=True,
         default_age=True,
         show_time=False,
@@ -209,4 +209,12 @@ class AnalysisRequestSchemaModifier(object):
         entry_mode = get_patient_name_entry_mode()
         fullname_field = schema.get("PatientFullName")
         fullname_field.widget.entry_mode = entry_mode
+
+        # Change the name of the DoB's field label if Age is supported
+        field = schema.get("DateOfBirth")
+        if is_age_supported():
+            field.widget.label = _("Age / Date of birth")
+        else:
+            field.widget.label = _("Date of birth")
+
         return schema

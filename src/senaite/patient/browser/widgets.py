@@ -106,6 +106,11 @@ class AgeDoBWidget(DateTimeWidget):
             "days": delta.days,
         }
 
+    def is_age_supported(self, context):
+        """Returns whether the introduction of age is supported or not
+        """
+        return patient_api.is_age_supported()
+
     def process_form(self, instance, field, form, empty_marker=None,
                      emptyReturnsMarker=False, validating=True):
 

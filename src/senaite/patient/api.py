@@ -57,7 +57,15 @@ def get_patient_name_entry_mode():
 def is_gender_visible():
     """Checks whether the gender is visible
     """
-    return api.get_registry_record("senaite.patient.gender_visible")
+    key = "senaite.patient.gender_visible"
+    return api.get_registry_record(key, default=True)
+
+
+def is_age_supported():
+    """Returns whether the introduction of age is supported
+    """
+    key = "senaite.patient.age_supported"
+    return api.get_registry_record(key, default=True)
 
 
 def get_patient_by_mrn(mrn, full_object=True, include_inactive=False):

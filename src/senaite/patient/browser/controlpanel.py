@@ -106,6 +106,18 @@ class IPatientControlPanel(Interface):
         default=True,
     )
 
+    age_supported = schema.Bool(
+        title=_(u"Age introduction"),
+        description=_(
+            u"If selected, a control for the introduction of either the age or "
+            u"date of birth will be displayed in Sample registration form and "
+            u"view. Otherwise, only the control for the introduction of the "
+            u"date of birth will be displayed"
+        ),
+        required=False,
+        default=True,
+    )
+
     verify_temp_mrn = schema.Bool(
         title=_(u"Allow to verify samples with a temporary MRN"),
         description=_(u"If selected, users will be able to verify samples "
