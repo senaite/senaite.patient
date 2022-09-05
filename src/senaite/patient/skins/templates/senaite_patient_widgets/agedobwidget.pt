@@ -30,16 +30,19 @@
                           years python:current_age.get('years') or '';
                           months python:current_age.get('months') or '';
                           days python:current_age.get('days') or '';
-                          age_selected python:widget.get_age_selected(context);">
+                          age_selected python:widget.get_age_selected(context);
+                          age_supported python:widget.is_age_supported(context);
+                          years_only python:widget.is_years_only(value);
+                          show_months python:not years_only;
+                          show_days python:not years_only;">
 
         <div class="field AgeDoBWidget text-left"
              tal:attributes="data-required python:required and '1' or '0';
-                    data-fieldname string:${fieldName}">
+                             data-fieldname string:${fieldName}">
           <div class="fieldErrorBox" tal:condition="required"></div>
 
           <!-- Age / DoB toggle radio -->
-          <div class="form-group mb-0"
-               tal:condition="python:widget.is_age_supported(context)">
+          <div class="form-group mb-0" tal:condition="age_supported">
             <!-- age selector -->
             <input
               type="radio"
@@ -62,39 +65,53 @@
 
           <!-- Age input area (keep outer container for visibility toggle) -->
           <div tal:attributes="id string:${fieldName}_age_controls"
-               tal:condition="python:widget.is_age_supported(context)">
-            <div class="input-group flex-nowrap d-inline-flex w-auto">
-              <input type="number" min='0' max='150'
+               tal:condition="age_supported">
+            <div class="input-group input-group-sm flex-nowrap d-inline-flex w-auto">
+
+              <!-- Years -->
+              <div class="input-group-prepend">
+                <label class="input-group-text"
+                       tal:attributes="for string:${subfield_years}"
+                       i18n:translate="">Years</label>
+              </div>
+              <input type="number" min='0' max='150' size='3'
                      class="form-control form-control-sm"
-                     title="Years"
-                     placeholder="Years"
-                     i18n:attributes="placeholder label_years"
                      tal:attributes="id string:${subfield_years};
                            name string:${subfield_years};
                            value years;
                            required python:required and 'required' or None;"/>
-              <input type="number" value='' min='0' max='12'
+
+              <!-- Months -->
+              <div class="input-group-prepend ml-1" tal:condition="show_months">
+                <label class="input-group-text"
+                       tal:attributes="for string:${subfield_months}"
+                       i18n:translate="">Months</label>
+              </div>
+              <input value='' min='0' max='12' size='3'
                      class="form-control form-control-sm"
-                     title="Months"
-                     placeholder="Months"
-                     i18n:attributes="placeholder label_months"
                      tal:attributes="id string:${subfield_months};
                            name string:${subfield_months};
-                           value months;"/>
-              <input type="number" value='' min='0' max='31'
+                           value months;
+                           type python: 'number' if show_months else 'hidden';"/>
+
+              <!-- Days -->
+              <div class="input-group-prepend ml-1" tal:condition="show_days">
+                <label class="input-group-text"
+                       tal:attributes="for string:${subfield_days}"
+                       i18n:translate="">Days</label>
+              </div>
+              <input value='' min='0' max='31' size='3'
                      class="form-control form-control-sm"
-                     title="Days"
-                     placeholder="Days"
-                     i18n:attributes="placeholder label_days"
                      tal:attributes="id string:${subfield_days};
                            name string:${subfield_days};
-                           value days;"/>
+                           value days;
+                           type python: 'number' if show_days else 'hidden';"/>
             </div>
           </div>
 
           <!-- DoB input field -->
-          <div class="form-group"
-               tal:attributes="id string:${fieldName}_dob_controls">
+          <div tal:attributes="id string:${fieldName}_dob_controls">
+            <div class="input-group input-group-sm flex-nowrap d-inline-flex w-auto">
             <input type="date"
                    class="form-control form-control-sm"
                    tal:attributes="python:widget.attrs();
@@ -113,6 +130,7 @@
                          name string:${fieldName};
                          value string:${value}"/>
 
+          </div>
           </div>
         </div>
       </tal:values>
