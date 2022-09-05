@@ -110,8 +110,8 @@
           </div>
 
           <!-- DoB input field -->
-          <div class="form-group"
-               tal:attributes="id string:${fieldName}_dob_controls">
+          <div tal:attributes="id string:${fieldName}_dob_controls">
+            <div class="input-group input-group-sm flex-nowrap d-inline-flex w-auto">
             <input type="date"
                    class="form-control form-control-sm"
                    tal:attributes="python:widget.attrs();
@@ -130,6 +130,7 @@
                          name string:${fieldName};
                          value string:${value}"/>
 
+          </div>
           </div>
         </div>
       </tal:values>
