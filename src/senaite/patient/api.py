@@ -68,6 +68,14 @@ def is_age_supported():
     return api.get_registry_record(key, default=True)
 
 
+def is_age_in_years():
+    """Returns whether the months and days should be omitted when displaying
+    the age of a patient when is greater than one year
+    """
+    key = "senaite.patient.age_years"
+    return api.get_registry_record(key, default=True)
+
+
 def get_patient_by_mrn(mrn, full_object=True, include_inactive=False):
     """Get a patient by Medical Record Number
 

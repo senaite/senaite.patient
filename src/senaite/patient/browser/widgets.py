@@ -111,6 +111,16 @@ class AgeDoBWidget(DateTimeWidget):
         """
         return patient_api.is_age_supported()
 
+    def is_years_only(self, dob):
+        """Returns whether months and days are not displayed when the age is
+        greater than one year
+        """
+        if not patient_api.is_age_in_years():
+            return False
+        dob = self.get_current_age(dob)
+        years = dob.get("years", 0)
+        return years >= 1
+
     def process_form(self, instance, field, form, empty_marker=None,
                      emptyReturnsMarker=False, validating=True):
 

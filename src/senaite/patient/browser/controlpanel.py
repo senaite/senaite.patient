@@ -118,6 +118,20 @@ class IPatientControlPanel(Interface):
         default=True,
     )
 
+    age_years = schema.Bool(
+        title=_(
+            u"label_controlpanel_patient_ageyears",
+            default=u"Age in years"),
+        description=_(
+            u"description_controlpanel_patient_ageyears",
+            default=u"If selected, months and days won't be displayed in "
+                    u"sample view if the age of the patient is greater than "
+                    u"one year. In such case, only years will be displayed"
+        ),
+        required=False,
+        default=True,
+    )
+
     verify_temp_mrn = schema.Bool(
         title=_(u"Allow to verify samples with a temporary MRN"),
         description=_(u"If selected, users will be able to verify samples "
