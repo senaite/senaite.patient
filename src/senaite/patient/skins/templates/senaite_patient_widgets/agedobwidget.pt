@@ -52,16 +52,18 @@
               tal:attributes="id string:${fieldName}_age_selector;
                     checked python:age_selected;
                     name string:${subfield_selector}" />
-            <label tal:attributes="for string:${fieldName}_age_selector;">Age</label>
+            <label tal:attributes="for string:${fieldName}_age_selector;"
+                   i18n:translate="">Age</label>
 
             <!-- dob selector -->
             <input
               type="radio"
               value="dob"
-              tal:attributes="id string:${fieldName}DateOfBirth_dob_selector;
+              tal:attributes="id string:${fieldName}_dob_selector;
                     checked python:not age_selected;
                     name string:${subfield_selector}" />
-            <label tal:attributes="for string:${fieldName}_dob_selector">Date of Birth</label>
+            <label tal:attributes="for string:${fieldName}_dob_selector"
+                   i18n:translate="">Date of Birth</label>
 
           </div>
 
