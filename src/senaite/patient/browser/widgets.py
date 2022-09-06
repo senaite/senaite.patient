@@ -93,6 +93,16 @@ class AgeDoBWidget(DateTimeWidget):
         attr = "_%s_age_selected" % name
         setattr(context, attr, bool(value))
 
+    def get_dob_estimated(self, context):
+        name = self.getName()
+        attr = "_%s_dob_estimated" % name
+        return getattr(context, attr, self.get_age_selected(context))
+
+    def set_dob_estimated(self, context, value):
+        name = self.getName()
+        attr = "_%s_dob_estimated" % name
+        setattr(context, attr, bool(value))
+
     def get_current_age(self, dob):
         """Returns a dict with keys "years", "months", "days"
         """
@@ -123,7 +133,6 @@ class AgeDoBWidget(DateTimeWidget):
 
     def process_form(self, instance, field, form, empty_marker=None,
                      emptyReturnsMarker=False, validating=True):
-
         value = form.get(field.getName())
 
         # Not interested in the hidden field, but in the age + dob specific
@@ -144,7 +153,7 @@ class AgeDoBWidget(DateTimeWidget):
         dob = patient_api.to_datetime(dob)
         age_selected = value.get("selector") == "age"
 
-        # remember what was slected
+        # remember what was selected
         self.set_age_selected(instance, age_selected)
 
         # Maybe user entered age instead of DoB
@@ -161,6 +170,24 @@ class AgeDoBWidget(DateTimeWidget):
 
             # Calculate the DoB
             dob = patient_api.get_birth_date(ymd)
+
+            # Consider DoB as estimated?
+            orig_dob = value.get("original", None)
+            if not orig_dob:
+                # First time age is set, assume dob is estimated
+                self.set_dob_estimated(instance, True)
+            else:
+                # Do not update estimated unless value changed. Maybe the user
+                # set the DoB at the beginning and now is just viewing the
+                # Age value in edit mode. We do not want the property
+                # "estimated" to change if he/she presses the Save button
+                # without the dob value being changed
+                orig_dob = patient_api.to_datetime(orig_dob)
+                if orig_dob.strftime("%y%m%d") != dob.strftime("%y%m%d"):
+                    self.set_dob_estimated(instance, True)
+        else:
+            # User entered date of birth, so is not estimated
+            self.set_dob_estimated(instance, False)
 
         return dob, {}
 
