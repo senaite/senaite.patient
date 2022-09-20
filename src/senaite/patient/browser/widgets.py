@@ -172,7 +172,8 @@ class AgeDoBWidget(DateTimeWidget):
             dob = patient_api.get_birth_date(ymd)
 
             # Consider DoB as estimated?
-            orig_dob = value.get("original", None)
+            orig_dob = value.get("original")
+            orig_dob = patient_api.to_datetime(orig_dob)
             if not orig_dob:
                 # First time age is set, assume dob is estimated
                 self.set_dob_estimated(instance, True)
@@ -182,7 +183,6 @@ class AgeDoBWidget(DateTimeWidget):
                 # Age value in edit mode. We do not want the property
                 # "estimated" to change if he/she presses the Save button
                 # without the dob value being changed
-                orig_dob = patient_api.to_datetime(orig_dob)
                 if orig_dob.strftime("%y%m%d") != dob.strftime("%y%m%d"):
                     self.set_dob_estimated(instance, True)
         else:
