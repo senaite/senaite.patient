@@ -72,8 +72,8 @@
                    title="Middlename"
                    placeholder="Middlename"
                    class="form-control form-control-sm mb-1"
-                   i18n:attributes="placeholder label_firstname"
-                   tal:attributes="id string:${subfield_firstname};
+                   i18n:attributes="placeholder label_middlename"
+                   tal:attributes="id string:${subfield_middlename};
                                    name string:${subfield_middlename};
                                    value middlename;
                                    required required;"/>
