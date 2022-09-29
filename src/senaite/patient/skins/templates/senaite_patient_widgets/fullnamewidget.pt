@@ -7,14 +7,15 @@
   <body>
 
     <metal:view_macro define-macro="view">
-      <tal:values define="value      python: field.getAccessor(here)();
-                          firstname python: value.get('firstname', '');
-                          lastname  python: value.get('lastname', '');
-                          fullname python: filter(None, [firstname, lastname]);
-                          fullname python: ' '.join(fullname).strip();
-                          entry_mode python: field.widget.entry_mode or 'parts';
-                          view_format python: field.widget.view_format;
-                          fullname_mode python: entry_mode in ['full', 'fullname'];">
+      <tal:values define="value  python:field.getAccessor(here)();
+                          firstname python:value.get('firstname', '');
+                          middlename python:value.get('middlename', '');
+                          lastname python:value.get('lastname', '');
+                          fullname python:filter(None, [firstname, middlename , lastname]);
+                          fullname python:' '.join(fullname).strip();
+                          entry_mode python:field.widget.entry_mode or 'parts';
+                          view_format python:field.widget.view_format;
+                          fullname_mode python:entry_mode in ['full', 'fullname'];">
         <tal:with_value tal:condition="value">
           <span tal:condition="not:fullname_mode"
                 tal:content="python: view_format % value"/>
@@ -32,11 +33,13 @@
                           cached_value python:request.get(fieldName, session_value);
                           value python:cached_value or value;
                           firstname python: value.get('firstname', '');
+                          middlename python: value.get('middlename', '');
                           lastname python: value.get('lastname', '');
-                          fullname python: filter(None, [firstname, lastname]);
+                          fullname python: filter(None, [firstname, middlename, lastname]);
                           fullname python: ' '.join(fullname).strip();
 
                           subfield_firstname string:${fieldName}.firstname:ignore_empty:record;
+                          subfield_middlename string:${fieldName}.middlename:ignore_empty:record;
                           subfield_lastname string:${fieldName}.lastname:ignore_empty:record;
 
                           required field/required|nothing;
@@ -52,19 +55,33 @@
           <div class="fieldErrorBox" tal:condition="required"></div>
 
           <!-- Firstname + lastname input area -->
-          <div class="input-group flex-nowrap d-inline-flex w-auto" tal:condition="not:fullname_mode">
+          <div class="input-group d-flex d-inline-flex w-auto" tal:condition="not:fullname_mode">
+            <!-- Firstname -->
             <input type="text"
                    title="Firstname"
                    placeholder="Firstname"
-                   class="form-control form-control-sm"
+                   class="form-control form-control-sm mb-1"
                    i18n:attributes="placeholder label_firstname"
                    tal:attributes="id string:${subfield_firstname};
                                    name string:${subfield_firstname};
-                                   value    firstname;
+                                   value firstname;
                                    required required;"/>
+
+            <!-- Middlename -->
+            <input type="text"
+                   title="Middlename"
+                   placeholder="Middlename"
+                   class="form-control form-control-sm mb-1"
+                   i18n:attributes="placeholder label_firstname"
+                   tal:attributes="id string:${subfield_firstname};
+                                   name string:${subfield_middlename};
+                                   value middlename;
+                                   required required;"/>
+
+            <!-- Lastname -->
             <input type="text"
                    title="Lastname"
-                   class="form-control form-control-sm"
+                   class="form-control form-control-sm mb-1"
                    placeholder="Lastname"
                    i18n:attributes="placeholder label_lastname"
                    tal:attributes="id string:${subfield_lastname};
