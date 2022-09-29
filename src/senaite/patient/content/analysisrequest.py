@@ -94,7 +94,7 @@ PatientFullNameField = FullnameField(
     widget=FullnameWidget(
         label=_("Patient name"),
         entry_mode="parts",
-        view_format="%(firstname)s %(lastname)s",
+        view_format="%(firstname)s %(middlename)s %(lastname)s",
         render_own_label=True,
         visible={
             "add": "edit",
