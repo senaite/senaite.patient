@@ -147,6 +147,12 @@ class IPatientSchema(model.Schema):
         required=False,
     )
 
+    middlename = schema.TextLine(
+        title=_(u"label_patient_middlename", default=u"Middlename"),
+        description=_(u"Patient middlename"),
+        required=False,
+    )
+
     lastname = schema.TextLine(
         title=_(u"label_patient_lastname", default=u"Lastname"),
         description=_(u"Patient lastname"),
@@ -432,6 +438,19 @@ class Patient(Container):
         mutator(self, api.safe_unicode(value.strip()))
 
     @security.protected(permissions.View)
+    def getMiddlename(self):
+        accessor = self.accessor("middlename")
+        value = accessor(self) or ""
+        return value.encode("utf-8")
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setMiddlename(self, value):
+        if not isinstance(value, string_types):
+            value = u""
+        mutator = self.mutator("middlename")
+        mutator(self, api.safe_unicode(value.strip()))
+
+    @security.protected(permissions.View)
     def getLastname(self):
         accessor = self.accessor("lastname")
         value = accessor(self) or ""
@@ -446,9 +465,9 @@ class Patient(Container):
 
     @security.protected(permissions.View)
     def getFullname(self):
-        # Create the fullname from firstname + lastname
-        full = filter(None, [self.getFirstname(), self.getLastname()])
-        return " ".join(full)
+        # Create the fullname from firstname + middlename + lastname
+        parts = [self.getFirstname(), self.getMiddlename(), self.getLastname()]
+        return " ".join(filter(None, parts))
 
     @security.protected(permissions.View)
     def getEmail(self):

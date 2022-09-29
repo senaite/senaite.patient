@@ -174,7 +174,7 @@ class FullnameWidget(TypesWidget):
     _properties.update({
         "macro": "senaite_patient_widgets/fullnamewidget",
         "entry_mode": "parts",
-        "view_format": "%(firstname)s %(lastname)s",
+        "view_format": "%(firstname)s %(middlename)s %(lastname)s",
         "size": "15",
     })
 
@@ -183,6 +183,7 @@ class FullnameWidget(TypesWidget):
 
         value = form.get(field.getName())
         firstname = ""
+        middlename = ""
         lastname = ""
 
         if isinstance(value, (list, tuple)):
@@ -194,6 +195,7 @@ class FullnameWidget(TypesWidget):
 
         elif value:
             firstname = value.get("firstname", "").strip()
+            middlename = value.get("middlename", "").strip()
             lastname = value.get("lastname", "").strip()
 
         # Allow non-required fields
@@ -202,6 +204,7 @@ class FullnameWidget(TypesWidget):
 
         output = {
             "firstname": firstname,
+            "middlename": middlename,
             "lastname": lastname,
         }
         return output, {}

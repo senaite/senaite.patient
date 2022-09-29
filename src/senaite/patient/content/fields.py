@@ -78,12 +78,16 @@ class FullnameField(ExtensionField, ObjectField):
     def get(self, instance, **kwargs):
         val = super(FullnameField, self).get(instance, **kwargs)
         if isinstance(val, six.string_types):
-            val = {"firstname": val, "lastname": ""}
+            val = {"firstname": val, "middlename": "", "lastname": ""}
         return val
 
     def get_firstname(self, instance):
         val = self.get(instance) or {}
         return val.get("firstname", "")
+
+    def get_middlename(self, instance):
+        val = self.get(instance) or {}
+        return val.get("middlename", "")
 
     def get_lastname(self, instance):
         val = self.get(instance) or {}
