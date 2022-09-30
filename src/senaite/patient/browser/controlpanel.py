@@ -321,6 +321,60 @@ class IPatientControlPanel(Interface):
             if brains:
                 raise Invalid(_("Can not delete identifiers that are in use"))
 
+    @invariant
+    def validate_races(data):
+        """Checks if the keyword is unique and valid
+        """
+        keys = []
+        for race in data.races:
+            key = race.get("key")
+            # check if the key contains invalid characters
+            if re.findall(r"[^A-Za-z\w\d\-\_]", key):
+                raise Invalid(_("Key contains invalid characters"))
+            # check if the key is unique
+            if key in keys:
+                raise Invalid(_("Key '%s' is not unique" % key))
+
+            keys.append(key)
+
+        # check if a used key is removed
+        old_races = data.__context__.races
+        old_keys = map(lambda i: i.get("key"), old_races)
+        removed = list(set(old_keys).difference(keys))
+
+        if removed:
+            # check if there are patients that use one of the removed keys
+            brains = patient_search({"patient_race_keys": removed})
+            if brains:
+                raise Invalid(_("Can not delete races that are in use"))
+
+    @invariant
+    def validate_ethnicities(data):
+        """Checks if the keyword is unique and valid
+        """
+        keys = []
+        for ethnicity in data.ethnicities:
+            key = ethnicity.get("key")
+            # check if the key contains invalid characters
+            if re.findall(r"[^A-Za-z\w\d\-\_]", key):
+                raise Invalid(_("Key contains invalid characters"))
+            # check if the key is unique
+            if key in keys:
+                raise Invalid(_("Key '%s' is not unique" % key))
+
+            keys.append(key)
+
+        # check if a used key is removed
+        old_ethnicities = data.__context__.ethnicities
+        old_keys = map(lambda i: i.get("key"), old_ethnicities)
+        removed = list(set(old_keys).difference(keys))
+
+        if removed:
+            # check if there are patients that use one of the removed keys
+            brains = patient_search({"patient_ethnicity_keys": removed})
+            if brains:
+                raise Invalid(_("Can not delete ethnicities that are in use"))
+
 
 class PatientControlPanelForm(RegistryEditForm):
     schema = IPatientControlPanel
