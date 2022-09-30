@@ -262,10 +262,16 @@ class IPatientControlPanel(Interface):
     directives.widget(
         "races",
         DataGridWidgetFactory,
+        allow_reorder=True,
         auto_append=True)
     races = schema.List(
-        title=_(u"Races"),
-        description=_(u""),
+        title=_(
+            u"label_controlpanel_patient_races",
+            default=u"Races"),
+        description=_(
+            u"description_controlpanel_patient_races",
+            default=u"Patient race categories"
+        ),
         value_type=DataGridRow(
             title=u"Race",
             schema=IRace),
@@ -276,10 +282,16 @@ class IPatientControlPanel(Interface):
     directives.widget(
         "ethnicities",
         DataGridWidgetFactory,
+        allow_reorder=True,
         auto_append=True)
     ethnicities = schema.List(
-        title=_(u"Ethnicities"),
-        description=_(u""),
+        title=_(
+            u"label_controlpanel_patient_ethnicities",
+            default=u"Ethnicities"),
+        description=_(
+            u"description_controlpanel_patient_ethnicities",
+            default=u"Patient ethnicity categories"
+        ),
         value_type=DataGridRow(
             title=u"Ethnicity",
             schema=IEthnicity),
