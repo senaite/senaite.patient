@@ -72,6 +72,23 @@ class IIdentifiersSchema(Interface):
     )
 
 
+class IAdditionalEmailSchema(Interface):
+    """Schema definition for additional emails field
+    """
+
+    name = schema.TextLine(
+        title=_("Name"),
+        description=_(u"Private, Work, Other etc."),
+        required=True,
+    )
+
+    email = schema.TextLine(
+        title=_(u"Email"),
+        description=_(u"Email address"),
+        required=True,
+    )
+
+
 class IPatientSchema(model.Schema):
     """Patient Content
     """
@@ -92,7 +109,7 @@ class IPatientSchema(model.Schema):
     fieldset(
         "contact",
         label=u"Contact",
-        fields=["email", "phone", "mobile"])
+        fields=["email", "additional_emails", "phone", "mobile"])
 
     # address fieldset
     fieldset(
@@ -177,10 +194,37 @@ class IPatientSchema(model.Schema):
 
     # Contact
 
+    # primary patient email address
     email = schema.TextLine(
-        title=_(u"label_patient_email", default=u"Email"),
-        description=_(u"Patient email address"),
+        title=_(
+            u"label_primary_patient_email",
+            default=u"Primary Email"
+        ),
+        description=_(
+            u"description_patient_primary_email",
+            default=u"Primary email address for this patient"),
         required=False,
+    )
+
+    # additional emails
+    directives.widget(
+        "additional_emails",
+        DataGridWidgetFactory,
+        auto_append=True)
+    additional_emails = DataGridField(
+        title=_(
+            u"label_patient_additional_emails",
+            default=u"Additional Emails"),
+        description=_(
+            u"description_patient_additional_emails",
+            default=u"Additional email addresses for this client"
+        ),
+        value_type=DataGridRow(
+            title=u"Email",
+            schema=IAdditionalEmailSchema),
+        required=False,
+        missing_value=[],
+        default=[],
     )
 
     phone = schema.TextLine(
@@ -293,6 +337,18 @@ class IPatientSchema(model.Schema):
             return
         if not is_valid_email_address(data.email):
             raise Invalid(_("Patient email is invalid"))
+
+    @invariant
+    def validate_additional_emails(data):
+        """Checks if the additional emails are valid
+        """
+        if not data.additional_emails:
+            return
+
+        for record in data.additional_emails:
+            email = record.get("email")
+            if email and not is_valid_email_address(email):
+                raise Invalid(_("Email address %s is invalid" % email))
 
 
 @implementer(IPatient, IPatientSchema, IClientShareable)
