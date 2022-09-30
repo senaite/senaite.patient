@@ -44,6 +44,7 @@ from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
 from senaite.patient.config import SEXES
 from senaite.patient.interfaces import IPatient
+from z3c.form.interfaces import NO_VALUE
 from zope import schema
 from zope.interface import Interface
 from zope.interface import Invalid
@@ -211,6 +212,7 @@ class IPatientSchema(model.Schema):
     directives.widget(
         "additional_emails",
         DataGridWidgetFactory,
+        allow_reorder=True,
         auto_append=True)
     additional_emails = DataGridField(
         title=_(
@@ -218,7 +220,7 @@ class IPatientSchema(model.Schema):
             default=u"Additional Emails"),
         description=_(
             u"description_patient_additional_emails",
-            default=u"Additional email addresses for this client"
+            default=u"Additional email addresses for this patient"
         ),
         value_type=DataGridRow(
             title=u"Email",
@@ -345,8 +347,9 @@ class IPatientSchema(model.Schema):
         """
         if not data.additional_emails:
             return
-
         for record in data.additional_emails:
+            if record == NO_VALUE:
+                continue
             email = record.get("email")
             if email and not is_valid_email_address(email):
                 raise Invalid(_("Email address %s is invalid" % email))
