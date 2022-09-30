@@ -239,7 +239,8 @@ class IPatientControlPanel(Interface):
 class PatientControlPanelForm(RegistryEditForm):
     schema = IPatientControlPanel
     schema_prefix = "senaite.patient"
-    label = _("SENAITE Patient Settings")
+    label = _("Patient Settings")
+    description = _("Global settings for patients")
 
 
 PatientControlPanelView = layout.wrap_form(
