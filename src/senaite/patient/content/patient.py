@@ -105,7 +105,7 @@ class IRaceSchema(Interface):
 class IEthnicitySchema(Interface):
     """Schema definition for patient ethnicity
     """
-    race = schema.Choice(
+    ethnicity = schema.Choice(
         title=_("Ethnicity"),
         description=_(u""),
         source="senaite.patient.vocabularies.ethnicities",
@@ -510,7 +510,7 @@ class Patient(Container):
 
     @security.protected(permissions.View)
     def getIdentifiers(self):
-        """Returns the birthday with the field accessor
+        """Returns the identifiers with the field accessor
         """
         accessor = self.accessor("identifiers")
         return accessor(self)
@@ -529,9 +529,37 @@ class Patient(Container):
 
     @security.protected(permissions.ModifyPortalContent)
     def setIdentifiers(self, value):
-        """Set birthdate by the field accessor
+        """Set identifiers by the field accessor
         """
         mutator = self.mutator("identifiers")
+        return mutator(self, value)
+
+    @security.protected(permissions.View)
+    def getRaces(self):
+        """Returns the patient races
+        """
+        accessor = self.accessor("races")
+        return accessor(self)
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setRaces(self, value):
+        """Set the patient races
+        """
+        mutator = self.mutator("races")
+        return mutator(self, value)
+
+    @security.protected(permissions.View)
+    def getEthnicities(self):
+        """Returns the patient ethnicities
+        """
+        accessor = self.accessor("ethnicities")
+        return accessor(self)
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setEthnicities(self, value):
+        """Set the patient ethnicities
+        """
+        mutator = self.mutator("ethnicities")
         return mutator(self, value)
 
     @security.protected(permissions.View)
