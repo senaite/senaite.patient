@@ -544,6 +544,20 @@ class Patient(Container):
         mutator(self, api.safe_unicode(value.strip()))
 
     @security.protected(permissions.View)
+    def getAdditionalEmails(self):
+        """Returns the email with the field accessor
+        """
+        accessor = self.accessor("additional_emails")
+        return accessor(self) or []
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setAdditionalEmails(self, value):
+        """Set email by the field accessor
+        """
+        mutator = self.mutator("additional_emails")
+        mutator(self, value)
+
+    @security.protected(permissions.View)
     def getSex(self):
         """Returns the sex with the field accessor
         """
