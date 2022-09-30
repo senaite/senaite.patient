@@ -18,6 +18,8 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+from six import string_types
+
 from AccessControl import ClassSecurityInfo
 from bika.lims import api
 from bika.lims.api.mail import is_valid_email_address
@@ -42,11 +44,10 @@ from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
 from senaite.patient.config import SEXES
 from senaite.patient.interfaces import IPatient
-from six import string_types
 from zope import schema
-from zope.interface import implementer
 from zope.interface import Interface
 from zope.interface import Invalid
+from zope.interface import implementer
 from zope.interface import invariant
 
 
