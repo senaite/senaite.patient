@@ -4,6 +4,7 @@ Changelog
 1.3.0 (unreleased)
 ------------------
 
+- #49 Group configuration settings
 - #48 Add Patient middle name
 - #46 Added config option to hide age's month and day when older than 1 year
 - #45 Added configuration option for Age introduction
