@@ -34,6 +34,8 @@ INDEXES = BASE_INDEXES + [
     ("patient_mrn", "", "FieldIndex"),
     ("patient_identifier_keys", "", "KeywordIndex"),
     ("patient_identifier_values", "", "KeywordIndex"),
+    ("patient_race_keys", "", "KeywordIndex"),
+    ("patient_ethnicity_keys", "", "KeywordIndex"),
     ("patient_email", "", "FieldIndex"),
     ("patient_email_report", "", "BooleanIndex"),
     ("patient_fullname", "", "FieldIndex"),
