@@ -23,6 +23,7 @@ import re
 from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
 from plone.app.registry.browser.controlpanel import RegistryEditForm
 from plone.autoform import directives
+from plone.supermodel import model
 from plone.z3cform import layout
 from senaite.core.schema.registry import DataGridRow
 from senaite.core.z3cform.widgets.datagrid import DataGridWidgetFactory
@@ -63,6 +64,39 @@ class IIdentifier(Interface):
 class IPatientControlPanel(Interface):
     """Controlpanel Settings
     """
+    ###
+    # Fieldsets
+    ###
+    model.fieldset(
+        "patient_field_settings",
+        label=_(u"Field Settings"),
+        description=_(""),
+        fields=[
+            "patient_entry_mode",
+            "age_supported",
+            "age_years",
+            "gender_visible",
+        ],
+    )
+
+    model.fieldset(
+        "patient_identifiers",
+        label=_(u"Identifiers"),
+        description=_(""),
+        fields=[
+            "identifiers",
+        ],
+    )
+
+    model.fieldset(
+        "patient_sharing",
+        label=_(u"Sharing"),
+        description=_(""),
+        fields=[
+            "share_patients",
+        ],
+    )
+
     require_patient = schema.Bool(
         title=_(u"Require Patient"),
         description=_("Require Patients in Samples"),
