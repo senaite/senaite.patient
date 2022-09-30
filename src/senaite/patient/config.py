@@ -58,7 +58,7 @@ IDENTIFIERS = (
     (u"voter_id", _(u"Voter ID")),
 )
 
-# https://hl7.org/fhir/us/core/ValueSet-detailed-ethnicity.html#expansion
+# https://hl7.org/fhir/us/core/ValueSet-omb-race-category.html#expansion
 RACES = (
     (u"1002-5", _(u"American Indian or Alaska Native")),
     (u"2028-9", _(u"Asian")),

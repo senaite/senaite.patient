@@ -4,6 +4,7 @@ Changelog
 1.3.0 (unreleased)
 ------------------
 
+- #51 Add Race and Ethnicity Categories for Patients
 - #50 Allow additional email addresses for patients
 - #49 Group configuration settings
 - #48 Add Patient middle name
