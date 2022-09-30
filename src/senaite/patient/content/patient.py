@@ -91,6 +91,28 @@ class IAdditionalEmailSchema(Interface):
     )
 
 
+class IRaceSchema(Interface):
+    """Schema definition for patient race
+    """
+    race = schema.Choice(
+        title=_("Race"),
+        description=_(u""),
+        source="senaite.patient.vocabularies.races",
+        required=False,
+    )
+
+
+class IEthnicitySchema(Interface):
+    """Schema definition for patient ethnicity
+    """
+    race = schema.Choice(
+        title=_("Ethnicity"),
+        description=_(u""),
+        source="senaite.patient.vocabularies.ethnicities",
+        required=False,
+    )
+
+
 class IPatientSchema(model.Schema):
     """Patient Content
     """
@@ -106,6 +128,12 @@ class IPatientSchema(model.Schema):
         title=u"Description",
         required=False
     )
+
+    # race/ethnicity fieldset
+    fieldset(
+        "race_and_ethnicity",
+        label=u"Race and Ethnicity",
+        fields=["races", "ethnicities"])
 
     # contact fieldset
     fieldset(
@@ -192,6 +220,42 @@ class IPatientSchema(model.Schema):
         source="senaite.patient.vocabularies.gender",
         default="",
         required=True,
+    )
+
+    directives.widget(
+        "races",
+        DataGridWidgetFactory,
+        allow_reorder=True,
+        auto_append=True)
+    races = DataGridField(
+        title=_(u"label_patient_races", default=u"Races"),
+        description=_(
+            "description_patient_races",
+            default=u"General race category reported by the patient "
+            u"- subject may have more than one"
+        ),
+        value_type=DataGridRow(schema=IRaceSchema),
+        required=False,
+        missing_value=[],
+        default=[],
+    )
+
+    directives.widget(
+        "ethnicities",
+        DataGridWidgetFactory,
+        allow_reorder=True,
+        auto_append=True)
+    ethnicities = DataGridField(
+        title=_(u"label_patient_ethnicities", default=u"Ethnicities"),
+        description=_(
+            "description_patient_ethnicities",
+            default=u"General ethnicity category reported by the patient "
+            u"- subject may have more than one"
+        ),
+        value_type=DataGridRow(schema=IEthnicitySchema),
+        required=False,
+        missing_value=[],
+        default=[],
     )
 
     # Contact
