@@ -74,7 +74,7 @@ class IIdentifier(Interface):
 
 
 class IRace(Interface):
-    key = schema.ASCIILine(
+    key = schema.TextLine(
         title=_(u"Key"),
         description=_(
             u"The key will be stored in the database and must be unique"
@@ -92,7 +92,7 @@ class IRace(Interface):
 
 
 class IEthnicity(Interface):
-    key = schema.ASCIILine(
+    key = schema.TextLine(
         title=_(u"Key"),
         description=_(
             u"The key will be stored in the database and must be unique"
@@ -272,10 +272,8 @@ class IPatientControlPanel(Interface):
             u"description_controlpanel_patient_races",
             default=u"Patient race categories"
         ),
-        value_type=DataGridRow(
-            title=u"Race",
-            schema=IRace),
-        required=False,
+        value_type=DataGridRow(schema=IRace),
+        required=True,
         defaultFactory=default_races,
     )
 
@@ -292,10 +290,8 @@ class IPatientControlPanel(Interface):
             u"description_controlpanel_patient_ethnicities",
             default=u"Patient ethnicity categories"
         ),
-        value_type=DataGridRow(
-            title=u"Ethnicity",
-            schema=IEthnicity),
-        required=False,
+        value_type=DataGridRow(schema=IEthnicity),
+        required=True,
         defaultFactory=default_ethnicities,
     )
 
