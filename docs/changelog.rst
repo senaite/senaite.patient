@@ -5,6 +5,8 @@ Changelog
 ------------------
 
 - #47 Display "Estimated" next to date of birth when estimated from age
+- #49 Group configuration settings
+- #48 Add Patient middle name
 - #46 Added config option to hide age's month and day when older than 1 year
 - #45 Added configuration option for Age introduction
 - #44 Added Sex as a different field from Gender

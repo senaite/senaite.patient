@@ -23,6 +23,7 @@ import re
 from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
 from plone.app.registry.browser.controlpanel import RegistryEditForm
 from plone.autoform import directives
+from plone.supermodel import model
 from plone.z3cform import layout
 from senaite.core.schema.registry import DataGridRow
 from senaite.core.z3cform.widgets.datagrid import DataGridWidgetFactory
@@ -63,27 +64,79 @@ class IIdentifier(Interface):
 class IPatientControlPanel(Interface):
     """Controlpanel Settings
     """
+
+    ###
+    # Fieldsets
+    ###
+    model.fieldset(
+        "patient_field_settings",
+        label=_(u"Field Settings"),
+        description=_(""),
+        fields=[
+            "patient_entry_mode",
+            "age_supported",
+            "age_years",
+            "gender_visible",
+        ],
+    )
+
+    model.fieldset(
+        "patient_identifiers",
+        label=_(u"Identifiers"),
+        description=_(""),
+        fields=[
+            "identifiers",
+        ],
+    )
+
+    model.fieldset(
+        "patient_sharing",
+        label=_(u"Sharing"),
+        description=_(""),
+        fields=[
+            "share_patients",
+        ],
+    )
+
+    ###
+    # Fields
+    ###
     require_patient = schema.Bool(
-        title=_(u"Require Patient"),
-        description=_("Require Patients in Samples"),
+        title=_(u"Require Medical Record Number (MRN)"),
+        description=_(
+            u"Make the MRN field mandatory in Sample Add form"
+        ),
         required=False,
         default=True,
     )
 
-    directives.widget(
-        "identifiers",
-        DataGridWidgetFactory,
-        auto_append=True)
-    identifiers = schema.List(
-        title=_(u"Identifiers"),
-        description=_(
-            u"List of identifiers that can be selected for a patient."
-        ),
-        value_type=DataGridRow(
-            title=u"Identifier",
-            schema=IIdentifier),
+    verify_temp_mrn = schema.Bool(
+        title=_(u"Allow to verify samples with a temporary MRN"),
+        description=_(u"If selected, users will be able to verify samples "
+                      u"that have a Patient assigned with a temporary Medical "
+                      u"Record Number (MRN)."),
         required=False,
-        defaultFactory=default_identifiers,
+        default=False,
+    )
+
+    publish_temp_mrn = schema.Bool(
+        title=_(u"Allow to publish samples with a temporary MRN"),
+        description=_(u"If selected, users will be able to publish samples "
+                      u"that have a Patient assigned with a temporary Medical "
+                      u"Record Number (MRN)."),
+        required=False,
+        default=False,
+    )
+
+    show_icon_temp_mrn = schema.Bool(
+        title=_(u"Display an alert icon on samples with a temporary MRN"),
+        description=_(
+            u"When selected, an alert icon is displayed in samples listing for "
+            u"samples that have a Patient assigned with a temporary Medical "
+            u"Record Number (MRN)."
+        ),
+        required=False,
+        default=True,
     )
 
     patient_entry_mode = schema.Choice(
@@ -132,33 +185,20 @@ class IPatientControlPanel(Interface):
         default=True,
     )
 
-    verify_temp_mrn = schema.Bool(
-        title=_(u"Allow to verify samples with a temporary MRN"),
-        description=_(u"If selected, users will be able to verify samples "
-                      u"that have a Patient assigned with a temporary Medical "
-                      u"Record Number (MRN)."),
-        required=False,
-        default=False,
-    )
-
-    publish_temp_mrn = schema.Bool(
-        title=_(u"Allow to publish samples with a temporary MRN"),
-        description=_(u"If selected, users will be able to publish samples "
-                      u"that have a Patient assigned with a temporary Medical "
-                      u"Record Number (MRN)."),
-        required=False,
-        default=False,
-    )
-
-    show_icon_temp_mrn = schema.Bool(
-        title=_(u"Display an alert icon on samples with a temporary MRN"),
+    directives.widget(
+        "identifiers",
+        DataGridWidgetFactory,
+        auto_append=True)
+    identifiers = schema.List(
+        title=_(u"Identifiers"),
         description=_(
-            u"When selected, an alert icon is displayed in samples listing for "
-            u"samples that have a Patient assigned with a temporary Medical "
-            u"Record Number (MRN)."
+            u"List of identifiers that can be selected for a patient."
         ),
+        value_type=DataGridRow(
+            title=u"Identifier",
+            schema=IIdentifier),
         required=False,
-        default=True,
+        defaultFactory=default_identifiers,
     )
 
     share_patients = schema.Bool(
@@ -199,7 +239,8 @@ class IPatientControlPanel(Interface):
 class PatientControlPanelForm(RegistryEditForm):
     schema = IPatientControlPanel
     schema_prefix = "senaite.patient"
-    label = _("SENAITE Patient Settings")
+    label = _("Patient Settings")
+    description = _("Global settings for patients")
 
 
 PatientControlPanelView = layout.wrap_form(

@@ -117,6 +117,7 @@ def get_patient_fields(instance):
     address = instance.getField("PatientAddress").get(instance)
     field = instance.getField("PatientFullName")
     firstname = field.get_firstname(instance)
+    middlename = field.get_middlename(instance)
     lastname = field.get_lastname(instance)
 
     if address:
@@ -133,5 +134,6 @@ def get_patient_fields(instance):
         "birthdate": birthdate,
         "address": address,
         "firstname": firstname,
+        "middlename": middlename,
         "lastname": lastname,
     }
