@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - #50 Allow additional email addresses for patients
+- #47 Display "Estimated" next to date of birth when estimated from age
 - #49 Group configuration settings
 - #48 Add Patient middle name
 - #46 Added config option to hide age's month and day when older than 1 year
