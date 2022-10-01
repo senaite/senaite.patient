@@ -25,6 +25,7 @@
                           subfield_days string:${fieldName}.days:ignore_empty:record;
                           subfield_dob string:${fieldName}.dob:ignore_empty:record;
                           subfield_selector string:${fieldName}.selector:ignore_empty:record;
+                          subfield_original_value string:${fieldName}.original:ignore_empty:record;
                           required field/required|nothing;
                           current_age python:widget.get_current_age(value);
                           years python:current_age.get('years') or '';
@@ -32,6 +33,7 @@
                           days python:current_age.get('days') or '';
                           age_selected python:widget.get_age_selected(context);
                           age_supported python:widget.is_age_supported(context);
+                          dob_estimated python:widget.get_dob_estimated(context);
                           years_only python:widget.is_years_only(value);
                           show_months python:not years_only;
                           show_days python:not years_only;">
@@ -50,21 +52,24 @@
               tal:attributes="id string:${fieldName}_age_selector;
                     checked python:age_selected;
                     name string:${subfield_selector}" />
-            <label tal:attributes="for string:${fieldName}_age_selector;">Age</label>
+            <label tal:attributes="for string:${fieldName}_age_selector;"
+                   i18n:translate="">Age</label>
 
             <!-- dob selector -->
             <input
               type="radio"
               value="dob"
-              tal:attributes="id string:${fieldName}DateOfBirth_dob_selector;
+              tal:attributes="id string:${fieldName}_dob_selector;
                     checked python:not age_selected;
                     name string:${subfield_selector}" />
-            <label tal:attributes="for string:${fieldName}_dob_selector">Date of Birth</label>
+            <label tal:attributes="for string:${fieldName}_dob_selector"
+                   i18n:translate="">Date of Birth</label>
 
           </div>
 
           <!-- Age input area (keep outer container for visibility toggle) -->
-          <div tal:attributes="id string:${fieldName}_age_controls"
+          <div tal:attributes="id string:${fieldName}_age_controls;
+                               style python:'display:none' if not age_selected else ''"
                tal:condition="age_supported">
             <div class="input-group input-group-sm flex-nowrap d-inline-flex w-auto">
 
@@ -110,15 +115,30 @@
           </div>
 
           <!-- DoB input field -->
-          <div tal:attributes="id string:${fieldName}_dob_controls">
+          <div tal:attributes="id string:${fieldName}_dob_controls;
+                               style python:'display:none' if age_selected else ''">
             <div class="input-group input-group-sm flex-nowrap d-inline-flex w-auto">
-            <input type="date"
-                   class="form-control form-control-sm"
-                   tal:attributes="python:widget.attrs();
+              <input type="date"
+                     style="min-width:130px;max-width:130px"
+                     tal:define="invalid_class python: 'is-invalid' if dob_estimated else ''"
+                     tal:attributes="python:widget.attrs();
                          id string:${subfield_dob};
                          name string:${subfield_dob};
                          required python:required and 'required' or None;
-                         value python: widget.get_date(value) if value else '';"/>
+                         value python: widget.get_date(value) if value else '';
+                         class python: 'form-control form-control-sm {}'.format(invalid_class);"/>
+
+              <div tal:condition="dob_estimated"
+                   class="form-control form-control-sm text-danger border-danger">
+                <span i18n:translate="">Estimated</span>
+              </div>
+            </div>
+
+            <!-- Keep track of the old value -->
+            <input type="hidden"
+                   tal:attributes="id string:${subfield_original_value};
+                                   name string:${subfield_original_value};
+                                   value string:${value}"/>
 
             <!-- Field not visible for when the value is set automatically by
                  others through JS. When a value is set to this field, agedob widget
@@ -129,8 +149,6 @@
                    tal:attributes="id string:${fieldName}-dob-fallback;
                          name string:${fieldName};
                          value string:${value}"/>
-
-          </div>
           </div>
         </div>
       </tal:values>
