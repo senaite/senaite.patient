@@ -6,7 +6,7 @@
   <genericsetup:upgradeStep
       title="Upgrade to SENAITE PATIENT 1.3.0"
       source="1.2.0"
-      destination="1.3.0"
+      destination="1300"
       handler="senaite.patient.upgrade.v01_03_000.upgrade"
       profile="senaite.patient:default"/>
 
