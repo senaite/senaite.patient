@@ -1,10 +1,7 @@
-# --- PLEASE EDIT THE LINES BELOW CORRECTLY ---
-# SOME DESCRIPTIVE TITLE.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-06-10 21:31+0000\n"
+"POT-Creation-Date: 2022-10-03 11:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +18,7 @@ msgstr ""
 msgid "Activate"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:96
+#: senaite/patient/browser/patientfolder.py:98
 #: senaite/patient/profiles/default/workflows/senaite_patient_folder_workflow/definition.xml
 #: senaite/patient/profiles/default/workflows/senaite_patient_workflow/definition.xml
 msgid "Active"
@@ -31,55 +28,176 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: senaite/patient/content/patient.py:137
+#: senaite/patient/content/patient.py:185
 msgid "Add the patient email as CC recipient to new samples"
 msgstr ""
 
-#: senaite/patient/content/patient.py:185
+#: senaite/patient/content/patient.py:311
 msgid "Address"
 msgstr ""
 
-#: senaite/patient/content/analysisrequest.py:121
+#: senaite/patient/skins/templates/senaite_patient_widgets/agedobwidget.pt:55
+msgid "Age"
+msgstr ""
+
+#: senaite/patient/content/analysisrequest.py:216
 msgid "Age / Date of birth"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:106
+#: senaite/patient/browser/controlpanel.py:221
+msgid "Age introduction"
+msgstr ""
+
+#: senaite/patient/browser/patientfolder.py:108
 msgid "All"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:107
+#: senaite/patient/browser/controlpanel.py:181
 msgid "Allow to publish samples with a temporary MRN"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:98
+#: senaite/patient/browser/controlpanel.py:172
 msgid "Allow to verify samples with a temporary MRN"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:89
+#: senaite/patient/config.py:63
+msgid "American Indian or Alaska Native"
+msgstr ""
+
+#: senaite/patient/config.py:76
+msgid "Andalusian"
+msgstr ""
+
+#: senaite/patient/config.py:101
+msgid "Argentinean"
+msgstr ""
+
+#: senaite/patient/config.py:64
+msgid "Asian"
+msgstr ""
+
+#: senaite/patient/config.py:77
+msgid "Asturian"
+msgstr ""
+
+#: senaite/patient/config.py:80
+msgid "Belearic Islander"
+msgstr ""
+
+#: senaite/patient/browser/patientfolder.py:91
 msgid "Birthdate"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:147
+#: senaite/patient/config.py:65
+msgid "Black or African American"
+msgstr ""
+
+#: senaite/patient/config.py:102
+msgid "Bolivian"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:384
+msgid "Can not delete ethnicities that are in use"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:330
 msgid "Can not delete identifiers that are in use"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:357
+msgid "Can not delete races that are in use"
+msgstr ""
+
+#: senaite/patient/config.py:99
+msgid "Canal Zone"
+msgstr ""
+
+#: senaite/patient/config.py:83
+msgid "Canarian"
+msgstr ""
+
+#: senaite/patient/config.py:78
+msgid "Castillian"
+msgstr ""
+
+#: senaite/patient/config.py:79
+msgid "Catalonian"
+msgstr ""
+
+#: senaite/patient/config.py:91
+msgid "Central American"
+msgstr ""
+
+#: senaite/patient/config.py:98
+msgid "Central American Indian"
+msgstr ""
+
+#: senaite/patient/config.py:88
+msgid "Chicano"
+msgstr ""
+
+#: senaite/patient/config.py:103
+msgid "Chilean"
+msgstr ""
+
+#: senaite/patient/config.py:104
+msgid "Colombian"
+msgstr ""
+
+#: senaite/patient/config.py:92
+msgid "Costa Rican"
+msgstr ""
+
+#: senaite/patient/config.py:111
+msgid "Criollo"
+msgstr ""
+
+#: senaite/patient/config.py:114
+msgid "Cuban"
+msgstr ""
+
+#: senaite/patient/skins/templates/senaite_patient_widgets/agedobwidget.pt:65
+msgid "Date of Birth"
+msgstr ""
+
+#: senaite/patient/content/analysisrequest.py:218
+msgid "Date of birth"
+msgstr ""
+
+#: senaite/patient/skins/templates/senaite_patient_widgets/agedobwidget.pt:104
+msgid "Days"
 msgstr ""
 
 #: senaite/patient/profiles/default/workflows/senaite_patient_workflow/definition.xml
 msgid "Deactivate"
 msgstr ""
 
-#: senaite/patient/content/patient.py:122
+#: senaite/patient/content/patient.py:170
 msgid "Define one or more identifers for this patient"
 msgstr ""
 
-#: senaite/patient/config.py:37
+#: senaite/patient/browser/controlpanel.py:190
+msgid "Display an alert icon on samples with a temporary MRN"
+msgstr ""
+
+#: senaite/patient/config.py:44
 msgid "Diverse"
 msgstr ""
 
-#: senaite/patient/config.py:50
+#: senaite/patient/config.py:115
+msgid "Dominican"
+msgstr ""
+
+#: senaite/patient/config.py:57
 msgid "Driver ID"
 msgstr ""
 
+#: senaite/patient/config.py:105
+msgid "Ecuadorian"
+msgstr ""
+
 #: senaite/patient/browser/patientfolder.py:84
+#: senaite/patient/content/patient.py:88
 msgid "Email"
 msgstr ""
 
@@ -87,67 +205,130 @@ msgstr ""
 msgid "Email Report"
 msgstr ""
 
+#: senaite/patient/content/patient.py:89
+msgid "Email address"
+msgstr ""
+
+#: senaite/patient/content/patient.py:419
+msgid "Email address %s is invalid"
+msgstr ""
+
+#: senaite/patient/skins/templates/senaite_patient_widgets/agedobwidget.pt:133
+msgid "Estimated"
+msgstr ""
+
+#: senaite/patient/content/patient.py:109
+msgid "Ethnicity"
+msgstr ""
+
 #: senaite/patient/config.py:36
 msgid "Female"
 msgstr ""
 
-#: senaite/patient/config.py:42
+#: senaite/patient/browser/controlpanel.py:121
+msgid "Field Settings"
+msgstr ""
+
+#: senaite/patient/config.py:49
 msgid "First name + last name"
 msgstr ""
 
 #: senaite/patient/browser/patientfolder.py:78
-#: senaite/patient/config.py:43
+#: senaite/patient/config.py:50
 msgid "Fullname"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:87
-#: senaite/patient/content/analysisrequest.py:140
+#: senaite/patient/config.py:81
+msgid "Gallego"
+msgstr ""
+
+#: senaite/patient/browser/patientfolder.py:89
 msgid "Gender"
 msgstr ""
 
-#: senaite/patient/content/patient.py:66
+#: senaite/patient/content/analysisrequest.py:159
+msgid "Gender Identity"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:209
+msgid "Gender identity"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:391
+msgid "Global settings for patients"
+msgstr ""
+
+#: senaite/patient/config.py:93
+msgid "Guatemalan"
+msgstr ""
+
+#: senaite/patient/config.py:94
+msgid "Honduran"
+msgstr ""
+
+#: senaite/patient/content/patient.py:69
 msgid "ID"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:78
+#: senaite/patient/browser/controlpanel.py:133
 #: senaite/patient/browser/patientfolder.py:76
 msgid "Identifiers"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:117
+#: senaite/patient/browser/controlpanel.py:222
+msgid "If selected, a control for the introduction of either the age or date of birth will be displayed in Sample registration form and view. Otherwise, only the control for the introduction of the date of birth will be displayed"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:210
+msgid "If selected, a field for the introduction of the patient's gender identity becomes visible in Sample registration form and view. The field for birth sex is always visible regardless of this setting."
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:300
 msgid "If selected, patients created or referred on sample creation will automatically be shared across users from same client the sample belongs to"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:108
+#: senaite/patient/browser/controlpanel.py:182
 msgid "If selected, users will be able to publish samples that have a Patient assigned with a temporary Medical Record Number (MRN)."
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:99
+#: senaite/patient/browser/controlpanel.py:173
 msgid "If selected, users will be able to verify samples that have a Patient assigned with a temporary Medical Record Number (MRN)."
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:101
+#: senaite/patient/browser/patientfolder.py:103
 #: senaite/patient/profiles/default/workflows/senaite_patient_workflow/definition.xml
 msgid "Inactive"
 msgstr ""
 
-#: senaite/patient/configure.zcml:60
+#: senaite/patient/configure.zcml:75
 msgid "Installs SENAITE PATIENT"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:47
+#: senaite/patient/browser/controlpanel.py:60
 msgid "Key"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:131
+#: senaite/patient/browser/controlpanel.py:344
+msgid "Key '%s' is not unique"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:314
 msgid "Key contains invalid characters"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:134
+#: senaite/patient/browser/controlpanel.py:317
 msgid "Key is not unique"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:79
+#: senaite/patient/config.py:89
+msgid "La Raza"
+msgstr ""
+
+#: senaite/patient/config.py:112
+msgid "Latin American"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:252
 msgid "List of identifiers that can be selected for a patient."
 msgstr ""
 
@@ -155,28 +336,84 @@ msgstr ""
 msgid "MRN"
 msgstr ""
 
+#: senaite/patient/browser/controlpanel.py:164
+msgid "Make the MRN field mandatory in Sample Add form"
+msgstr ""
+
 #: senaite/patient/config.py:35
 msgid "Male"
 msgstr ""
 
+#: senaite/patient/config.py:41
+msgid "Man"
+msgstr ""
+
 #: senaite/patient/browser/patientfolder.py:70
-#: senaite/patient/content/analysisrequest.py:61
+#: senaite/patient/content/analysisrequest.py:64
 msgid "Medical Record #"
 msgstr ""
 
-#: senaite/patient/config.py:49
+#: senaite/patient/config.py:85
+msgid "Mexican"
+msgstr ""
+
+#: senaite/patient/config.py:86
+msgid "Mexican American"
+msgstr ""
+
+#: senaite/patient/config.py:90
+msgid "Mexican American Indian"
+msgstr ""
+
+#: senaite/patient/config.py:87
+msgid "Mexicano"
+msgstr ""
+
+#: senaite/patient/skins/templates/senaite_patient_widgets/agedobwidget.pt:91
+msgid "Months"
+msgstr ""
+
+#: senaite/patient/content/patient.py:82
+msgid "Name"
+msgstr ""
+
+#: senaite/patient/config.py:56
 msgid "National ID"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:187
+#: senaite/patient/config.py:66
+msgid "Native Hawaiian or Other Pacific Islander"
+msgstr ""
+
+#: senaite/patient/config.py:95
+msgid "Nicaraguan"
+msgstr ""
+
+#: senaite/patient/browser/patientfolder.py:189
 msgid "No"
 msgstr ""
 
-#: senaite/patient/config.py:38
+#: senaite/patient/config.py:45
 msgid "Not Specified"
 msgstr ""
 
-#: senaite/patient/config.py:48
+#: senaite/patient/config.py:37
+msgid "Not specified"
+msgstr ""
+
+#: senaite/patient/config.py:68
+msgid "Other Race"
+msgstr ""
+
+#: senaite/patient/config.py:96
+msgid "Panamanian"
+msgstr ""
+
+#: senaite/patient/config.py:106
+msgid "Paraguayan"
+msgstr ""
+
+#: senaite/patient/config.py:55
 msgid "Passport ID"
 msgstr ""
 
@@ -187,76 +424,81 @@ msgstr ""
 
 #: senaite/patient/adapters/listing.py:57
 #: senaite/patient/browser/patientfolder.py:73
-#: senaite/patient/content/analysisrequest.py:76
+#: senaite/patient/content/analysisrequest.py:79
 msgid "Patient ID"
 msgstr ""
 
-#: senaite/patient/content/patient.py:249
+#: senaite/patient/content/patient.py:375
 msgid "Patient ID must be unique"
 msgstr ""
 
-#: senaite/patient/content/patient.py:121
+#: senaite/patient/content/patient.py:169
 msgid "Patient Identifiers"
 msgstr ""
 
-#: senaite/patient/content/patient.py:221
+#: senaite/patient/content/patient.py:347
 msgid "Patient Medical Record # must be unique"
 msgstr ""
 
-#: senaite/patient/content/patient.py:106
+#: senaite/patient/content/patient.py:154
 msgid "Patient Medical Record Number"
 msgstr ""
 
-#: senaite/patient/content/patient.py:215
+#: senaite/patient/content/patient.py:341
 msgid "Patient Medical Record is missing or empty"
 msgstr ""
 
+#: senaite/patient/browser/controlpanel.py:390
 #: senaite/patient/profiles/default/controlpanel.xml
 #: senaite/patient/profiles/uninstall/controlpanel.xml
 msgid "Patient Settings"
 msgstr ""
 
-#: senaite/patient/content/patient.py:199
+#: senaite/patient/content/patient.py:325
 msgid "Patient birthdate"
 msgstr ""
 
-#: senaite/patient/content/patient.py:167
-msgid "Patient email address"
-msgstr ""
-
-#: senaite/patient/content/patient.py:280
+#: senaite/patient/content/patient.py:406
 msgid "Patient email is invalid"
 msgstr ""
 
-#: senaite/patient/content/patient.py:145
+#: senaite/patient/content/patient.py:193
 msgid "Patient firstname"
 msgstr ""
 
-#: senaite/patient/content/patient.py:157
-msgid "Patient gender"
+#: senaite/patient/content/patient.py:219
+msgid "Patient gender identity"
 msgstr ""
 
-#: senaite/patient/content/patient.py:151
+#: senaite/patient/content/patient.py:205
 msgid "Patient lastname"
 msgstr ""
 
-#: senaite/patient/content/patient.py:179
+#: senaite/patient/content/patient.py:199
+msgid "Patient middlename"
+msgstr ""
+
+#: senaite/patient/content/patient.py:305
 msgid "Patient mobile phone number"
 msgstr ""
 
-#: senaite/patient/content/analysisrequest.py:92
+#: senaite/patient/content/analysisrequest.py:95
 msgid "Patient name"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:90
+#: senaite/patient/browser/controlpanel.py:201
 msgid "Patient name entry mode"
 msgstr ""
 
-#: senaite/patient/content/patient.py:173
+#: senaite/patient/content/patient.py:299
 msgid "Patient phone number"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:91
+#: senaite/patient/content/patient.py:211
+msgid "Patient sex at birth"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:202
 msgid "Patient's name entry mode in Sample Add form"
 msgstr ""
 
@@ -264,40 +506,85 @@ msgstr ""
 msgid "Patients"
 msgstr ""
 
-#: senaite/patient/content/analysisrequest.py:107
+#: senaite/patient/config.py:107
+msgid "Peruvian"
+msgstr ""
+
+#: senaite/patient/content/analysisrequest.py:110
 msgid "Place of residence"
 msgstr ""
 
-#: senaite/patient/content/patient.py:271
+#: senaite/patient/content/patient.py:397
 msgid "Please set a valid email address first"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:67
-msgid "Require Patient"
+#: senaite/patient/content/patient.py:83
+msgid "Private, Work, Other etc."
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:68
-msgid "Require Patients in Samples"
+#: senaite/patient/config.py:113
+msgid "Puerto Rican"
+msgstr ""
+
+#: senaite/patient/content/patient.py:98
+msgid "Race"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:142
+msgid "Race and Ethnicity"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:163
+msgid "Require Medical Record Number (MRN)"
 msgstr ""
 
 #: senaite/patient/validators.py:44
 msgid "Required field: ${title}"
 msgstr ""
 
-#: senaite/patient/configure.zcml:60
+#: senaite/patient/configure.zcml:75
 msgid "SENAITE PATIENT"
 msgstr ""
 
-#: senaite/patient/configure.zcml:78
+#: senaite/patient/configure.zcml:93
 msgid "SENAITE PATIENT (uninstall)"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:153
-msgid "SENAITE Patient Settings"
+#: senaite/patient/config.py:97
+msgid "Salvadoran"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:116
+#: senaite/patient/browser/patientfolder.py:87
+#: senaite/patient/content/analysisrequest.py:142
+msgid "Sex"
+msgstr ""
+
+#: senaite/patient/content/analysisrequest.py:143
+msgid "Sex at birth"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:299
 msgid "Share patient on sample creation"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:152
+msgid "Sharing"
+msgstr ""
+
+#: senaite/patient/config.py:100
+msgid "South American"
+msgstr ""
+
+#: senaite/patient/config.py:110
+msgid "South American Indian"
+msgstr ""
+
+#: senaite/patient/config.py:75
+msgid "Spaniard"
+msgstr ""
+
+#: senaite/patient/config.py:84
+msgid "Spanish Basque"
 msgstr ""
 
 #: senaite/patient/skins/templates/senaite_patient_widgets/temporaryidentifierwidget.pt:110
@@ -312,122 +599,238 @@ msgstr ""
 msgid "The Medical Record Number (MRN) assigned to this sample is temporary"
 msgstr ""
 
-#: senaite/patient/content/patient.py:67
+#: senaite/patient/content/patient.py:70
 msgid "The identification number of the selected identifier"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:48
+#: senaite/patient/browser/controlpanel.py:61
 msgid "The key will be stored in the database and must be unique"
 msgstr ""
 
-#: senaite/patient/content/patient.py:58
+#: senaite/patient/content/patient.py:61
 msgid "The type of identifier that holds the ID"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:56
+#: senaite/patient/browser/controlpanel.py:105
+msgid "The value will be displayed in the ethnicity selection"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:69
 msgid "The value will be displayed in the identifers selection"
 msgstr ""
 
-#: senaite/patient/content/patient.py:57
+#: senaite/patient/browser/controlpanel.py:87
+msgid "The value will be displayed in the race selection"
+msgstr ""
+
+#: senaite/patient/config.py:43
+msgid "Transgender"
+msgstr ""
+
+#: senaite/patient/content/patient.py:60
 msgid "Type"
 msgstr ""
 
-#: senaite/patient/configure.zcml:78
+#: senaite/patient/configure.zcml:93
 msgid "Uninstalls SENAITE PATIENT"
 msgstr ""
 
-#: senaite/patient/content/patient.py:112
+#: senaite/patient/content/patient.py:160
 msgid "Unique Patient ID"
 msgstr ""
 
-#: senaite/patient/browser/controlpanel.py:55
+#: senaite/patient/config.py:108
+msgid "Uruguayan"
+msgstr ""
+
+#: senaite/patient/config.py:82
+msgid "Valencian"
+msgstr ""
+
+#: senaite/patient/browser/controlpanel.py:68
 msgid "Value"
 msgstr ""
 
-#: senaite/patient/config.py:51
+#: senaite/patient/config.py:109
+msgid "Venezuelan"
+msgstr ""
+
+#: senaite/patient/config.py:58
 msgid "Voter ID"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:187
+#: senaite/patient/browser/controlpanel.py:191
+msgid "When selected, an alert icon is displayed in samples listing for samples that have a Patient assigned with a temporary Medical Record Number (MRN)."
+msgstr ""
+
+#: senaite/patient/config.py:67
+msgid "White"
+msgstr ""
+
+#: senaite/patient/config.py:42
+msgid "Woman"
+msgstr ""
+
+#: senaite/patient/skins/templates/senaite_patient_widgets/agedobwidget.pt:78
+msgid "Years"
+msgstr ""
+
+#: senaite/patient/browser/patientfolder.py:189
 msgid "Yes"
 msgstr ""
 
-#. Default: "Days"
-#: senaite/patient/skins/templates/senaite_patient_widgets/agedobwidget.pt:82
-msgid "label_days"
+#: senaite/patient/config.py:69
+msgid "asked but unknown"
+msgstr ""
+
+#. Default: "If selected, months and days won't be displayed in sample view if the age of the patient is greater than one year. In such case, only years will be displayed"
+#: senaite/patient/browser/controlpanel.py:236
+msgid "description_controlpanel_patient_ageyears"
+msgstr ""
+
+#. Default: "Patient ethnicity categories"
+#: senaite/patient/browser/controlpanel.py:289
+msgid "description_controlpanel_patient_ethnicities"
+msgstr ""
+
+#. Default: "Patient race categories"
+#: senaite/patient/browser/controlpanel.py:271
+msgid "description_controlpanel_patient_races"
+msgstr ""
+
+#. Default: "Additional email addresses for this patient"
+#: senaite/patient/content/patient.py:285
+msgid "description_patient_additional_emails"
+msgstr ""
+
+#. Default: "General ethnicity category reported by the patient - subject may have more than one"
+#: senaite/patient/content/patient.py:250
+msgid "description_patient_ethnicities"
+msgstr ""
+
+#. Default: "Primary email address for this patient"
+#: senaite/patient/content/patient.py:269
+msgid "description_patient_primary_email"
+msgstr ""
+
+#. Default: "General race category reported by the patient - subject may have more than one"
+#: senaite/patient/content/patient.py:232
+msgid "description_patient_races"
+msgstr ""
+
+#. Default: "Age in years"
+#: senaite/patient/browser/controlpanel.py:233
+msgid "label_controlpanel_patient_ageyears"
+msgstr ""
+
+#. Default: "Ethnicities"
+#: senaite/patient/browser/controlpanel.py:286
+msgid "label_controlpanel_patient_ethnicities"
+msgstr ""
+
+#. Default: "Races"
+#: senaite/patient/browser/controlpanel.py:268
+msgid "label_controlpanel_patient_races"
 msgstr ""
 
 #. Default: "Firstname"
-#: senaite/patient/skins/templates/senaite_patient_widgets/fullnamewidget.pt:56
+#: senaite/patient/skins/templates/senaite_patient_widgets/fullnamewidget.pt:60
 msgid "label_firstname"
 msgstr ""
 
 #. Default: "Lastname"
-#: senaite/patient/skins/templates/senaite_patient_widgets/fullnamewidget.pt:65
+#: senaite/patient/skins/templates/senaite_patient_widgets/fullnamewidget.pt:82
 msgid "label_lastname"
 msgstr ""
 
-#. Default: "Months"
-#: senaite/patient/skins/templates/senaite_patient_widgets/agedobwidget.pt:74
-msgid "label_months"
+#. Default: "Middlename"
+#: senaite/patient/skins/templates/senaite_patient_widgets/fullnamewidget.pt:71
+msgid "label_middlename"
+msgstr ""
+
+#. Default: "Additional Emails"
+#: senaite/patient/content/patient.py:282
+msgid "label_patient_additional_emails"
 msgstr ""
 
 #. Default: "Birthdate"
-#: senaite/patient/content/patient.py:198
+#: senaite/patient/content/patient.py:324
 msgid "label_patient_birthdate"
 msgstr ""
 
-#. Default: "Email"
-#: senaite/patient/content/patient.py:166
-msgid "label_patient_email"
-msgstr ""
-
 #. Default: "Email results report"
-#: senaite/patient/content/patient.py:134
+#: senaite/patient/content/patient.py:182
 msgid "label_patient_email_report"
 msgstr ""
 
+#. Default: "Ethnicities"
+#: senaite/patient/content/patient.py:249
+msgid "label_patient_ethnicities"
+msgstr ""
+
 #. Default: "Firstname"
-#: senaite/patient/content/patient.py:144
+#: senaite/patient/content/patient.py:192
 msgid "label_patient_firstname"
 msgstr ""
 
-#. Default: "Gender"
-#: senaite/patient/content/patient.py:156
+#. Default: "Gender Identity"
+#: senaite/patient/content/patient.py:218
 msgid "label_patient_gender"
 msgstr ""
 
 #. Default: "ID"
-#: senaite/patient/content/patient.py:111
+#: senaite/patient/content/patient.py:159
 msgid "label_patient_id"
 msgstr ""
 
 #. Default: "Lastname"
-#: senaite/patient/content/patient.py:150
+#: senaite/patient/content/patient.py:204
 msgid "label_patient_lastname"
 msgstr ""
 
+#. Default: "Middlename"
+#: senaite/patient/content/patient.py:198
+msgid "label_patient_middlename"
+msgstr ""
+
 #. Default: "Mobile"
-#: senaite/patient/content/patient.py:178
+#: senaite/patient/content/patient.py:304
 msgid "label_patient_mobile"
 msgstr ""
 
 #. Default: "Medical Record #"
-#: senaite/patient/content/patient.py:105
+#: senaite/patient/content/patient.py:153
 msgid "label_patient_mrn"
 msgstr ""
 
 #. Default: "Phone"
-#: senaite/patient/content/patient.py:172
+#: senaite/patient/content/patient.py:298
 msgid "label_patient_phone"
 msgstr ""
 
-#. Default: "Years"
-#: senaite/patient/skins/templates/senaite_patient_widgets/agedobwidget.pt:65
-msgid "label_years"
+#. Default: "Races"
+#: senaite/patient/content/patient.py:231
+msgid "label_patient_races"
 msgstr ""
 
-#. Default: "Firstname"
-#: senaite/patient/skins/templates/senaite_patient_widgets/fullnamewidget.pt:78
+#. Default: "Sex"
+#: senaite/patient/content/patient.py:210
+msgid "label_patient_sex"
+msgstr ""
+
+#. Default: "Primary Email"
+#: senaite/patient/content/patient.py:265
+msgid "label_primary_patient_email"
+msgstr ""
+
+#: senaite/patient/config.py:117
+msgid "other"
+msgstr ""
+
+#: senaite/patient/skins/templates/senaite_patient_widgets/fullnamewidget.pt:95
 msgid "placeholder"
+msgstr ""
+
+#: senaite/patient/config.py:70
+msgid "unknown"
 msgstr ""

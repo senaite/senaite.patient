@@ -1,18 +1,20 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2022-10-03 11:09+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"PO-Revision-Date: 2022-10-03 11:08+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: German (https://www.transifex.com/senaite/teams/130029/de/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Language-Code: en\n"
 "Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
+"Language: de\n"
 
 #: senaite/patient/profiles/default/workflows/senaite_patient_workflow/definition.xml
 msgid "Activate"
@@ -683,6 +685,8 @@ msgstr ""
 msgid "asked but unknown"
 msgstr ""
 
+#. the age of the patient is greater than one year. In such case, only years
+#. will be displayed"
 #. Default: "If selected, months and days won't be displayed in sample view if the age of the patient is greater than one year. In such case, only years will be displayed"
 #: senaite/patient/browser/controlpanel.py:236
 msgid "description_controlpanel_patient_ageyears"
@@ -703,6 +707,7 @@ msgstr ""
 msgid "description_patient_additional_emails"
 msgstr ""
 
+#. have more than one"
 #. Default: "General ethnicity category reported by the patient - subject may have more than one"
 #: senaite/patient/content/patient.py:250
 msgid "description_patient_ethnicities"
@@ -713,6 +718,7 @@ msgstr ""
 msgid "description_patient_primary_email"
 msgstr ""
 
+#. more than one"
 #. Default: "General race category reported by the patient - subject may have more than one"
 #: senaite/patient/content/patient.py:232
 msgid "description_patient_races"
