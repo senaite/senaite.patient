@@ -3,8 +3,7 @@
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:cmf="http://namespaces.zope.org/cmf"
     xmlns:i18n="http://namespaces.zope.org/i18n"
-    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    i18n_domain="senaite.patient">
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <five:registerPackage package="." initialize=".initialize"/>
 

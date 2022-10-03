@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3.0 (unreleased)
+1.3.0 (2022-10-03)
 ------------------
 
 - #51 Add Race and Ethnicity Categories for Patients
