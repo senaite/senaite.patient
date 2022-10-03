@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-10-03 11:09+0000\n"
+"POT-Creation-Date: 2022-10-03 11:12+0000\n"
 "PO-Revision-Date: 2022-10-03 11:08+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish (https://www.transifex.com/senaite/teams/130029/es/)\n"
@@ -302,10 +302,6 @@ msgstr ""
 msgid "Inactive"
 msgstr ""
 
-#: senaite/patient/configure.zcml:75
-msgid "Installs SENAITE PATIENT"
-msgstr ""
-
 #: senaite/patient/browser/controlpanel.py:60
 msgid "Key"
 msgstr ""
@@ -544,14 +540,6 @@ msgstr ""
 msgid "Required field: ${title}"
 msgstr ""
 
-#: senaite/patient/configure.zcml:75
-msgid "SENAITE PATIENT"
-msgstr ""
-
-#: senaite/patient/configure.zcml:93
-msgid "SENAITE PATIENT (uninstall)"
-msgstr ""
-
 #: senaite/patient/config.py:97
 msgid "Salvadoran"
 msgstr ""
@@ -631,10 +619,6 @@ msgstr ""
 
 #: senaite/patient/content/patient.py:60
 msgid "Type"
-msgstr ""
-
-#: senaite/patient/configure.zcml:93
-msgid "Uninstalls SENAITE PATIENT"
 msgstr ""
 
 #: senaite/patient/content/patient.py:160
