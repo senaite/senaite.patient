@@ -29,7 +29,9 @@ from senaite.core.schema.registry import DataGridRow
 from senaite.core.z3cform.widgets.datagrid import DataGridWidgetFactory
 from senaite.patient import messageFactory as _
 from senaite.patient.api import patient_search
+from senaite.patient.config import ETHNICITIES
 from senaite.patient.config import IDENTIFIERS
+from senaite.patient.config import RACES
 from zope import schema
 from zope.interface import Interface
 from zope.interface import Invalid
@@ -41,6 +43,16 @@ from zope.schema.interfaces import IContextAwareDefaultFactory
 @provider(IContextAwareDefaultFactory)
 def default_identifiers(context):
     return [{u"key": i[0], u"value": i[1]} for i in IDENTIFIERS]
+
+
+@provider(IContextAwareDefaultFactory)
+def default_races(context):
+    return [{u"key": i[0], u"value": i[1]} for i in RACES]
+
+
+@provider(IContextAwareDefaultFactory)
+def default_ethnicities(context):
+    return [{u"key": i[0], u"value": i[1]} for i in ETHNICITIES]
 
 
 class IIdentifier(Interface):
@@ -56,6 +68,42 @@ class IIdentifier(Interface):
         title=_(u"Value"),
         description=_(
             u"The value will be displayed in the identifers selection"
+        ),
+        required=True,
+    )
+
+
+class IRace(Interface):
+    key = schema.TextLine(
+        title=_(u"Key"),
+        description=_(
+            u"The key will be stored in the database and must be unique"
+        ),
+        required=True,
+    )
+
+    value = schema.TextLine(
+        title=_(u"Value"),
+        description=_(
+            u"The value will be displayed in the race selection"
+        ),
+        required=True,
+    )
+
+
+class IEthnicity(Interface):
+    key = schema.TextLine(
+        title=_(u"Key"),
+        description=_(
+            u"The key will be stored in the database and must be unique"
+        ),
+        required=True,
+    )
+
+    value = schema.TextLine(
+        title=_(u"Value"),
+        description=_(
+            u"The value will be displayed in the ethnicity selection"
         ),
         required=True,
     )
@@ -86,6 +134,16 @@ class IPatientControlPanel(Interface):
         description=_(""),
         fields=[
             "identifiers",
+        ],
+    )
+
+    model.fieldset(
+        "patient_race_ethnicity",
+        label=_(u"Race and Ethnicity"),
+        description=_(""),
+        fields=[
+            "races",
+            "ethnicities",
         ],
     )
 
@@ -201,6 +259,42 @@ class IPatientControlPanel(Interface):
         defaultFactory=default_identifiers,
     )
 
+    directives.widget(
+        "races",
+        DataGridWidgetFactory,
+        allow_reorder=True,
+        auto_append=True)
+    races = schema.List(
+        title=_(
+            u"label_controlpanel_patient_races",
+            default=u"Races"),
+        description=_(
+            u"description_controlpanel_patient_races",
+            default=u"Patient race categories"
+        ),
+        value_type=DataGridRow(schema=IRace),
+        required=True,
+        defaultFactory=default_races,
+    )
+
+    directives.widget(
+        "ethnicities",
+        DataGridWidgetFactory,
+        allow_reorder=True,
+        auto_append=True)
+    ethnicities = schema.List(
+        title=_(
+            u"label_controlpanel_patient_ethnicities",
+            default=u"Ethnicities"),
+        description=_(
+            u"description_controlpanel_patient_ethnicities",
+            default=u"Patient ethnicity categories"
+        ),
+        value_type=DataGridRow(schema=IEthnicity),
+        required=True,
+        defaultFactory=default_ethnicities,
+    )
+
     share_patients = schema.Bool(
         title=_(u"Share patient on sample creation"),
         description=_(u"If selected, patients created or referred on sample "
@@ -234,6 +328,60 @@ class IPatientControlPanel(Interface):
             brains = patient_search({"patient_identifier_keys": removed})
             if brains:
                 raise Invalid(_("Can not delete identifiers that are in use"))
+
+    @invariant
+    def validate_races(data):
+        """Checks if the keyword is unique and valid
+        """
+        keys = []
+        for race in data.races:
+            key = race.get("key")
+            # check if the key contains invalid characters
+            if re.findall(r"[^A-Za-z\w\d\-\_]", key):
+                raise Invalid(_("Key contains invalid characters"))
+            # check if the key is unique
+            if key in keys:
+                raise Invalid(_("Key '%s' is not unique" % key))
+
+            keys.append(key)
+
+        # check if a used key is removed
+        old_races = data.__context__.races
+        old_keys = map(lambda i: i.get("key"), old_races)
+        removed = list(set(old_keys).difference(keys))
+
+        if removed:
+            # check if there are patients that use one of the removed keys
+            brains = patient_search({"patient_race_keys": removed})
+            if brains:
+                raise Invalid(_("Can not delete races that are in use"))
+
+    @invariant
+    def validate_ethnicities(data):
+        """Checks if the keyword is unique and valid
+        """
+        keys = []
+        for ethnicity in data.ethnicities:
+            key = ethnicity.get("key")
+            # check if the key contains invalid characters
+            if re.findall(r"[^A-Za-z\w\d\-\_]", key):
+                raise Invalid(_("Key contains invalid characters"))
+            # check if the key is unique
+            if key in keys:
+                raise Invalid(_("Key '%s' is not unique" % key))
+
+            keys.append(key)
+
+        # check if a used key is removed
+        old_ethnicities = data.__context__.ethnicities
+        old_keys = map(lambda i: i.get("key"), old_ethnicities)
+        removed = list(set(old_keys).difference(keys))
+
+        if removed:
+            # check if there are patients that use one of the removed keys
+            brains = patient_search({"patient_ethnicity_keys": removed})
+            if brains:
+                raise Invalid(_("Can not delete ethnicities that are in use"))
 
 
 class PatientControlPanelForm(RegistryEditForm):

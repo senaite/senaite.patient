@@ -103,3 +103,45 @@ class NameEntryModesVocabulary(object):
 
 
 NameEntryModesVocabularyFactory = NameEntryModesVocabulary()
+
+
+@implementer(IVocabularyFactory)
+class RacesVocabulary(object):
+
+    def __call__(self, context):
+
+        races = api.get_registry_record("senaite.patient.races")
+
+        items = []
+        for race in races:
+            # note: the key will get the submitted value
+            keyword = race.get("key")
+            title = race.get("value")
+            # value, token, title
+            term = SimpleTerm(keyword, keyword, title)
+            items.append(term)
+        return SimpleVocabulary(sorted(items, key=lambda t: t.title))
+
+
+RacesVocabularyFactory = RacesVocabulary()
+
+
+@implementer(IVocabularyFactory)
+class EthnicitiesVocabulary(object):
+
+    def __call__(self, context):
+
+        ethnicities = api.get_registry_record("senaite.patient.ethnicities")
+
+        items = []
+        for ethnicity in ethnicities:
+            # note: the key will get the submitted value
+            keyword = ethnicity.get("key")
+            title = ethnicity.get("value")
+            # value, token, title
+            term = SimpleTerm(keyword, keyword, title)
+            items.append(term)
+        return SimpleVocabulary(sorted(items, key=lambda t: t.title))
+
+
+EthnicitiesVocabularyFactory = EthnicitiesVocabulary()

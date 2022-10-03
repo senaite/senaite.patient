@@ -25,6 +25,7 @@ from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
 from senaite.patient.config import PRODUCT_NAME
 from senaite.patient.config import SEXES
+from senaite.patient.setuphandlers import setup_catalogs
 
 version = "1.3.0"
 profile = "profile-{0}:default".format(PRODUCT_NAME)
@@ -55,6 +56,8 @@ def upgrade(tool):
     # Update the sex if possible
     update_patients_sex(portal)
     update_samples_sex(portal)
+
+    setup_catalogs(portal)
 
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True

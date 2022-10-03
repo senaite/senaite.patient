@@ -25,6 +25,16 @@
       component="senaite.patient.vocabularies.IdentifierVocabularyFactory"
       name="senaite.patient.vocabularies.identifiers" />
 
+  <!-- Races Vocabulary -->
+  <utility
+      component="senaite.patient.vocabularies.RacesVocabularyFactory"
+      name="senaite.patient.vocabularies.races" />
+
+  <!-- Ethnicities Vocabulary -->
+  <utility
+      component="senaite.patient.vocabularies.EthnicitiesVocabularyFactory"
+      name="senaite.patient.vocabularies.ethnicities" />
+
   <!-- Sex Vocabulary -->
   <utility
       component="senaite.patient.vocabularies.SexVocabularyFactory"

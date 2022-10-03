@@ -10,6 +10,8 @@
   <adapter name="patient_mrn" factory=".indexers.patient_mrn" />
   <adapter name="patient_identifier_keys" factory=".indexers.patient_identifier_keys" />
   <adapter name="patient_identifier_values" factory=".indexers.patient_identifier_values" />
+  <adapter name="patient_race_keys" factory=".indexers.patient_race_keys" />
+  <adapter name="patient_ethnicity_keys" factory=".indexers.patient_ethnicity_keys" />
   <adapter name="patient_email" factory=".indexers.patient_email" />
   <adapter name="patient_email_report" factory=".indexers.patient_email_report" />
   <adapter name="patient_birthdate" factory=".indexers.patient_birthdate" />

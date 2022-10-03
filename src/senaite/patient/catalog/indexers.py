@@ -54,6 +54,22 @@ def patient_identifier_values(instance):
 
 
 @indexer(IPatient)
+def patient_race_keys(instance):
+    """Return patient race keys
+    """
+    races = instance.getRaces()
+    return map(lambda i: i.get("race"), races)
+
+
+@indexer(IPatient)
+def patient_ethnicity_keys(instance):
+    """Return patient ethnicity keys
+    """
+    ethnicities = instance.getEthnicities()
+    return map(lambda i: i.get("ethnicity"), ethnicities)
+
+
+@indexer(IPatient)
 def patient_mrn(instance):
     """Index Medical Record #
     """
