@@ -5,7 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
-- no changes yet
+- #53 Add patient marital status
 
 
 1.3.0 (2022-10-03)
