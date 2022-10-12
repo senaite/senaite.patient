@@ -34,6 +34,11 @@
       component="senaite.patient.vocabularies.EthnicitiesVocabularyFactory"
       name="senaite.patient.vocabularies.ethnicities" />
 
+  <!-- Marital Statuses Vocabulary -->
+  <utility
+      component="senaite.patient.vocabularies.MaritalStatusesVocabularyFactory"
+      name="senaite.patient.vocabularies.marital_statuses" />
+
   <!-- Sex Vocabulary -->
   <utility
       component="senaite.patient.vocabularies.SexVocabularyFactory"

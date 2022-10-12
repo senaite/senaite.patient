@@ -145,3 +145,25 @@ class EthnicitiesVocabulary(object):
 
 
 EthnicitiesVocabularyFactory = EthnicitiesVocabulary()
+
+
+@implementer(IVocabularyFactory)
+class MaritalStatusesVocabulary(object):
+
+    def __call__(self, context):
+
+        marital_statuses = api.get_registry_record(
+            "senaite.patient.marital_statuses")
+
+        items = []
+        for marital_status in marital_statuses:
+            # note: the key will get the submitted value
+            keyword = marital_status.get("key")
+            title = marital_status.get("value")
+            # value, token, title
+            term = SimpleTerm(keyword, keyword, title)
+            items.append(term)
+        return SimpleVocabulary(sorted(items, key=lambda t: t.title))
+
+
+MaritalStatusesVocabularyFactory = MaritalStatusesVocabulary()
