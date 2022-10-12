@@ -571,6 +571,20 @@ class Patient(Container):
         return mutator(self, value)
 
     @security.protected(permissions.View)
+    def getMaritalStatus(self):
+        """Returns the patient marital status
+        """
+        accessor = self.accessor("marital_status")
+        return accessor(self)
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setMaritalStatus(self, value):
+        """Set the patient marital status
+        """
+        mutator = self.mutator("marital_status")
+        return mutator(self, value)
+
+    @security.protected(permissions.View)
     def getEmailReport(self):
         """Returns the email report option
         """
