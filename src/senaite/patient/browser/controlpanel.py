@@ -31,6 +31,7 @@ from senaite.patient import messageFactory as _
 from senaite.patient.api import patient_search
 from senaite.patient.config import ETHNICITIES
 from senaite.patient.config import IDENTIFIERS
+from senaite.patient.config import MARITAL_STATUSES
 from senaite.patient.config import RACES
 from zope import schema
 from zope.interface import Interface
@@ -53,6 +54,11 @@ def default_races(context):
 @provider(IContextAwareDefaultFactory)
 def default_ethnicities(context):
     return [{u"key": i[0], u"value": i[1]} for i in ETHNICITIES]
+
+
+@provider(IContextAwareDefaultFactory)
+def default_marital_statuses(context):
+    return [{u"key": i[0], u"value": i[1]} for i in MARITAL_STATUSES]
 
 
 class IIdentifier(Interface):
@@ -109,6 +115,24 @@ class IEthnicity(Interface):
     )
 
 
+class IMaritalStatus(Interface):
+    key = schema.TextLine(
+        title=_(u"Key"),
+        description=_(
+            u"The key will be stored in the database and must be unique"
+        ),
+        required=True,
+    )
+
+    value = schema.TextLine(
+        title=_(u"Value"),
+        description=_(
+            u"The value will be displayed in the marital status selection"
+        ),
+        required=True,
+    )
+
+
 class IPatientControlPanel(Interface):
     """Controlpanel Settings
     """
@@ -134,6 +158,15 @@ class IPatientControlPanel(Interface):
         description=_(""),
         fields=[
             "identifiers",
+        ],
+    )
+
+    model.fieldset(
+        "marital_statuses",
+        label=_(u"Marital Statuses"),
+        description=_(""),
+        fields=[
+            "marital_statuses",
         ],
     )
 
@@ -295,6 +328,24 @@ class IPatientControlPanel(Interface):
         defaultFactory=default_ethnicities,
     )
 
+    directives.widget(
+        "marital_statuses",
+        DataGridWidgetFactory,
+        allow_reorder=True,
+        auto_append=True)
+    marital_statuses = schema.List(
+        title=_(
+            u"label_controlpanel_patient_marital_statuses",
+            default=u"Marital Statuses"),
+        description=_(
+            u"description_controlpanel_patient_marital_statuses",
+            default=u"Legally defined marital statuses"
+        ),
+        value_type=DataGridRow(schema=IMaritalStatus),
+        required=True,
+        defaultFactory=default_marital_statuses,
+    )
+
     share_patients = schema.Bool(
         title=_(u"Share patient on sample creation"),
         description=_(u"If selected, patients created or referred on sample "
@@ -382,6 +433,34 @@ class IPatientControlPanel(Interface):
             brains = patient_search({"patient_ethnicity_keys": removed})
             if brains:
                 raise Invalid(_("Can not delete ethnicities that are in use"))
+
+    @invariant
+    def validate_marital_statuses(data):
+        """Checks if the keyword is unique and valid
+        """
+        keys = []
+        for status in data.marital_statuses:
+            key = status.get("key")
+            # check if the key contains invalid characters
+            if re.findall(r"[^A-Za-z\w\d\-\_]", key):
+                raise Invalid(_("Key contains invalid characters"))
+            # check if the key is unique
+            if key in keys:
+                raise Invalid(_("Key '%s' is not unique" % key))
+
+            keys.append(key)
+
+        # check if a used key is removed
+        old_statuses = data.__context__.marital_statuses
+        old_keys = map(lambda i: i.get("key"), old_statuses)
+        removed = list(set(old_keys).difference(keys))
+
+        if removed:
+            # check if there are patients that use one of the removed keys
+            brains = patient_search({"patient_marital_statuses_keys": removed})
+            if brains:
+                raise Invalid(
+                    _("Can not delete marital statuses that are in use"))
 
 
 class PatientControlPanelForm(RegistryEditForm):
