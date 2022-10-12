@@ -279,6 +279,7 @@ class IPatientControlPanel(Interface):
     directives.widget(
         "identifiers",
         DataGridWidgetFactory,
+        allow_reorder=True,
         auto_append=True)
     identifiers = schema.List(
         title=_(u"Identifiers"),

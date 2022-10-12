@@ -51,7 +51,7 @@ class IdentifierVocabulary(object):
             # value, token, title
             term = SimpleTerm(keyword, keyword, title)
             items.append(term)
-        return SimpleVocabulary(sorted(items, key=lambda t: t.title))
+        return SimpleVocabulary(items)
 
 
 IdentifierVocabularyFactory = IdentifierVocabulary()
@@ -120,7 +120,7 @@ class RacesVocabulary(object):
             # value, token, title
             term = SimpleTerm(keyword, keyword, title)
             items.append(term)
-        return SimpleVocabulary(sorted(items, key=lambda t: t.title))
+        return SimpleVocabulary(items)
 
 
 RacesVocabularyFactory = RacesVocabulary()
@@ -141,7 +141,7 @@ class EthnicitiesVocabulary(object):
             # value, token, title
             term = SimpleTerm(keyword, keyword, title)
             items.append(term)
-        return SimpleVocabulary(sorted(items, key=lambda t: t.title))
+        return SimpleVocabulary(items)
 
 
 EthnicitiesVocabularyFactory = EthnicitiesVocabulary()
@@ -163,7 +163,7 @@ class MaritalStatusesVocabulary(object):
             # value, token, title
             term = SimpleTerm(keyword, keyword, title)
             items.append(term)
-        return SimpleVocabulary(sorted(items, key=lambda t: t.title))
+        return SimpleVocabulary(items)
 
 
 MaritalStatusesVocabularyFactory = MaritalStatusesVocabulary()
