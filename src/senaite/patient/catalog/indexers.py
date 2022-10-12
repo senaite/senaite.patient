@@ -70,6 +70,13 @@ def patient_ethnicity_keys(instance):
 
 
 @indexer(IPatient)
+def patient_marital_status(instance):
+    """Return patient marital status
+    """
+    return instance.getMaritalStatus()
+
+
+@indexer(IPatient)
 def patient_mrn(instance):
     """Index Medical Record #
     """

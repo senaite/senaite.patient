@@ -22,6 +22,7 @@ from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
 from senaite.patient.config import PRODUCT_NAME
+from senaite.patient.setuphandlers import setup_catalogs
 
 version = "1.4.0"
 profile = "profile-{0}:default".format(PRODUCT_NAME)
@@ -46,3 +47,20 @@ def upgrade(tool):
 
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True
+
+
+def upgrade_marital_status(tool):
+    """Update controlpanel and add index to patient catalog
+
+    :param tool: portal_setup tool
+    """
+    logger.info("Upgrade patient marital status ...")
+
+    portal = tool.aq_inner.aq_parent
+    setup = portal.portal_setup
+    # import registry
+    setup.runImportStepFromProfile(profile, "plone.app.registry")
+    # setup patient catalog
+    setup_catalogs(portal)
+
+    logger.info("Upgrade patient marital status [DONCE]")

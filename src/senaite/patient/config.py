@@ -117,3 +117,20 @@ ETHNICITIES = (
     (u"OTH", _(u"other")),
     (u"UNK", _(u"unknown")),
 )
+
+
+# http://hl7.org/fhir/R4/valueset-marital-status.html
+MARITAL_STATUSES = (
+    (u"A", _(u"Annulled")),
+    (u"D", _(u"Divorced")),
+    (u"I", _(u"Interlocutory")),
+    (u"L", _(u"Legally Separated")),
+    (u"M", _(u"Married")),
+    (u"C", _(u"Common Law")),
+    (u"P", _(u"Polygamous")),
+    (u"T", _(u"Domestic partner")),
+    (u"U", _(u"unmarried")),
+    (u"S", _(u"Never Married")),
+    (u"W", _(u"Widowed")),
+    (u"UNK", _(u"unknown")),
+)

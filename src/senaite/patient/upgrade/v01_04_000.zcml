@@ -1,0 +1,15 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
+
+  <!-- Reindex QC Analyses
+       https://github.com/senaite/senaite.core/pull/2157 -->
+  <genericsetup:upgradeStep
+      title="SENAITE PATIENT 1.4.0: Marital Status"
+      description="Update patient controlpanel and add catalog index"
+      source="1400"
+      destination="1401"
+      handler="senaite.patient.upgrade.v01_04_000.upgrade_marital_status"
+      profile="senaite.patient:default"/>
+
+</configure>
