@@ -10,6 +10,9 @@
       handler="senaite.patient.upgrade.v01_04_000.upgrade"
       profile="senaite.patient:default"/>
 
+  <!-- Include all upgrade steps for 1.4.0 -->
+  <include file="v01_04_000.zcml" />
+
   <genericsetup:upgradeStep
       title="Upgrade to SENAITE PATIENT 1.3.0"
       source="1.2.0"
