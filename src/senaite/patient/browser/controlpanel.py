@@ -455,12 +455,12 @@ class IPatientControlPanel(Interface):
         old_keys = map(lambda i: i.get("key"), old_statuses)
         removed = list(set(old_keys).difference(keys))
 
-        if removed:
-            # check if there are patients that use one of the removed keys
-            brains = patient_search({"patient_marital_statuses_keys": removed})
+        for key in removed:
+            # check if there are patients that use one of the removed key
+            brains = patient_search({"patient_marital_status": key})
             if brains:
                 raise Invalid(
-                    _("Can not delete marital statuses that are in use"))
+                    _("Can not delete marital status that is in use"))
 
 
 class PatientControlPanelForm(RegistryEditForm):
