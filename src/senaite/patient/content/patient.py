@@ -222,6 +222,14 @@ class IPatientSchema(model.Schema):
         required=True,
     )
 
+    marital_status = schema.Choice(
+        title=_(u"label_patient_marital_status", default=u"Marital Status"),
+        description=_(u"Patient legally defined marital status"),
+        source="senaite.patient.vocabularies.marital_statuses",
+        default="UNK",
+        required=True,
+    )
+
     directives.widget(
         "races",
         DataGridWidgetFactory,
