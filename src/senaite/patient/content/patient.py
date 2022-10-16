@@ -31,6 +31,7 @@ from Products.CMFCore import permissions
 from senaite.core.behaviors import IClientShareable
 from senaite.core.schema import AddressField
 from senaite.core.schema import DatetimeField
+from senaite.core.schema import PhoneField
 from senaite.core.schema.addressfield import OTHER_ADDRESS
 from senaite.core.schema.addressfield import PHYSICAL_ADDRESS
 from senaite.core.schema.addressfield import POSTAL_ADDRESS
@@ -38,6 +39,7 @@ from senaite.core.schema.fields import DataGridField
 from senaite.core.schema.fields import DataGridRow
 from senaite.core.z3cform.widgets.datagrid import DataGridWidgetFactory
 from senaite.core.z3cform.widgets.datetimewidget import DatetimeWidget
+from senaite.core.z3cform.widgets.phone import PhoneWidgetFactory
 from senaite.patient import api as patient_api
 from senaite.patient import messageFactory as _
 from senaite.patient.catalog import PATIENT_CATALOG
@@ -46,71 +48,15 @@ from senaite.patient.config import SEXES
 from senaite.patient.interfaces import IPatient
 from z3c.form.interfaces import NO_VALUE
 from zope import schema
-from zope.interface import Interface
 from zope.interface import Invalid
 from zope.interface import implementer
 from zope.interface import invariant
 
-
-class IIdentifiersSchema(Interface):
-    """Schema definition for identifier records field
-    """
-
-    key = schema.Choice(
-        title=_("Type"),
-        description=_(
-            u"The type of identifier that holds the ID"
-        ),
-        source="senaite.patient.vocabularies.identifiers",
-        required=True,
-    )
-
-    value = schema.TextLine(
-        title=_(u"ID"),
-        description=_(
-            u"The identification number of the selected identifier"
-        ),
-        required=True,
-    )
-
-
-class IAdditionalEmailSchema(Interface):
-    """Schema definition for additional emails field
-    """
-
-    name = schema.TextLine(
-        title=_("Name"),
-        description=_(u"Private, Work, Other etc."),
-        required=True,
-    )
-
-    email = schema.TextLine(
-        title=_(u"Email"),
-        description=_(u"Email address"),
-        required=True,
-    )
-
-
-class IRaceSchema(Interface):
-    """Schema definition for patient race
-    """
-    race = schema.Choice(
-        title=_("Race"),
-        description=_(u""),
-        source="senaite.patient.vocabularies.races",
-        required=False,
-    )
-
-
-class IEthnicitySchema(Interface):
-    """Schema definition for patient ethnicity
-    """
-    ethnicity = schema.Choice(
-        title=_("Ethnicity"),
-        description=_(u""),
-        source="senaite.patient.vocabularies.ethnicities",
-        required=False,
-    )
+from .schema import IAdditionalEmailSchema
+from .schema import IAdditionalPhoneNumbersSchema
+from .schema import IEthnicitySchema
+from .schema import IIdentifiersSchema
+from .schema import IRaceSchema
 
 
 class IPatientSchema(model.Schema):
