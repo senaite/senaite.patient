@@ -223,7 +223,7 @@ class IPatientSchema(model.Schema):
     email = schema.TextLine(
         title=_(
             u"label_primary_patient_email",
-            default=u"Primary Email"
+            default=u"Primary Email Address"
         ),
         description=_(
             u"description_patient_primary_email",
@@ -240,7 +240,7 @@ class IPatientSchema(model.Schema):
     additional_emails = DataGridField(
         title=_(
             u"label_patient_additional_emails",
-            default=u"Additional Emails"),
+            default=u"Additional Email Addresses"),
         description=_(
             u"description_patient_additional_emails",
             default=u"Additional email addresses for this patient"
