@@ -253,16 +253,36 @@ class IPatientSchema(model.Schema):
         default=[],
     )
 
-    phone = schema.TextLine(
-        title=_(u"label_patient_phone", default=u"Phone"),
-        description=_(u"Patient phone number"),
+    # primary phone number
+    directives.widget("phone", PhoneWidgetFactory)
+    phone = PhoneField(
+        title=_(
+            u"label_patient_primary_phone",
+            default=u"Primary Phone Number",),
+        description=_(
+            u"description_patient_primary_phone",
+            u"Primary phone number for this patient"),
         required=False,
     )
 
-    mobile = schema.TextLine(
-        title=_(u"label_patient_mobile", default=u"Mobile"),
-        description=_(u"Patient mobile phone number"),
+    # additional phone numbers
+    directives.widget(
+        "additional_phone_numbers",
+        DataGridWidgetFactory,
+        allow_reorder=True,
+        auto_append=True)
+    additional_phone_numbers = DataGridField(
+        title=_(u"label_patient_additional_phone_numbers",
+                default=u"Additional Phone Numbers"),
+        description=_(
+            u"description_patient_additional_phone_numbers",
+            u"Additional phone numbers for this patient"),
+        value_type=DataGridRow(
+            title=u"Phone",
+            schema=IAdditionalPhoneNumbersSchema),
         required=False,
+        missing_value=[],
+        default=[],
     )
 
     # Address
@@ -594,9 +614,13 @@ class Patient(Container):
         parts = [self.getFirstname(), self.getMiddlename(), self.getLastname()]
         return " ".join(filter(None, parts))
 
+    ###
+    # EMAIL AND PHONE
+    ###
+
     @security.protected(permissions.View)
     def getEmail(self):
-        """Returns the email with the field accessor
+        """Get email with the field accessor
         """
         accessor = self.accessor("email")
         value = accessor(self) or ""
@@ -604,7 +628,7 @@ class Patient(Container):
 
     @security.protected(permissions.ModifyPortalContent)
     def setEmail(self, value):
-        """Set email by the field accessor
+        """Set email by the field mutator
         """
         if not isinstance(value, string_types):
             value = u""
@@ -623,6 +647,36 @@ class Patient(Container):
         """Set email by the field accessor
         """
         mutator = self.mutator("additional_emails")
+        mutator(self, value)
+
+    @security.protected(permissions.View)
+    def getPhone(self):
+        """Get phone by the field accessor
+        """
+        accessor = self.accessor("phone")
+        return accessor(self) or ""
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setPhone(self, value):
+        """Set phone by the field mutator
+        """
+        if not isinstance(value, string_types):
+            value = u""
+        mutator = self.mutator("phone")
+        mutator(self, api.safe_unicode(value.strip()))
+
+    @security.protected(permissions.View)
+    def getAdditionalPhoneNumbers(self):
+        """Get additional phone numbers by the field accessor
+        """
+        accessor = self.accessor("additional_phone_numbers")
+        return accessor(self) or []
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setAdditionalPhoneNumbers(self, value):
+        """Set additional phone numbers by the field mutator
+        """
+        mutator = self.mutator("additional_phone_numbers")
         mutator(self, value)
 
     @security.protected(permissions.View)
