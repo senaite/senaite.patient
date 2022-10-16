@@ -83,9 +83,14 @@ class IPatientSchema(model.Schema):
 
     # contact fieldset
     fieldset(
-        "contact",
-        label=u"Contact",
-        fields=["email", "additional_emails", "phone", "mobile"])
+        "email_and_phone",
+        label=u"Email and Phone",
+        fields=[
+            "email",
+            "additional_emails",
+            "phone",
+            "additional_phone_numbers",
+        ])
 
     # address fieldset
     fieldset(
