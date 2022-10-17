@@ -80,6 +80,13 @@ def upgrade_patient_mobile_phone_number(tool):
     for brain in patients:
         patient = api.get_object(brain)
         mobile = getattr(patient, "mobile", None)
-        # TBD
+        if not mobile:
+            continue
+        logger.info("Moving mobile phone '%s' -> additional_phone_numbers"
+                    % mobile)
+        numbers = patient.getAdditionalPhoneNumbers()
+        numbers.append({"name": "Mobile", "phone": mobile})
+        patient.setAdditionalPhoneNumbers(numbers)
+        delattr(patient, mobile)
 
     logger.info("Upgrade patient mobile number [DONE]")
