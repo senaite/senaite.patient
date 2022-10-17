@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #54 Allow to set additional named phone numbers
 - #53 Add patient marital status
 
 
