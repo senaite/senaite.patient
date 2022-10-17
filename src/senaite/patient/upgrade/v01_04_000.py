@@ -87,6 +87,6 @@ def upgrade_patient_mobile_phone_number(tool):
         numbers = patient.getAdditionalPhoneNumbers()
         numbers.append({"name": "Mobile", "phone": mobile})
         patient.setAdditionalPhoneNumbers(numbers)
-        delattr(patient, mobile)
+        delattr(patient, "mobile")
 
     logger.info("Upgrade patient mobile number [DONE]")
