@@ -2,6 +2,16 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
+  <!-- Move mobile phone number to additional phone numbers
+       -->
+  <genericsetup:upgradeStep
+      title="SENAITE PATIENT 1.4.0: Migrate mobile phone number"
+      description="Move mobile phone number to additional phone numbers record"
+      source="1401"
+      destination="1402"
+      handler="senaite.patient.upgrade.v01_04_000.upgrade_patient_mobile_phone_number"
+      profile="senaite.patient:default"/>
+
   <!-- Reindex QC Analyses
        https://github.com/senaite/senaite.core/pull/2157 -->
   <genericsetup:upgradeStep
