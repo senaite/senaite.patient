@@ -9,6 +9,30 @@
   <include package=".viewlets"/>
   <include package=".widgets"/>
 
+  <!-- Add Patient view and form - invoked from ++add++ traverser -->
+  <adapter
+      for="Products.CMFCore.interfaces.IFolderish
+           senaite.patient.interfaces.ISenaitePatientLayer
+           plone.dexterity.interfaces.IDexterityFTI"
+      provides="zope.publisher.interfaces.browser.IBrowserPage"
+      factory=".views.PatientAddView"
+      name="Patient"/>
+
+  <class class=".views.PatientAddView">
+    <require
+        permission="cmf.AddPortalContent"
+        interface="zope.publisher.interfaces.browser.IBrowserPage"/>
+  </class>
+
+  <!-- Edit Patient -->
+  <browser:page
+      for="senaite.patient.interfaces.IPatient"
+      name="edit"
+      class=".views.PatientEditForm"
+      permission="cmf.ModifyPortalContent"
+      layer="senaite.patient.interfaces.ISenaitePatientLayer"
+      />
+
   <!-- Patient Folder View -->
   <browser:page
       name="view"
