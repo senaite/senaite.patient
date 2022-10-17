@@ -92,17 +92,6 @@ class IAdditionalPhoneNumbersSchema(Interface):
         required=True,
     )
 
-    extension = schema.TextLine(
-        title=_(
-            u"label_patient_additional_phone_numbers_extension",
-            default=u"Extension"),
-        description=_(
-            u"description_patient_additional_phone_numbers_extension",
-            default=u"Phone Extension"
-        ),
-        required=False,
-    )
-
 
 class IRaceSchema(Interface):
     """Schema definition for patient race
