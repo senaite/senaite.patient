@@ -6,6 +6,7 @@ Changelog
 ------------------
 
 - #54 Allow to set additional named phone numbers
+- #55 Optional MRN in Patient Add/Edit forms
 - #53 Add patient marital status
 
 
