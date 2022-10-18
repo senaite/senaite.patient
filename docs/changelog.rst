@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #55 Optional MRN in Patient Add/Edit forms
 - #53 Add patient marital status
 
 
