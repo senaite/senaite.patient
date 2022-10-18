@@ -195,7 +195,8 @@ class IPatientControlPanel(Interface):
     require_patient = schema.Bool(
         title=_(u"Require Medical Record Number (MRN)"),
         description=_(
-            u"Make the MRN field mandatory in Sample Add form"
+            u"Make the MRN field mandatory in the sample registration form "
+            u"and when creating or modifiying patients."
         ),
         required=False,
         default=True,
@@ -222,9 +223,9 @@ class IPatientControlPanel(Interface):
     show_icon_temp_mrn = schema.Bool(
         title=_(u"Display an alert icon on samples with a temporary MRN"),
         description=_(
-            u"When selected, an alert icon is displayed in samples listing for "
-            u"samples that have a Patient assigned with a temporary Medical "
-            u"Record Number (MRN)."
+            u"When selected, an alert icon is displayed in samples listing "
+            u"for samples that have a Patient assigned with a temporary "
+            u"Medical Record Number (MRN)."
         ),
         required=False,
         default=True,
