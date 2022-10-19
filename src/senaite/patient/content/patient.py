@@ -31,6 +31,7 @@ from Products.CMFCore import permissions
 from senaite.core.behaviors import IClientShareable
 from senaite.core.schema import AddressField
 from senaite.core.schema import DatetimeField
+from senaite.core.schema import PhoneField
 from senaite.core.schema.addressfield import OTHER_ADDRESS
 from senaite.core.schema.addressfield import PHYSICAL_ADDRESS
 from senaite.core.schema.addressfield import POSTAL_ADDRESS
@@ -38,6 +39,7 @@ from senaite.core.schema.fields import DataGridField
 from senaite.core.schema.fields import DataGridRow
 from senaite.core.z3cform.widgets.datagrid import DataGridWidgetFactory
 from senaite.core.z3cform.widgets.datetimewidget import DatetimeWidget
+from senaite.core.z3cform.widgets.phone import PhoneWidgetFactory
 from senaite.patient import api as patient_api
 from senaite.patient import messageFactory as _
 from senaite.patient.catalog import PATIENT_CATALOG
@@ -46,71 +48,15 @@ from senaite.patient.config import SEXES
 from senaite.patient.interfaces import IPatient
 from z3c.form.interfaces import NO_VALUE
 from zope import schema
-from zope.interface import Interface
 from zope.interface import Invalid
 from zope.interface import implementer
 from zope.interface import invariant
 
-
-class IIdentifiersSchema(Interface):
-    """Schema definition for identifier records field
-    """
-
-    key = schema.Choice(
-        title=_("Type"),
-        description=_(
-            u"The type of identifier that holds the ID"
-        ),
-        source="senaite.patient.vocabularies.identifiers",
-        required=True,
-    )
-
-    value = schema.TextLine(
-        title=_(u"ID"),
-        description=_(
-            u"The identification number of the selected identifier"
-        ),
-        required=True,
-    )
-
-
-class IAdditionalEmailSchema(Interface):
-    """Schema definition for additional emails field
-    """
-
-    name = schema.TextLine(
-        title=_("Name"),
-        description=_(u"Private, Work, Other etc."),
-        required=True,
-    )
-
-    email = schema.TextLine(
-        title=_(u"Email"),
-        description=_(u"Email address"),
-        required=True,
-    )
-
-
-class IRaceSchema(Interface):
-    """Schema definition for patient race
-    """
-    race = schema.Choice(
-        title=_("Race"),
-        description=_(u""),
-        source="senaite.patient.vocabularies.races",
-        required=False,
-    )
-
-
-class IEthnicitySchema(Interface):
-    """Schema definition for patient ethnicity
-    """
-    ethnicity = schema.Choice(
-        title=_("Ethnicity"),
-        description=_(u""),
-        source="senaite.patient.vocabularies.ethnicities",
-        required=False,
-    )
+from .schema import IAdditionalEmailSchema
+from .schema import IAdditionalPhoneNumbersSchema
+from .schema import IEthnicitySchema
+from .schema import IIdentifiersSchema
+from .schema import IRaceSchema
 
 
 class IPatientSchema(model.Schema):
@@ -137,9 +83,14 @@ class IPatientSchema(model.Schema):
 
     # contact fieldset
     fieldset(
-        "contact",
-        label=u"Contact",
-        fields=["email", "additional_emails", "phone", "mobile"])
+        "email_and_phone",
+        label=u"Email and Phone",
+        fields=[
+            "email",
+            "additional_emails",
+            "phone",
+            "additional_phone_numbers",
+        ])
 
     # address fieldset
     fieldset(
@@ -272,7 +223,7 @@ class IPatientSchema(model.Schema):
     email = schema.TextLine(
         title=_(
             u"label_primary_patient_email",
-            default=u"Primary Email"
+            default=u"Primary Email Address"
         ),
         description=_(
             u"description_patient_primary_email",
@@ -289,7 +240,7 @@ class IPatientSchema(model.Schema):
     additional_emails = DataGridField(
         title=_(
             u"label_patient_additional_emails",
-            default=u"Additional Emails"),
+            default=u"Additional Email Addresses"),
         description=_(
             u"description_patient_additional_emails",
             default=u"Additional email addresses for this patient"
@@ -302,16 +253,36 @@ class IPatientSchema(model.Schema):
         default=[],
     )
 
-    phone = schema.TextLine(
-        title=_(u"label_patient_phone", default=u"Phone"),
-        description=_(u"Patient phone number"),
+    # primary phone number
+    directives.widget("phone", PhoneWidgetFactory)
+    phone = PhoneField(
+        title=_(
+            u"label_patient_primary_phone",
+            default=u"Primary Phone Number",),
+        description=_(
+            u"description_patient_primary_phone",
+            u"Primary phone number for this patient"),
         required=False,
     )
 
-    mobile = schema.TextLine(
-        title=_(u"label_patient_mobile", default=u"Mobile"),
-        description=_(u"Patient mobile phone number"),
+    # additional phone numbers
+    directives.widget(
+        "additional_phone_numbers",
+        DataGridWidgetFactory,
+        allow_reorder=True,
+        auto_append=True)
+    additional_phone_numbers = DataGridField(
+        title=_(u"label_patient_additional_phone_numbers",
+                default=u"Additional Phone Numbers"),
+        description=_(
+            u"description_patient_additional_phone_numbers",
+            u"Additional phone numbers for this patient"),
+        value_type=DataGridRow(
+            title=u"Phone",
+            schema=IAdditionalPhoneNumbersSchema),
         required=False,
+        missing_value=[],
+        default=[],
     )
 
     # Address
@@ -643,9 +614,13 @@ class Patient(Container):
         parts = [self.getFirstname(), self.getMiddlename(), self.getLastname()]
         return " ".join(filter(None, parts))
 
+    ###
+    # EMAIL AND PHONE
+    ###
+
     @security.protected(permissions.View)
     def getEmail(self):
-        """Returns the email with the field accessor
+        """Get email with the field accessor
         """
         accessor = self.accessor("email")
         value = accessor(self) or ""
@@ -653,7 +628,7 @@ class Patient(Container):
 
     @security.protected(permissions.ModifyPortalContent)
     def setEmail(self, value):
-        """Set email by the field accessor
+        """Set email by the field mutator
         """
         if not isinstance(value, string_types):
             value = u""
@@ -672,6 +647,36 @@ class Patient(Container):
         """Set email by the field accessor
         """
         mutator = self.mutator("additional_emails")
+        mutator(self, value)
+
+    @security.protected(permissions.View)
+    def getPhone(self):
+        """Get phone by the field accessor
+        """
+        accessor = self.accessor("phone")
+        return accessor(self) or ""
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setPhone(self, value):
+        """Set phone by the field mutator
+        """
+        if not isinstance(value, string_types):
+            value = u""
+        mutator = self.mutator("phone")
+        mutator(self, api.safe_unicode(value.strip()))
+
+    @security.protected(permissions.View)
+    def getAdditionalPhoneNumbers(self):
+        """Get additional phone numbers by the field accessor
+        """
+        accessor = self.accessor("additional_phone_numbers")
+        return accessor(self) or []
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setAdditionalPhoneNumbers(self, value):
+        """Set additional phone numbers by the field mutator
+        """
+        mutator = self.mutator("additional_phone_numbers")
         mutator(self, value)
 
     @security.protected(permissions.View)

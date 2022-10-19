@@ -18,9 +18,11 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+from bika.lims import api
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
+from senaite.patient.api import patient_search
 from senaite.patient.config import PRODUCT_NAME
 from senaite.patient.setuphandlers import setup_catalogs
 
@@ -63,4 +65,28 @@ def upgrade_marital_status(tool):
     # setup patient catalog
     setup_catalogs(portal)
 
-    logger.info("Upgrade patient marital status [DONCE]")
+    logger.info("Upgrade patient marital status [DONE]")
+
+
+def upgrade_patient_mobile_phone_number(tool):
+    """Move mobile phone -> additional_phone_numbers records
+
+    :param tool: portal_setup tool
+    """
+    logger.info("Upgrade patient mobile number ...")
+
+    patients = patient_search({"portal_type": "Patient"})
+
+    for brain in patients:
+        patient = api.get_object(brain)
+        mobile = getattr(patient, "mobile", None)
+        if not mobile:
+            continue
+        logger.info("Moving mobile phone '%s' -> additional_phone_numbers"
+                    % mobile)
+        numbers = patient.getAdditionalPhoneNumbers()
+        numbers.append({"name": "Mobile", "phone": mobile})
+        patient.setAdditionalPhoneNumbers(numbers)
+        delattr(patient, "mobile")
+
+    logger.info("Upgrade patient mobile number [DONE]")
