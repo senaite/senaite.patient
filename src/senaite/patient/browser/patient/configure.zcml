@@ -1,0 +1,48 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone">
+
+  <!-- Add Patient view and form - invoked from ++add++ traverser -->
+  <adapter
+      for="Products.CMFCore.interfaces.IFolderish
+           senaite.patient.interfaces.ISenaitePatientLayer
+           plone.dexterity.interfaces.IDexterityFTI"
+      provides="zope.publisher.interfaces.browser.IBrowserPage"
+      factory=".views.PatientAddView"
+      name="Patient"/>
+
+  <class class=".views.PatientAddView">
+    <require
+        permission="cmf.AddPortalContent"
+        interface="zope.publisher.interfaces.browser.IBrowserPage"/>
+  </class>
+
+  <!-- Edit Patient -->
+  <browser:page
+      for="senaite.patient.interfaces.IPatient"
+      name="edit"
+      class=".views.PatientEditForm"
+      permission="cmf.ModifyPortalContent"
+      layer="senaite.patient.interfaces.ISenaitePatientLayer"
+      />
+
+  <!-- Patient Samples -->
+  <browser:page
+      name="samples"
+      for="senaite.patient.interfaces.IPatient"
+      class=".samples.SamplesView"
+      permission="zope2.View"
+      layer="senaite.patient.interfaces.ISenaitePatientLayer"
+      />
+
+  <!-- Patient Sample Add Form -->
+  <browser:page
+      for="senaite.patient.interfaces.IPatient"
+      name="ar_add"
+      class=".add2.PatientSampleAddView"
+      permission="senaite.core.permissions.AddAnalysisRequest"
+      layer="senaite.patient.interfaces.ISenaitePatientLayer"
+      />
+
+</configure>

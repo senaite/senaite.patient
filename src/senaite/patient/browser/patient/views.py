@@ -1,4 +1,4 @@
-#!/usr/bin/env zopepy
+# -*- coding: utf-8 -*-
 
 import copy
 
