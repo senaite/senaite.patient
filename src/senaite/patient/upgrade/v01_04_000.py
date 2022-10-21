@@ -90,3 +90,16 @@ def upgrade_patient_mobile_phone_number(tool):
         delattr(patient, "mobile")
 
     logger.info("Upgrade patient mobile number [DONE]")
+
+
+def upgrade_patient_control_panel(tool):
+    """Reinstall controlpanel registry
+
+    :param tool: portal_setup tool
+    """
+    logger.info("Upgrade patient control panel ...")
+    portal = tool.aq_inner.aq_parent
+    setup = portal.portal_setup
+    setup.runImportStepFromProfile(profile, "plone.app.registry")
+    setup.runImportStepFromProfile(profile, "controlpanel")
+    logger.info("Upgrade patient control panel [DONE]")
