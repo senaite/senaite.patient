@@ -100,6 +100,8 @@ def upgrade_patient_control_panel(tool):
     logger.info("Upgrade patient control panel ...")
     portal = tool.aq_inner.aq_parent
     setup = portal.portal_setup
+    setup.runImportStepFromProfile(profile, "rolemap")
+    setup.runImportStepFromProfile(profile, "actions")
     setup.runImportStepFromProfile(profile, "plone.app.registry")
     setup.runImportStepFromProfile(profile, "controlpanel")
     logger.info("Upgrade patient control panel [DONE]")

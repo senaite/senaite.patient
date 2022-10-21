@@ -23,6 +23,7 @@ import re
 from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
 from plone.app.registry.browser.controlpanel import RegistryEditForm
 from plone.autoform import directives
+from plone.protect.interfaces import IDisableCSRFProtection
 from plone.supermodel import model
 from plone.z3cform import layout
 from senaite.core.schema.registry import DataGridRow
@@ -36,6 +37,7 @@ from senaite.patient.config import RACES
 from zope import schema
 from zope.interface import Interface
 from zope.interface import Invalid
+from zope.interface import alsoProvides
 from zope.interface import invariant
 from zope.interface import provider
 from zope.schema.interfaces import IContextAwareDefaultFactory
@@ -485,6 +487,10 @@ class PatientControlPanelForm(RegistryEditForm):
     schema_prefix = "senaite.patient"
     label = _("Patient Settings")
     description = _("Global settings for patients")
+
+    def __init__(self, context, request):
+        super(PatientControlPanelForm, self).__init__(context, request)
+        alsoProvides(request, IDisableCSRFProtection)
 
 
 PatientControlPanelView = layout.wrap_form(

@@ -2,6 +2,8 @@
     xmlns="http://namespaces.zope.org/zope"
     i18n_domain="senaite.patient">
 
+  <permission id="senaite.patient.permissions.ManagePatients" title="senaite.patient: Manage Patients"/>
+
   <!-- Content permissions -->
   <permission id="senaite.patient.permissions.AddPatientFolder" title="senaite.patient: Add Patient Folder"/>
   <permission id="senaite.patient.permissions.AddPatient" title="senaite.patient: Add Patient"/>

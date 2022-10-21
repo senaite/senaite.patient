@@ -14,7 +14,7 @@
       visible="True"
       i18n:domain="senaite.patient"
       i18n:attributes="title">
-    <permission>senaite.core: Manage Bika</permission>
+    <permission>senaite.patient: Manage Patients</permission>
   </configlet>
 
 </object>
