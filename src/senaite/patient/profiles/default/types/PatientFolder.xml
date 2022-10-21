@@ -59,6 +59,20 @@
   <alias from="sharing" to="@@sharing"/>
   <alias from="view" to="(selected layout)"/>
 
+  <!-- Patient Settings -->
+  <action title="Patient Settings"
+          action_id="patient_settings"
+          category="document_actions"
+          condition_expr=""
+          icon_expr="string:${portal_url}/senaite_theme/icon/setup"
+          link_target=""
+          url_expr="string:${portal_url}/@@patient-controlpanel"
+          i18n:attributes="title"
+          visible="True">
+    <permission value="senaite.patient: Manage Patients"/>
+  </action>
+
+
   <!-- View -->
   <action title="View"
           action_id="view"
