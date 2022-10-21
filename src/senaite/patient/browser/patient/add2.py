@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from bika.lims import api
 from senaite.patient.api import get_patient_name_entry_mode
 from bika.lims.browser.analysisrequest.add2 import \
     AnalysisRequestAddView as BaseView
@@ -44,7 +45,8 @@ class PatientSampleAddView(BaseView):
             else:
                 return {"firstname": self.context.getFullname()}
         elif name == "PatientAddress":
-            return self.get_patient_address()
+            address = self.context.getFormattedAddress()
+            return api.to_utf8(address)
         elif name == "DateOfBirth":
             birthdate = self.context.getBirthdate()
             if birthdate:

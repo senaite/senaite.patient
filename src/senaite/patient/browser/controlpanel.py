@@ -149,6 +149,7 @@ class IPatientControlPanel(Interface):
             "age_supported",
             "age_years",
             "gender_visible",
+            "address_format",
         ],
     )
 
@@ -275,6 +276,20 @@ class IPatientControlPanel(Interface):
         ),
         required=False,
         default=True,
+    )
+
+    address_format = schema.Text(
+        title=_(
+            u"label_controlpanel_patient_address_format",
+            default=u"Address Format"),
+        description=_(
+            u"description_controlpanel_patient_address_format",
+            default=u"Define the format of the patient address in samples. "
+                    u"Possible variables are $address, $zip, $city, $country, "
+                    u"$subdivision1, $subdivision2, $type."
+        ),
+        required=False,
+        default=u"$address, $zip $city, $country",
     )
 
     directives.widget(

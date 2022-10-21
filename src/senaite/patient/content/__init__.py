@@ -20,6 +20,7 @@
 
 from archetypes.schemaextender.field import ExtensionField
 from Products.Archetypes.public import StringField
+from Products.Archetypes.public import TextField
 from senaite.core.browser.fields.datetime import DateTimeField
 
 
@@ -30,4 +31,9 @@ class ExtDateTimeField(ExtensionField, DateTimeField):
 
 class ExtStringField(ExtensionField, StringField):
     """Extended String Field
+    """
+
+
+class ExtTextField(ExtensionField, TextField):
+    """Extended Text Field
     """
