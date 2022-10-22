@@ -72,7 +72,6 @@
     <permission value="senaite.patient: Manage Patients"/>
   </action>
 
-
   <!-- View -->
   <action title="View"
           action_id="view"
