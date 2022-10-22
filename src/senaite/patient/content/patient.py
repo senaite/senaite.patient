@@ -767,7 +767,7 @@ class Patient(Container):
         """Returns the formatted address
         """
         if atype not in POSSIBLE_ADDRESSES:
-            atype = PHYSICAL_ADDRESS
+            return None
 
         address_format = patient_api.get_patient_address_format()
 
