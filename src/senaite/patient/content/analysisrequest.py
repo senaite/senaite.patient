@@ -48,6 +48,8 @@ from senaite.patient.permissions import FieldEditGender
 from senaite.patient.permissions import FieldEditID
 from senaite.patient.permissions import FieldEditMRN
 from senaite.patient.permissions import FieldEditSex
+from senaite.patient.validators import PatientIDValidator
+from senaite.patient.validators import TemporaryIdentifierValidator
 from zope.component import adapts
 from zope.interface import implementer
 
@@ -59,7 +61,7 @@ MAYBE_REQUIRED_FIELDS = [
 MedicalRecordNumberField = TemporaryIdentifierField(
     "MedicalRecordNumber",
     required=True,
-    validators=("temporary_identifier_validator",),
+    validators=(TemporaryIdentifierValidator(), ),
     read_permission=View,
     write_permission=FieldEditMRN,
     widget=TemporaryIdentifierWidget(
@@ -75,6 +77,7 @@ MedicalRecordNumberField = TemporaryIdentifierField(
 
 PatientIDField = ExtStringField(
     "PatientID",
+    validators=(PatientIDValidator(), ),
     read_permission=View,
     write_permission=FieldEditID,
     widget=StringWidget(
