@@ -28,6 +28,7 @@ from plone.dexterity.content import Container
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
 from Products.CMFCore import permissions
+from senaite.core.api import dtime
 from senaite.core.behaviors import IClientShareable
 from senaite.core.schema import AddressField
 from senaite.core.schema import DatetimeField
@@ -732,11 +733,15 @@ class Patient(Container):
         mutator(self, api.safe_unicode(value))
 
     @security.protected(permissions.View)
-    def getBirthdate(self):
+    def getBirthdate(self, as_date=True):
         """Returns the birthday with the field accessor
         """
         accessor = self.accessor("birthdate")
-        return accessor(self)
+        value = accessor(self)
+        # Return a plain date object to avoid timezone issues
+        if dtime.is_dt(value) and as_date:
+            value = value.date()
+        return value
 
     @security.protected(permissions.ModifyPortalContent)
     def setBirthdate(self, value):
