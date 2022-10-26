@@ -126,8 +126,17 @@ class SamplesListingAdapter(object):
 
         # Add review_states
         for status in ADD_STATUSES:
+            sid = status.get("id")
+            # skip temporary MRN for patient context
+            if sid == "temp_mrn" and self.is_patient_context():
+                continue
             after = status.get("after", None)
             before = status.get("before", None)
             if not status.get("columns"):
                 status.update({"columns": self.listing.columns.keys()})
             add_review_state(self.listing, status, after=after, before=before)
+
+    def is_patient_context(self):
+        """Check if the current context is a patient
+        """
+        return api.get_portal_type(self.context) == "Patient"
