@@ -12,15 +12,6 @@ class PatientSampleAddView(BaseView):
     def __init__(self, context, request):
         super(PatientSampleAddView, self).__init__(context, request)
 
-    def get_patient_address(self):
-        """Returns the patient address as a one-liner
-        """
-        records = self.context.getAddress()
-        for record in records:
-            address = record.get("address", "")
-            if address:
-                return address
-
     def get_default_value(self, field, context, arnum):
         """Get the default value of the field
         """
