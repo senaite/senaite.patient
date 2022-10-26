@@ -19,13 +19,16 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims import api
+from bika.lims.utils import get_link
 from plone.memoize.instance import memoize
+from plone.memoize.view import memoize as viewcache
 from senaite.app.listing.interfaces import IListingView
 from senaite.app.listing.interfaces import IListingViewAdapter
 from senaite.app.listing.utils import add_column
 from senaite.app.listing.utils import add_review_state
 from senaite.patient import check_installed
 from senaite.patient import messageFactory as _
+from senaite.patient.api import get_patient_by_mrn
 from zope.component import adapts
 from zope.component import getMultiAdapter
 from zope.interface import implements
@@ -108,9 +111,57 @@ class SamplesListingAdapter(object):
             after_icons += self.icon_tag("id-card-red", **kwargs)
             item["after"].update({"getId": after_icons})
 
-        item["MRN"] = obj.getMedicalRecordNumberValue
-        item["Patient"] = obj.getPatientFullName
-        item["PatientID"] = obj.getPatientID
+        sample_patient_mrn = obj.getMedicalRecordNumberValue
+        sample_patient_fullname = obj.getPatientFullName
+        sample_patient_id = obj.getPatientID
+
+        item["MRN"] = sample_patient_mrn
+        item["Patient"] = sample_patient_fullname
+        item["PatientID"] = sample_patient_id
+
+        # get the patient object
+        patient = self.get_patient_by_mrn(sample_patient_mrn)
+
+        if not patient:
+            return
+
+        # Link to patient object
+        patient_url = api.get_url(patient)
+        if sample_patient_mrn:
+            item["replace"]["MRN"] = get_link(
+                patient_url, sample_patient_mrn)
+        if sample_patient_id:
+            item["replace"]["PatientID"] = get_link(
+                patient_url, sample_patient_id)
+
+        patient_mrn = patient.getMRN()
+        patient_id = patient.getPatientID()
+        patient_fullname = patient.getFullname()
+
+        # patient MRN is different
+        if sample_patient_mrn != patient_mrn:
+            msg = _("Patient MRN of sample is not eqaul to %s" % (
+                patient_mrn or _("Not set")))
+            icon_args = {"width": 16, "title": msg}
+            item["after"]["MRN"] = self.icon_tag("info", **icon_args)
+        if sample_patient_fullname != patient_fullname:
+            msg = _("Patient fullname of sample is not eqaul to %s" % (
+                patient_fullname or _("Not set")))
+            icon_args = {"width": 16, "title": msg}
+            item["after"]["Patient"] = self.icon_tag("info", **icon_args)
+        if sample_patient_id != patient_id:
+            msg = _("Patient ID of sample is not eqaul to %s" % (
+                patient_id or _("Not set")))
+            icon_args = {"width": 16, "title": msg}
+            item["after"]["PatientID"] = self.icon_tag("info", **icon_args)
+
+    @viewcache
+    def get_patient_by_mrn(self, mrn):
+        if not mrn:
+            return None
+        if self.is_patient_context():
+            return self.context
+        return get_patient_by_mrn(mrn)
 
     @check_installed(None)
     def before_render(self):
