@@ -47,22 +47,22 @@ ADD_STATUSES = [{
 
 # Columns to add
 ADD_COLUMNS = [
+    ("PatientID", {
+        "title": _("Patient ID"),
+        "sortable": False,
+        "index": "patient_id",
+        "after": "getId",
+    }),
+    ("Patient", {
+        "title": _("Patient"),
+        "sortable": False,
+        "after": "getId",
+    }),
     ("MRN", {
         "title": _("MRN"),
         "sortable": False,
         "index": "medical_record_number",
         "after": "getId",
-    }),
-    ("PatientID", {
-        "title": _("Patient ID"),
-        "sortable": False,
-        "index": "patient_id",
-        "after": "MRN",
-    }),
-    ("Patient", {
-        "title": _("Patient"),
-        "sortable": False,
-        "after": "PatientID",
     }),
 ]
 
@@ -117,6 +117,9 @@ class SamplesListingAdapter(object):
         # Additional columns
         rv_keys = map(lambda r: r["id"], self.listing.review_states)
         for column_id, column_values in ADD_COLUMNS:
+            # skip MRN column for patient context
+            if column_id == "MRN" and self.is_patient_context():
+                continue
             add_column(
                 listing=self.listing,
                 column_id=column_id,
