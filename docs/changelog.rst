@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #58 Add sample field validation for patient ID
 - #57 Patient samples listing and registration form
 - #56 Fix unknown timezone error for birthdate in patient listing
 - #54 Allow to set additional named phone numbers
