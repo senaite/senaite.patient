@@ -2,6 +2,16 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
+
+  <!-- Upgrade controlpanel -->
+  <genericsetup:upgradeStep
+      title="SENAITE PATIENT 1.4.0: Upgrade patient controlpanel"
+      description="Run registry and controlpanel import steps"
+      source="1402"
+      destination="1403"
+      handler="senaite.patient.upgrade.v01_04_000.upgrade_patient_control_panel"
+      profile="senaite.patient:default"/>
+
   <!-- Move mobile phone number to additional phone numbers
        -->
   <genericsetup:upgradeStep

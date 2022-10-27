@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #57 Patient samples listing and registration form
 - #56 Fix unknown timezone error for birthdate in patient listing
 - #54 Allow to set additional named phone numbers
 - #55 Optional MRN in Patient Add/Edit forms

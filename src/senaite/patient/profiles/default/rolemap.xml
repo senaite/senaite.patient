@@ -3,6 +3,12 @@
 
   <permissions>
 
+    <!-- Manage permissions -->
+    <permission name="senaite.patient: Manage Patients" acquire="False">
+      <role name="Manager"/>
+      <role name="LabManager"/>
+    </permission>
+
     <!-- Add permissions -->
     <permission name="senaite.patient: Add Patient Folder" acquire="False">
       <role name="Manager"/>

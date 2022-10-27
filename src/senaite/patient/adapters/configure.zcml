@@ -33,4 +33,11 @@
     provides="senaite.app.listing.interfaces.IListingViewAdapter"
     factory=".listing.SamplesListingAdapter" />
 
+  <!-- Listing adapter for patient samles -->
+  <subscriber
+    for="senaite.patient.browser.patient.samples.SamplesView
+         senaite.patient.interfaces.IPatient"
+    provides="senaite.app.listing.interfaces.IListingViewAdapter"
+    factory=".listing.SamplesListingAdapter" />
+
 </configure>

@@ -18,6 +18,8 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+ManagePatients = "senaite.patient: Manage Patients"
+
 AddPatientFolder = "senaite.patient: Add PatientFolder"
 AddPatient = "senaite.patient: Add Patient"
 

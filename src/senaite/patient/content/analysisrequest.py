@@ -24,6 +24,7 @@ from archetypes.schemaextender.interfaces import ISchemaModifier
 from bika.lims.browser.widgets import SelectionWidget
 from bika.lims.interfaces import IAnalysisRequest
 from Products.Archetypes.Widget import StringWidget
+from Products.Archetypes.Widget import TextAreaWidget
 from Products.CMFCore.permissions import View
 from senaite.patient import messageFactory as _
 from senaite.patient.api import get_patient_name_entry_mode
@@ -36,6 +37,7 @@ from senaite.patient.config import GENDERS
 from senaite.patient.config import SEXES
 from senaite.patient.content import ExtDateTimeField
 from senaite.patient.content import ExtStringField
+from senaite.patient.content import ExtTextField
 from senaite.patient.content.fields import FullnameField
 from senaite.patient.content.fields import TemporaryIdentifierField
 from senaite.patient.interfaces import ISenaitePatientLayer
@@ -43,9 +45,9 @@ from senaite.patient.permissions import FieldEditAddress
 from senaite.patient.permissions import FieldEditDateOfBirth
 from senaite.patient.permissions import FieldEditFullName
 from senaite.patient.permissions import FieldEditGender
-from senaite.patient.permissions import FieldEditSex
 from senaite.patient.permissions import FieldEditID
 from senaite.patient.permissions import FieldEditMRN
+from senaite.patient.permissions import FieldEditSex
 from zope.component import adapts
 from zope.interface import implementer
 
@@ -102,13 +104,14 @@ PatientFullNameField = FullnameField(
     )
 )
 
-PatientAddressField = ExtStringField(
+PatientAddressField = ExtTextField(
     "PatientAddress",
     read_permission=View,
     write_permission=FieldEditAddress,
-    widget=StringWidget(
+    widget=TextAreaWidget(
         label=_("Place of residence"),
         render_own_label=True,
+        rows=3,
         visible={
             "add": "edit",
         }

@@ -54,6 +54,14 @@ def get_patient_name_entry_mode():
     return entry_mode
 
 
+def get_patient_address_format():
+    """Returns the address format
+    """
+    address_format = api.get_registry_record(
+        "senaite.patient.address_format")
+    return address_format
+
+
 def is_gender_visible():
     """Checks whether the gender is visible
     """
@@ -132,8 +140,8 @@ def create_temporary_patient():
     return patient
 
 
-def safe_temporary_patient(patient):
-    """Safe temporary patient to the patients folder
+def store_temporary_patient(patient):
+    """Store temporary patient to the patients folder
     """
     portal = api.get_portal()
     container = portal.patients

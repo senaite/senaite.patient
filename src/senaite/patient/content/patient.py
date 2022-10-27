@@ -18,6 +18,8 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+from string import Template
+
 from six import string_types
 
 from AccessControl import ClassSecurityInfo
@@ -58,6 +60,8 @@ from .schema import IAdditionalPhoneNumbersSchema
 from .schema import IEthnicitySchema
 from .schema import IIdentifiersSchema
 from .schema import IRaceSchema
+
+POSSIBLE_ADDRESSES = [OTHER_ADDRESS, PHYSICAL_ADDRESS, POSTAL_ADDRESS]
 
 
 class IPatientSchema(model.Schema):
@@ -763,3 +767,19 @@ class Patient(Container):
         """
         mutator = self.mutator("address")
         return mutator(self, value)
+
+    def getFormattedAddress(self, atype=PHYSICAL_ADDRESS):
+        """Returns the formatted address
+        """
+        if atype not in POSSIBLE_ADDRESSES:
+            return None
+
+        address_format = patient_api.get_patient_address_format()
+
+        records = self.getAddress()
+        for record in records:
+            if atype != record.get("type"):
+                continue
+            output = Template(address_format).safe_substitute(record)
+            output = filter(None, output.split(", "))
+            return ", ".join(output)
