@@ -780,4 +780,6 @@ class Patient(Container):
         for record in records:
             if atype != record.get("type"):
                 continue
-            return Template(address_format).safe_substitute(record)
+            output = Template(address_format).safe_substitute(record)
+            output = filter(None, output.split(", "))
+            return ", ".join(output)
