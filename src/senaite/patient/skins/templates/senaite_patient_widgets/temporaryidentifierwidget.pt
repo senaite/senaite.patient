@@ -28,54 +28,11 @@
     </metal:view_macro>
 
     <metal:view_macro define-macro="edit">
-      <!-- TODO This is not cute, remove as soon as Handlebars is provided by default -->
-       <script type="text/javascript"
-               src="handlebars.js"
-               tal:define="portal context/@@plone_portal_state/portal;"
-               tal:attributes="src string:${portal/absolute_url}/++plone++senaite.core.static/thirdparty/handlebars.min-v4.7.2.js"></script>
-
-      <!-- Existing identifier
-      TODO: Make this Handlebar thingies generic in core.
-      i18n translations are currently not picked up by i18ndude, because these
-      Handlebar templates live in these <script> tags. And this is the reason
-      why these popups appear only in english language
-      -->
-      <script id="existing-identifier" type="text/x-handlebars-template">
-        <div title="Existing identifier" i18n:attributes="title">
-          <p i18n:translate="">
-            A record for <strong>{{mrn}}</strong> exists already.
-          </p>
-          <div class="dialog-listing">
-            <div>{{firstname}} {{lastname}}</div>
-            <div>{{address_line}}</div>
-          </div>
-          <p i18n:translate="">
-            Do you want to apply these changes?
-          </p>
-        </div>
-      </script>
-      <script id="inactive-patient" type="text/x-handlebars-template">
-        <div title="Existing identifier" i18n:attributes="title">
-          <p i18n:translate="">
-            An <strong>inactive</strong> record for <strong>{{mrn}}</strong> exists already.
-          </p>
-          <div class="dialog-listing">
-            <div>{{firstname}} {{lastname}}</div>
-            <div>{{address_line}}</div>
-          </div>
-          <p i18n:translate="">
-            Activate this Patient first or choose a different identifier
-          </p>
-        </div>
-      </script>
       <div class="form form-inline field ArchetypesTemporaryIdentifierWidget TemporaryIdentifier"
           tal:define="values python:field.getEditAccessor(here)() or {};
                       session_values python:here.session_restore_value(fieldName, values);
                       cached_values python:request.get(fieldName, session_values);
                       values python:cached_values or values;
-                      subfield_value string:${fieldName}.value:ignore_empty:record;
-                      subfield_auto string:${fieldName}.value_auto:ignore_empty:record;
-                      subfield_temp string:${fieldName}.temporary:ignore_empty:record;
                       value python: values.get('value', values.get('value_auto', ''));
                       value_auto values/value_auto|string:;
                       value_temp values/temporary|nothing;
@@ -93,33 +50,29 @@
 
         <!-- Input text field -->
         <div class="form-group mr-2">
-          <input tal:condition="python:True"
-                 type="text" size="20"
-                 tal:attributes="id string:${fieldName}_value;
-                                 value python:value_temp and value_auto or value;
-                                 disabled value_temp|nothing;
-                                 required python:required and 'required' or None"/>
+
+          <!-- QUERYSELECT -->
+          <div class="senaite-queryselect-widget-input"
+               tal:define="widget_attrs python:field.widget.get_input_widget_attributes(context, field, value);"
+               tal:attributes='python:widget_attrs;'>
+            <!-- ReactJS controlled component -->
+          </div>
         </div>
 
         <!-- Temporary checkbox -->
         <div class="form-group">
           <input type="checkbox" class="mr-1"
                  tal:attributes="checked value_temp;
+                                 name string:${fieldName}_temporary;
                                  id string:${fieldName}_temporary"/>
 
           <label tal:attributes="for string:${fieldName}_temporary"
                  i18n:translate="">Temporary</label>
         </div>
 
-        <!-- Submit input elements -->
+        <!-- Auto generated ID -->
         <input type="hidden"
-               tal:attributes="name string:${subfield_value};
-                               value string:${value}"/>
-        <input type="hidden"
-               tal:attributes="name string:${subfield_temp};
-                               value python: value_temp and 'true' or ''"/>
-        <input type="hidden"
-               tal:attributes="name string:${subfield_auto};
+               tal:attributes="name string:${fieldName}_value_auto;
                                value string:${value_auto}"/>
 
         <!-- Input elements with config options -->
