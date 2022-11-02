@@ -131,3 +131,25 @@ def patient_searchable_text(instance):
     ]
     searchable_text_tokens = filter(None, searchable_text_tokens)
     return " ".join(searchable_text_tokens)
+
+
+@indexer(IPatient)
+def patient_searchable_id(instance):
+    """Index for searchable Patient ID queries
+    """
+    searchable_text_tokens = [
+        instance.getPatientID(),
+    ]
+    searchable_text_tokens = filter(None, searchable_text_tokens)
+    return " ".join(searchable_text_tokens)
+
+
+@indexer(IPatient)
+def patient_searchable_mrn(instance):
+    """Index for searchable Patient MRN queries
+    """
+    searchable_text_tokens = [
+        instance.getMRN(),
+    ]
+    searchable_text_tokens = filter(None, searchable_text_tokens)
+    return " ".join(searchable_text_tokens)
