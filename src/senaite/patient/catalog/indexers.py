@@ -139,6 +139,7 @@ def patient_searchable_id(instance):
     """
     searchable_text_tokens = [
         instance.getPatientID(),
+        instance.getFullname(),
     ]
     searchable_text_tokens = filter(None, searchable_text_tokens)
     return " ".join(searchable_text_tokens)
@@ -150,6 +151,7 @@ def patient_searchable_mrn(instance):
     """
     searchable_text_tokens = [
         instance.getMRN(),
+        instance.getFullname(),
     ]
     searchable_text_tokens = filter(None, searchable_text_tokens)
     return " ".join(searchable_text_tokens)
