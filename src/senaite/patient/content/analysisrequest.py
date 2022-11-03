@@ -90,14 +90,24 @@ MedicalRecordNumberField = TemporaryIdentifierField(
         columns=[
             {
                 "name": "mrn",
-                "width": "30",
+                "width": "25",
                 "align": "left",
                 "label": _(u"MRN"),
             }, {
                 "name": "firstname",
-                "width": "70",
+                "width": "25",
                 "align": "left",
-                "label": _(u"Patient Name"),
+                "label": _(u"Firstname"),
+            }, {
+                "name": "middlename",
+                "width": "25",
+                "align": "left",
+                "label": _(u"Middlename"),
+            }, {
+                "name": "lastname",
+                "width": "25",
+                "align": "left",
+                "label": _(u"Lastname"),
             },
         ],
         limit=3,
@@ -139,9 +149,19 @@ PatientIDField = ExtStringField(
                 "label": _(u"Patient ID"),
             }, {
                 "name": "firstname",
-                "width": "70",
+                "width": "25",
                 "align": "left",
-                "label": _(u"Patient Name"),
+                "label": _(u"Firstname"),
+            }, {
+                "name": "middlename",
+                "width": "25",
+                "align": "left",
+                "label": _(u"Middlename"),
+            }, {
+                "name": "lastname",
+                "width": "25",
+                "align": "left",
+                "label": _(u"Lastname"),
             },
         ],
         limit=3,
