@@ -23,9 +23,9 @@ from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
 from bika.lims.browser.widgets import SelectionWidget
 from bika.lims.interfaces import IAnalysisRequest
-from Products.Archetypes.Widget import StringWidget
 from Products.Archetypes.Widget import TextAreaWidget
 from Products.CMFCore.permissions import View
+from senaite.core.browser.widgets import QuerySelectWidget
 from senaite.patient import messageFactory as _
 from senaite.patient.api import get_patient_name_entry_mode
 from senaite.patient.api import is_age_supported
@@ -33,6 +33,7 @@ from senaite.patient.api import is_patient_required
 from senaite.patient.browser.widgets import AgeDoBWidget
 from senaite.patient.browser.widgets import FullnameWidget
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
+from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
 from senaite.patient.config import SEXES
 from senaite.patient.content import ExtDateTimeField
@@ -72,6 +73,44 @@ MedicalRecordNumberField = TemporaryIdentifierField(
             "secondary": "disabled",
             "header_table": "prominent",
         },
+        # Queryselect widget
+        catalog=PATIENT_CATALOG,
+        query={
+            "portal_type": "Patient",
+            "is_active": True,
+            "sort_on": "title",
+            "sort_order": "ascending",
+        },
+        search_index="patient_searchable_mrn",
+        value_key="mrn",
+        search_wildcard=True,
+        multi_valued=False,
+        allow_user_value=True,
+        hide_input_after_select=False,
+        columns=[
+            {
+                "name": "mrn",
+                "width": "25",
+                "align": "left",
+                "label": _(u"MRN"),
+            }, {
+                "name": "firstname",
+                "width": "25",
+                "align": "left",
+                "label": _(u"Firstname"),
+            }, {
+                "name": "middlename",
+                "width": "25",
+                "align": "left",
+                "label": _(u"Middlename"),
+            }, {
+                "name": "lastname",
+                "width": "25",
+                "align": "left",
+                "label": _(u"Lastname"),
+            },
+        ],
+        limit=3,
     )
 )
 
@@ -80,14 +119,52 @@ PatientIDField = ExtStringField(
     validators=(PatientIDValidator(), ),
     read_permission=View,
     write_permission=FieldEditID,
-    widget=StringWidget(
+    widget=QuerySelectWidget(
         label=_("Patient ID"),
         render_own_label=True,
         visible={
             "add": "edit",
             "secondary": "disabled",
             "header_table": "prominent",
-        }
+        },
+        # Queryselect widget
+        catalog=PATIENT_CATALOG,
+        query={
+            "portal_type": "Patient",
+            "is_active": True,
+            "sort_on": "title",
+            "sort_order": "ascending",
+        },
+        search_index="patient_searchable_id",
+        value_key="patient_id",
+        search_wildcard=True,
+        multi_valued=False,
+        allow_user_value=True,
+        hide_input_after_select=False,
+        columns=[
+            {
+                "name": "patient_id",
+                "width": "30",
+                "align": "left",
+                "label": _(u"Patient ID"),
+            }, {
+                "name": "firstname",
+                "width": "25",
+                "align": "left",
+                "label": _(u"Firstname"),
+            }, {
+                "name": "middlename",
+                "width": "25",
+                "align": "left",
+                "label": _(u"Middlename"),
+            }, {
+                "name": "lastname",
+                "width": "25",
+                "align": "left",
+                "label": _(u"Lastname"),
+            },
+        ],
+        limit=3,
     )
 )
 

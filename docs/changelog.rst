@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #59 Migrate Patient MRN/ID Sample Widgets to QuerySelect
 - #58 Add sample field validation for patient ID
 - #57 Patient samples listing and registration form
 - #56 Fix unknown timezone error for birthdate in patient listing

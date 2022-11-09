@@ -105,3 +105,15 @@ def upgrade_patient_control_panel(tool):
     setup.runImportStepFromProfile(profile, "plone.app.registry")
     setup.runImportStepFromProfile(profile, "controlpanel")
     logger.info("Upgrade patient control panel [DONE]")
+
+
+def upgrade_catalog_indexes(tool):
+    """Reinstall controlpanel registry
+
+    :param tool: portal_setup tool
+    """
+    logger.info("Upgrade catalog indexes ...")
+    portal = tool.aq_inner.aq_parent
+    # setup patient catalog to add new indexes
+    setup_catalogs(portal)
+    logger.info("Upgrade catalog indexes [DONE]")

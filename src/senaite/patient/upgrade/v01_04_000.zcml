@@ -2,8 +2,16 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
+  <!-- 1404: Additional Indexes -->
+  <genericsetup:upgradeStep
+      title="SENAITE PATIENT 1.4.0: Additional patient search indexes"
+      description="Add ZCTextIndexes for patient MRN/ID"
+      source="1403"
+      destination="1404"
+      handler="senaite.patient.upgrade.v01_04_000.upgrade_catalog_indexes"
+      profile="senaite.patient:default"/>
 
-  <!-- Upgrade controlpanel -->
+  <!-- 1403: Upgrade controlpanel -->
   <genericsetup:upgradeStep
       title="SENAITE PATIENT 1.4.0: Upgrade patient controlpanel"
       description="Run registry and controlpanel import steps"
@@ -12,8 +20,7 @@
       handler="senaite.patient.upgrade.v01_04_000.upgrade_patient_control_panel"
       profile="senaite.patient:default"/>
 
-  <!-- Move mobile phone number to additional phone numbers
-       -->
+  <!-- 1402: Move mobile phone number to additional phone numbers -->
   <genericsetup:upgradeStep
       title="SENAITE PATIENT 1.4.0: Migrate mobile phone number"
       description="Move mobile phone number to additional phone numbers record"
@@ -22,7 +29,7 @@
       handler="senaite.patient.upgrade.v01_04_000.upgrade_patient_mobile_phone_number"
       profile="senaite.patient:default"/>
 
-  <!-- Reindex QC Analyses
+  <!-- 1401: Reindex QC Analyses
        https://github.com/senaite/senaite.core/pull/2157 -->
   <genericsetup:upgradeStep
       title="SENAITE PATIENT 1.4.0: Marital Status"

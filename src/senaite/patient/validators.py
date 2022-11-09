@@ -33,14 +33,13 @@ class TemporaryIdentifierValidator(object):
     """
     name = "temporary_identifier_validator"
 
-    def __call__(self, value, *args, **kwargs):
+    def __call__(self, value, instance=None, *args, **kwargs):
         field = kwargs.get("field", None)
         if not field:
             return True
 
-        identifier = value.get("value", "")
         required = getattr(field, "required", False)
-        if required and not identifier:
+        if required and not value:
             field_title = field.widget.label
             msg = _("Required field: ${title}", mapping={"title": field_title})
             ts = api.get_tool("translation_service")
