@@ -19,6 +19,7 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims import api
+from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
@@ -117,3 +118,28 @@ def upgrade_catalog_indexes(tool):
     # setup patient catalog to add new indexes
     setup_catalogs(portal)
     logger.info("Upgrade catalog indexes [DONE]")
+
+
+def fix_samples_middlename(tool):
+    """Reindex samples with a patient middle name set so the metadata
+    getPatientFullName gets populated correctly and therefore, and displayed
+    in samples listing as well
+    """
+    logger.info("Fix samples middle name ...")
+    query = {"portal_type": "AnalysisRequest"}
+    brains = api.search(query, SAMPLE_CATALOG)
+    total = len(brains)
+    for num, brain in enumerate(brains):
+        if num > 0 and num % 100 == 0:
+            logger.info("Fix samples middle name: {}/{}".format(num, total))
+
+        obj = api.get_object(brain)
+        brain_fullname = brain.getPatientFullName
+        obj_fullname = obj.getPatientFullName()
+        if obj_fullname != brain_fullname:
+            obj.reindexObject()
+
+        # Flush the object from memory
+        obj._p_deactivate()
+
+    logger.info("Fix samples middle name [DONE]")
