@@ -140,19 +140,21 @@ class SamplesListingAdapter(object):
 
         # patient MRN is different
         if sample_patient_mrn != patient_mrn:
-            msg = _("Patient MRN of sample is not equal to %s" % (
-                patient_mrn or _("<no value>")))
-            icon_args = {"width": 16, "title": msg}
+            msg = _("Patient MRN of sample is not equal to %s")
+            val = api.safe_unicode(patient_mrn) or _("<no value>")
+            icon_args = {"width": 16, "title": api.to_utf8(msg % val)}
             item["after"]["MRN"] = self.icon_tag("info", **icon_args)
+
         if sample_patient_fullname != patient_fullname:
-            msg = _("Patient fullname of sample is not equal to %s" % (
-                patient_fullname or _("<no value>")))
-            icon_args = {"width": 16, "title": msg}
+            msg = _("Patient fullname of sample is not equal to %s")
+            val = api.safe_unicode(patient_fullname) or _("<no value>")
+            icon_args = {"width": 16, "title": api.to_utf8(msg % val)}
             item["after"]["Patient"] = self.icon_tag("info", **icon_args)
+
         if sample_patient_id != patient_id:
-            msg = _("Patient ID of sample is not equal to %s" % (
-                patient_id or _("<no value>")))
-            icon_args = {"width": 16, "title": msg}
+            msg = _("Patient ID of sample is not equal to %s")
+            val = api.safe_unicode(patient_id) or _("<no value>")
+            icon_args = {"width": 16, "title": api.to_utf8(msg % val)}
             item["after"]["PatientID"] = self.icon_tag("info", **icon_args)
 
     @viewcache
