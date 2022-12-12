@@ -76,7 +76,7 @@ Patient Sample Integration
 
 Create a new sample:
 
-    >>> sample = new_sample([MC, MS], client, contact, sampletype, MedicalRecordNumber={"value": "4711"}, PatientFullName="Clark Kent", Sex="m", Gender="d", DateOfBirth=birthdate)
+    >>> sample = new_sample([MC, MS], client, contact, sampletype, MedicalRecordNumber="4711", PatientFullName="Clark Kent", Sex="m", Gender="d", DateOfBirth=birthdate)
     >>> api.get_workflow_status_of(sample)
     'sample_due'
 
