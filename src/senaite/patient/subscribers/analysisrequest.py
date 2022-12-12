@@ -133,7 +133,7 @@ def get_patient_fields(instance):
         "gender": gender,
         "birthdate": birthdate,
         "address": address,
-        "firstname": firstname,
-        "middlename": middlename,
-        "lastname": lastname,
+        "firstname": api.safe_unicode(firstname),
+        "middlename": api.safe_unicode(middlename),
+        "lastname": api.safe_unicode(lastname),
     }

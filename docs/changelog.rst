@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #60 Fix patient's middlename is not displayed in samples listing
 - #59 Migrate Patient MRN/ID Sample Widgets to QuerySelect
 - #58 Add sample field validation for patient ID
 - #57 Patient samples listing and registration form

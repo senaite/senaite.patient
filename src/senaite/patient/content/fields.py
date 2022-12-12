@@ -95,5 +95,6 @@ class FullnameField(ExtensionField, ObjectField):
 
     def get_fullname(self, instance):
         firstname = self.get_firstname(instance)
+        middlename = self.get_middlename(instance)
         lastname = self.get_lastname(instance)
-        return " ".join(filter(None, [firstname, lastname]))
+        return " ".join(filter(None, [firstname, middlename, lastname]))
