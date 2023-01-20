@@ -47,6 +47,8 @@
 
                           entry_mode python: field.widget.entry_mode or 'parts';
                           fullname_mode python: entry_mode in ['full', 'fullname'];
+                          first_last_mode python: entry_mode == 'first_last';
+                          parts_mode python: not any([fullname_mode, first_last_mode]);
                           i18n_domain field/widget/i18n_domain|context/i18n_domain|string:plone;">
 
         <div class="field FullnameWidget text-left"
@@ -72,6 +74,7 @@
                    title="Middlename"
                    placeholder="Middlename"
                    class="form-control form-control-sm mb-1"
+                   tal:condition="parts_mode"
                    i18n:attributes="placeholder label_middlename"
                    tal:attributes="id string:${subfield_middlename};
                                    name string:${subfield_middlename};
