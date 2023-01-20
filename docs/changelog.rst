@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #62 Added new name entry mode (firstname + lastname)
 - #61 Fix Traceback in listing when fullname is different from sample's
 - #60 Fix patient's middlename is not displayed in samples listing
 - #59 Migrate Patient MRN/ID Sample Widgets to QuerySelect

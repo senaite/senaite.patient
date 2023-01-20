@@ -46,8 +46,18 @@ GENDERS = (
 )
 
 NAME_ENTRY_MODES = (
-    ("parts", _("First name + last name")),
-    ("full", _("Fullname")),
+    ("parts", _(
+        u"name_entry_mode_first_middle_last",
+        default=u"First + middle + last")
+     ),
+    ("first_last", _(
+        u"name_entry_mode_first_last",
+        default=u"First + last")
+     ),
+    ("full", _(
+        u"name_entry_mode_fullname",
+        default=u"Fullname")
+     ),
 )
 
 

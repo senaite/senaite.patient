@@ -33,6 +33,11 @@ class PatientSampleAddView(BaseView):
                     "middlename": self.context.getMiddlename(),
                     "lastname": self.context.getLastname(),
                 }
+            elif entry_mode == "first_last":
+                return {
+                    "firstname": self.context.getFirstname(),
+                    "lastname": self.context.getLastname(),
+                }
             else:
                 return {"firstname": self.context.getFullname()}
         elif name == "PatientAddress":
