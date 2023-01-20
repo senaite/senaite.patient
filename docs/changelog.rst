@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #63 Fix Traceback in patient's samples view when name has special characters
 - #61 Fix Traceback in listing when fullname is different from sample's
 - #60 Fix patient's middlename is not displayed in samples listing
 - #59 Migrate Patient MRN/ID Sample Widgets to QuerySelect

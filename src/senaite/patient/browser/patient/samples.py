@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from bika.lims import api
 from senaite.core.browser.samples.view import SamplesView as BaseView
 from senaite.patient import messageFactory as _
 
@@ -10,8 +11,8 @@ class SamplesView(BaseView):
     def __init__(self, context, request):
         super(SamplesView, self).__init__(context, request)
 
-        self.title = _("Samples of {}").format(
-            self.context.getFullname())
+        fullname = self.context.getFullname()
+        self.title = _("Samples of {}").format(api.safe_unicode(fullname))
 
         mrn = self.context.getMRN()
         if mrn:
