@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #64 Fix samples without patient middle name
 - #63 Fix Traceback in patient's samples view when name has special characters
 - #62 Added new name entry mode (firstname + lastname)
 - #61 Fix Traceback in listing when fullname is different from sample's

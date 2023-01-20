@@ -18,6 +18,8 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+import transaction
+
 from bika.lims import api
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade import upgradestep
@@ -26,6 +28,7 @@ from senaite.patient import logger
 from senaite.patient.api import patient_search
 from senaite.patient.config import PRODUCT_NAME
 from senaite.patient.setuphandlers import setup_catalogs
+from ZPublisher.HTTPRequest import record
 
 version = "1.4.0"
 profile = "profile-{0}:default".format(PRODUCT_NAME)
@@ -143,3 +146,43 @@ def fix_samples_middlename(tool):
         obj._p_deactivate()
 
     logger.info("Fix samples middle name [DONE]")
+
+
+def fix_samples_without_middlename(tool):
+    """Reindex samples with a patient middle name set so the metadata
+    getPatientFullName gets populated correctly and therefore, and displayed
+    in samples listing as well
+    """
+    logger.info("Fix samples without middle name ...")
+    query = {"portal_type": "AnalysisRequest"}
+    brains = api.search(query, SAMPLE_CATALOG)
+    total = len(brains)
+    for num, brain in enumerate(brains):
+        if num and num % 100 == 0:
+            logger.info("Processed objects: {}/{}".format(num, total))
+
+        if num and num % 1000 == 0:
+            # reduce memory size of the transaction
+            transaction.savepoint()
+
+        obj = api.get_object(brain)
+        field = obj.getField("PatientFullName")
+        value = field.get(obj)
+        if not value:
+            continue
+        if "middlename" in value:
+            continue
+        if isinstance(value, record):
+            # found some ZPublisher records!!
+            # (Pdb++) type(value)
+            # <class 'ZPublisher.HTTPRequest.record'>
+            value = dict(value)
+
+        # set an empty middlename
+        value.update({"middlename": ""})
+        field.set(obj, value)
+
+        # Flush the object from memory
+        obj._p_deactivate()
+
+    logger.info("Fix samples without middle name [DONE]")

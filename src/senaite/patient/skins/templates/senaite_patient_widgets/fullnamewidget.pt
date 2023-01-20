@@ -80,6 +80,11 @@
                                    name string:${subfield_middlename};
                                    value middlename;
                                    required required;"/>
+            <input type="hidden"
+                   tal:condition="not:parts_mode"
+                   tal:attributes="id string:${subfield_middlename};
+                                   name string:${subfield_middlename};
+                                   value middlename;"/>
 
             <!-- Lastname -->
             <input type="text"

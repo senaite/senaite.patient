@@ -2,6 +2,15 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
+  <!-- 1406: Fix samples without patient middle name -->
+  <genericsetup:upgradeStep
+      title="SENAITE PATIENT 1.4.0: Fix samples without patient middle name"
+      description="Fix samples without patient middle name"
+      source="1405"
+      destination="1406"
+      handler="senaite.patient.upgrade.v01_04_000.fix_samples_without_middlename"
+      profile="senaite.patient:default"/>
+
   <!-- 1405: Fix patient's middlename is not displayed in samples listing -->
   <genericsetup:upgradeStep
       title="SENAITE PATIENT 1.4.0: Patient middle name is missing in samples"
