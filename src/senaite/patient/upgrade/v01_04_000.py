@@ -149,9 +149,8 @@ def fix_samples_middlename(tool):
 
 
 def fix_samples_without_middlename(tool):
-    """Reindex samples with a patient middle name set so the metadata
-    getPatientFullName gets populated correctly and therefore, and displayed
-    in samples listing as well
+    """Walks through registered samples and sets an empty middlename to those
+    that do not have a middle name set
     """
     logger.info("Fix samples without middle name ...")
     query = {"portal_type": "AnalysisRequest"}
