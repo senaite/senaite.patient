@@ -169,16 +169,19 @@ def fix_samples_without_middlename(tool):
         value = field.get(obj)
         if not value:
             continue
-        if "middlename" in value:
-            continue
+
         if isinstance(value, record):
             # found some ZPublisher records!!
             # (Pdb++) type(value)
             # <class 'ZPublisher.HTTPRequest.record'>
             value = dict(value)
 
+        if not isinstance(value, dict):
+            continue
+
         # set an empty middlename
-        value.update({"middlename": ""})
+        middlename = value.get("middlename", "")
+        value.update({"middlename": middlename})
         field.set(obj, value)
 
         # Flush the object from memory
