@@ -28,7 +28,6 @@ from senaite.patient import logger
 from senaite.patient.api import patient_search
 from senaite.patient.config import PRODUCT_NAME
 from senaite.patient.setuphandlers import setup_catalogs
-from ZPublisher.HTTPRequest import record
 
 version = "1.4.0"
 profile = "profile-{0}:default".format(PRODUCT_NAME)
@@ -167,17 +166,21 @@ def fix_samples_without_middlename(tool):
         obj = api.get_object(brain)
         field = obj.getField("PatientFullName")
         value = field.get(obj)
-        if not value:
+        if value is None:
             continue
 
-        if isinstance(value, record):
+        if not isinstance(value, dict):
             # found some ZPublisher records!!
             # (Pdb++) type(value)
             # <class 'ZPublisher.HTTPRequest.record'>
             value = dict(value)
 
-        if not isinstance(value, dict):
-            continue
+        else:
+            # Do not update unless a key is missing
+            keys = ["firstname", "middlename", "lastname"]
+            exist = filter(lambda key: key in value, keys)
+            if len(exist) == len(keys):
+                continue
 
         # set an empty middlename
         middlename = value.get("middlename", "")

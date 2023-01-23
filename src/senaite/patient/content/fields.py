@@ -76,9 +76,11 @@ class FullnameField(ExtensionField, ObjectField):
     security = ClassSecurityInfo()
 
     def set(self, instance, value, **kwargs):
-        val = {"firstname": "", "middlename": "", "lastname": ""}
+        keys = ["firstname", "middlename", "lastname"]
+        val = dict([(key, "") for key in keys])
+
+        # Maybe fullname mode
         if isinstance(value, six.string_types):
-            # fullname mode
             val.update({"firstname": value})
 
         # Ensure the stored object is from dict type. The received value can
@@ -88,6 +90,12 @@ class FullnameField(ExtensionField, ObjectField):
 
         # Ensure the value contains expected keys
         val.update(value)
+
+        # Set default if no values for any of the keys
+        values = filter(None, [val.get(key) for key in keys])
+        if not any(values):
+            val = self.getDefault(instance)
+
         super(FullnameField, self).set(instance, val, **kwargs)
 
     def get_firstname(self, instance):
