@@ -137,8 +137,15 @@ def fix_samples_middlename(tool):
 
         obj = api.get_object(brain)
         brain_fullname = brain.getPatientFullName
-        obj_fullname = obj.getPatientFullName()
-        if obj_fullname != brain_fullname:
+        try:
+            obj_fullname = obj.getPatientFullName()
+            reindex = obj_fullname != brain_fullname
+        except AttributeError:
+            # AttributeError: 'unicode' object has no attribute 'get'
+            # Value is not stored as a dict. These cases are handled by 1406
+            reindex = False
+
+        if reindex:
             obj.reindexObject()
 
         # Flush the object from memory
@@ -184,6 +191,9 @@ def fix_samples_without_middlename(tool):
 
         # set the field value
         field.set(obj, value)
+
+        # reindex the object
+        obj.reindexObject()
 
         # Flush the object from memory
         obj._p_deactivate()
