@@ -75,11 +75,20 @@ class FullnameField(ExtensionField, ObjectField):
     })
     security = ClassSecurityInfo()
 
-    def get(self, instance, **kwargs):
-        val = super(FullnameField, self).get(instance, **kwargs)
-        if isinstance(val, six.string_types):
-            val = {"firstname": val, "middlename": "", "lastname": ""}
-        return val
+    def set(self, instance, value, **kwargs):
+        val = {"firstname": "", "middlename": "", "lastname": ""}
+        if isinstance(value, six.string_types):
+            # fullname mode
+            val.update({"firstname": value})
+
+        # Ensure the stored object is from dict type. The received value can
+        # be from ZPublisher record type and since the field inherits from
+        # ObjectField, no conversion/decoding is done by the super field
+        value = dict(value) if value else {}
+
+        # Ensure the value contains expected keys
+        val.update(value)
+        super(FullnameField, self).set(instance, val, **kwargs)
 
     def get_firstname(self, instance):
         val = self.get(instance) or {}
