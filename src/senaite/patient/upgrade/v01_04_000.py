@@ -18,6 +18,7 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+import six
 import transaction
 
 from bika.lims import api
@@ -174,20 +175,31 @@ def fix_samples_without_middlename(tool):
         field = obj.getField("PatientFullName")
         value = field.get(obj)
         if value is None:
+            obj._p_deactivate()
             continue
+
+        if isinstance(value, six.string_types):
+            # old instance with the fullname stored as str
+            value = {"firstname": value}
 
         if not isinstance(value, dict):
             # found some ZPublisher records!!
             # (Pdb++) type(value)
             # <class 'ZPublisher.HTTPRequest.record'>
-            value = dict(value)
-
-        else:
-            # Do not update unless a key is missing
-            keys = ["firstname", "middlename", "lastname"]
-            exist = filter(lambda key: key in value, keys)
-            if len(exist) == len(keys):
+            try:
+                value = dict(value)
+            except:
+                str_type = repr(type(value))
+                logger.error("Type not supported: {}".format(str_type))
+                obj._p_deactivate()
                 continue
+
+        # Do not update unless a key is missing
+        keys = ["firstname", "middlename", "lastname"]
+        exist = filter(lambda key: key in value, keys)
+        if len(exist) == len(keys):
+            obj._p_deactivate()
+            continue
 
         # set the field value
         field.set(obj, value)
