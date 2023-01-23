@@ -182,9 +182,7 @@ def fix_samples_without_middlename(tool):
             if len(exist) == len(keys):
                 continue
 
-        # set an empty middlename
-        middlename = value.get("middlename", "")
-        value.update({"middlename": middlename})
+        # set the field value
         field.set(obj, value)
 
         # Flush the object from memory
