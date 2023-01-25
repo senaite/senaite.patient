@@ -18,7 +18,6 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-import six
 import transaction
 
 from bika.lims import api

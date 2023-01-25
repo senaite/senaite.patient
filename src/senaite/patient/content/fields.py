@@ -23,7 +23,6 @@ from AccessControl import ClassSecurityInfo
 from archetypes.schemaextender.field import ExtensionField
 from Products.Archetypes.Field import ObjectField
 from senaite.patient import api as patient_api
-from senaite.patient import logger
 from senaite.patient.browser.widgets import FullnameWidget
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.config import AUTO_ID_MARKER
