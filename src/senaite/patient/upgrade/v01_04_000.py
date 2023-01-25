@@ -178,36 +178,27 @@ def fix_samples_without_middlename(tool):
             obj._p_deactivate()
             continue
 
-        if isinstance(value, six.string_types):
-            # old instance with the fullname stored as str
-            value = {"firstname": value}
-
-        if not isinstance(value, dict):
-            # found some ZPublisher records!!
-            # (Pdb++) type(value)
-            # <class 'ZPublisher.HTTPRequest.record'>
-            try:
-                value = dict(value)
-            except:
-                str_type = repr(type(value))
-                logger.error("Type not supported: {}".format(str_type))
+        if isinstance(value, dict):
+            # a dict already, do not update unless a key is missing
+            keys = ["firstname", "middlename", "lastname"]
+            exist = [key in value for key in keys]
+            if all(exist):
                 obj._p_deactivate()
                 continue
 
-        # Do not update unless a key is missing
-        keys = ["firstname", "middlename", "lastname"]
-        exist = filter(lambda key: key in value, keys)
-        if len(exist) == len(keys):
+        # set the field value
+        try:
+            field.set(obj, value)
+        except ValueError:
+            path = api.get_path(obj)
+            logger.warn("No valid value for {}: {}".format(path, repr(value)))
             obj._p_deactivate()
             continue
-
-        # set the field value
-        field.set(obj, value)
 
         # reindex the object
         obj.reindexObject()
 
-        # Flush the object from memory
+        # flush the object from memory
         obj._p_deactivate()
 
     logger.info("Fix samples without middle name [DONE]")

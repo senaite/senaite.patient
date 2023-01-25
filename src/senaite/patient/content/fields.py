@@ -19,11 +19,11 @@
 # Some rights reserved, see README and LICENSE.
 
 import six
-
 from AccessControl import ClassSecurityInfo
 from archetypes.schemaextender.field import ExtensionField
 from Products.Archetypes.Field import ObjectField
 from senaite.patient import api as patient_api
+from senaite.patient import logger
 from senaite.patient.browser.widgets import FullnameWidget
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.config import AUTO_ID_MARKER
@@ -76,23 +76,27 @@ class FullnameField(ExtensionField, ObjectField):
     security = ClassSecurityInfo()
 
     def set(self, instance, value, **kwargs):
-        keys = ["firstname", "middlename", "lastname"]
-        val = dict([(key, "") for key in keys])
+        val = dict.fromkeys(["firstname", "middlename", "lastname"], "")
 
-        # Maybe fullname mode
         if isinstance(value, six.string_types):
-            val.update({"firstname": value})
+            # Fullname entry mode
+            val["firstname"] = value
 
-        # Ensure the stored object is from dict type. The received value can
-        # be from ZPublisher record type and since the field inherits from
-        # ObjectField, no conversion/decoding is done by the super field
-        value = dict(value) if value else {}
-
-        # Ensure the value contains expected keys
-        val.update(value)
+        elif value is not None:
+            # Ensure the stored object is from dict type. The received value
+            # can be from ZPublisher record type and since the field inherits
+            # from ObjectField, no conversion is done by the super field
+            try:
+                for key, value in value.items():
+                    if key not in val:
+                        continue
+                    val[key] = value
+            except AttributeError:
+                msg = "Type not supported: {}".format(repr(type(value)))
+                raise ValueError(msg)
 
         # Set default if no values for any of the keys
-        values = filter(None, [val.get(key) for key in keys])
+        values = filter(None, val.values())
         if not any(values):
             val = self.getDefault(instance)
 
