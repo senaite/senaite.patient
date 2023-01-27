@@ -18,6 +18,8 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+import transaction
+
 from bika.lims import api
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade import upgradestep
@@ -135,11 +137,67 @@ def fix_samples_middlename(tool):
 
         obj = api.get_object(brain)
         brain_fullname = brain.getPatientFullName
-        obj_fullname = obj.getPatientFullName()
-        if obj_fullname != brain_fullname:
+        try:
+            obj_fullname = obj.getPatientFullName()
+            reindex = obj_fullname != brain_fullname
+        except AttributeError:
+            # AttributeError: 'unicode' object has no attribute 'get'
+            # Value is not stored as a dict. These cases are handled by 1406
+            reindex = False
+
+        if reindex:
             obj.reindexObject()
 
         # Flush the object from memory
         obj._p_deactivate()
 
     logger.info("Fix samples middle name [DONE]")
+
+
+def fix_samples_without_middlename(tool):
+    """Walks through registered samples and sets an empty middlename to those
+    that do not have a middle name set
+    """
+    logger.info("Fix samples without middle name ...")
+    query = {"portal_type": "AnalysisRequest"}
+    brains = api.search(query, SAMPLE_CATALOG)
+    total = len(brains)
+    for num, brain in enumerate(brains):
+        if num and num % 100 == 0:
+            logger.info("Processed objects: {}/{}".format(num, total))
+
+        if num and num % 1000 == 0:
+            # reduce memory size of the transaction
+            transaction.savepoint()
+
+        obj = api.get_object(brain)
+        field = obj.getField("PatientFullName")
+        value = field.get(obj)
+        if value is None:
+            obj._p_deactivate()
+            continue
+
+        if isinstance(value, dict):
+            # a dict already, do not update unless a key is missing
+            keys = ["firstname", "middlename", "lastname"]
+            exist = [key in value for key in keys]
+            if all(exist):
+                obj._p_deactivate()
+                continue
+
+        # set the field value
+        try:
+            field.set(obj, value)
+        except ValueError:
+            path = api.get_path(obj)
+            logger.warn("No valid value for {}: {}".format(path, repr(value)))
+            obj._p_deactivate()
+            continue
+
+        # reindex the object
+        obj.reindexObject()
+
+        # flush the object from memory
+        obj._p_deactivate()
+
+    logger.info("Fix samples without middle name [DONE]")

@@ -19,7 +19,6 @@
 # Some rights reserved, see README and LICENSE.
 
 import six
-
 from AccessControl import ClassSecurityInfo
 from archetypes.schemaextender.field import ExtensionField
 from Products.Archetypes.Field import ObjectField
@@ -75,11 +74,32 @@ class FullnameField(ExtensionField, ObjectField):
     })
     security = ClassSecurityInfo()
 
-    def get(self, instance, **kwargs):
-        val = super(FullnameField, self).get(instance, **kwargs)
-        if isinstance(val, six.string_types):
-            val = {"firstname": val, "middlename": "", "lastname": ""}
-        return val
+    def set(self, instance, value, **kwargs):
+        val = dict.fromkeys(["firstname", "middlename", "lastname"], "")
+
+        if isinstance(value, six.string_types):
+            # Fullname entry mode
+            val["firstname"] = value
+
+        elif value is not None:
+            # Ensure the stored object is from dict type. The received value
+            # can be from ZPublisher record type and since the field inherits
+            # from ObjectField, no conversion is done by the super field
+            try:
+                for key, value in value.items():
+                    if key not in val:
+                        continue
+                    val[key] = value
+            except AttributeError:
+                msg = "Type not supported: {}".format(repr(type(value)))
+                raise ValueError(msg)
+
+        # Set default if no values for any of the keys
+        values = filter(None, val.values())
+        if not any(values):
+            val = self.getDefault(instance)
+
+        super(FullnameField, self).set(instance, val, **kwargs)
 
     def get_firstname(self, instance):
         val = self.get(instance) or {}
