@@ -7,7 +7,7 @@
   <body>
 
     <metal:view_macro define-macro="view">
-      <tal:values define="value  python:field.getAccessor(here)();
+      <tal:values define="value  python:field.getAccessor(here)() or {};
                           firstname python:value.get('firstname', '');
                           middlename python:value.get('middlename', '');
                           lastname python:value.get('lastname', '');
