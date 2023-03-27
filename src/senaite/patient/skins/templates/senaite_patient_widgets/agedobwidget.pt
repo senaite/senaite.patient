@@ -7,15 +7,37 @@
   <body>
 
     <metal:view_macro define-macro="view">
-      <tal:values define="age python:field.get_formatted_age(here);
-                          birth_date python:field.get_formatted_birth_date(here);">
+      <span metal:define-slot="inside"
+            tal:define="value accessor;
+                        dob_estimated python:widget.get_dob_estimated(context);
+                        current_age python:widget.get_current_age(value);
+                        years python:current_age.get('years') or '';
+                        months python:current_age.get('months') or '';
+                        days python:current_age.get('days') or '';
+                        value python: widget.ulocalized_time(value, context=context, request=request) if value else ''">
 
-        <span tal:content="age"/>
-        <tal:dob condition="birth_date">
-          (<span tal:content="birth_date"/>)
-        </tal:dob>
+        <!-- Date of birth -->
+        <span tal:condition="python:not dob_estimated">
+          <span tal:replace="value"></span>
+        </span>
 
-      </tal:values>
+        <!-- Age (estimated) -->
+        <span class="" tal:condition="python:dob_estimated">
+          <span tal:condition="python:years">
+            <span tal:replace="years"></span>
+            <span class="text-secondary" i18n:translate="patient_dob_years">Years</span>
+          </span>
+          <span tal:condition="python:months">
+            <span tal:replace="months"></span>
+            <span class="text-secondary" i18n:translate="patient_dob_months">Months</span>
+          </span>
+          <span tal:condition="python:days">
+            <span tal:replace="days"></span>
+            <span class="text-secondary" i18n:translate="patient_dob_days">Days</span>
+          </span>
+        </span>
+      </span>
+
     </metal:view_macro>
 
     <metal:edit_macro define-macro="edit">
