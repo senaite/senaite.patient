@@ -14,7 +14,7 @@
   <cmf:registerDirectory name="skins" directory="skins" recursive="True"/>
 
   <!-- Import senaite.core permissions -->
-  <include package="bika.lims" file="permissions.zcml" />
+  <include package="senaite.core.permissions" />
 
   <!-- Import senaite.patient permissions -->
   <include file="permissions.zcml" />
