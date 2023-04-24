@@ -57,7 +57,7 @@ class PatientFolderView(ListingView):
         self.context_actions = {
             _("Add"): {
                 "url": "++add++Patient",
-                "permission": "Add portal content",
+                "permission": "senaite.patient: Add Patient",
                 "icon": "++resource++bika.lims.images/add.png"}
             }
 
