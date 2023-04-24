@@ -19,6 +19,7 @@
 # Some rights reserved, see README and LICENSE.
 
 ManagePatients = "senaite.patient: Manage Patients"
+ViewPatients = "senaite.patient: View Patients"
 
 AddPatientFolder = "senaite.patient: Add PatientFolder"
 AddPatient = "senaite.patient: Add Patient"
