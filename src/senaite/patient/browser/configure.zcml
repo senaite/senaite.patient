@@ -16,7 +16,8 @@
       name="view"
       for="senaite.patient.content.patientfolder.IPatientFolder"
       class=".patientfolder.PatientFolderView"
-      permission="zope2.View"
+      permission="senaite.patient.permissions.ViewPatients"
+      layer="senaite.patient.interfaces.ISenaitePatientLayer"
       />
 
   <!-- Patient Controlpanel -->
@@ -24,14 +25,16 @@
       name="patient-controlpanel"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".controlpanel.PatientControlPanelView"
-      permission="senaite.core.permissions.ManageBika"
-      layer="senaite.patient.interfaces.ISenaitePatientLayer" />
+      permission="senaite.patient.permissions.ManagePatients"
+      layer="senaite.patient.interfaces.ISenaitePatientLayer"
+      />
 
   <!-- Static directory for js, css and image resources -->
   <plone:static
     directory="static"
     type="plone"
-    name="senaite.patient.static" />
+    name="senaite.patient.static"
+    />
 
   <!-- Static Resources Viewlet -->
   <browser:viewlet
@@ -40,6 +43,7 @@
     class="senaite.core.browser.viewlets.resources.ResourcesViewlet"
     permission="zope2.View"
     template="./static/resources.pt"
-    layer="senaite.patient.interfaces.ISenaitePatientLayer" />
+    layer="senaite.patient.interfaces.ISenaitePatientLayer"
+    />
 
 </configure>
