@@ -18,67 +18,40 @@
 
   <!-- State: active -->
   <state state_id="active" title="Active" i18n:attributes="title">
+
+    <!-- TRANSITIONS -->
     <exit-transition transition_id="" />
+    <!-- /TRANSITIONS -->
+
+    <!-- MANAGED PERMISSIONS -->
     <permission-map name="Access contents information" acquired="False">
-      <!-- All except Anonymous and Client -->
-      <permission-role>Analyst</permission-role>
-      <permission-role>ClientGuest</permission-role>
       <permission-role>LabClerk</permission-role>
       <permission-role>LabManager</permission-role>
-      <permission-role>Preserver</permission-role>
-      <permission-role>RegulatoryInspector</permission-role>
-      <permission-role>Sampler</permission-role>
-      <permission-role>SamplingCoordinator</permission-role>
-      <!-- Plone roles -->
       <permission-role>Manager</permission-role>
-      <permission-role>Owner</permission-role>
-      <permission-role>Site Administrator</permission-role>
     </permission-map>
-    <permission-map name="Delete objects" acquired="False" />
     <permission-map name="List folder contents" acquired="False">
-      <!-- All except Anonymous and Client -->
-      <permission-role>Analyst</permission-role>
-      <permission-role>ClientGuest</permission-role>
       <permission-role>LabClerk</permission-role>
       <permission-role>LabManager</permission-role>
-      <permission-role>Preserver</permission-role>
-      <permission-role>RegulatoryInspector</permission-role>
-      <permission-role>Sampler</permission-role>
-      <permission-role>SamplingCoordinator</permission-role>
-      <!-- Plone roles -->
       <permission-role>Manager</permission-role>
-      <permission-role>Site Administrator</permission-role>
     </permission-map>
     <permission-map name="Add portal content" acquired="False">
-      <permission-role>Client</permission-role>
       <permission-role>LabClerk</permission-role>
       <permission-role>LabManager</permission-role>
-      <!-- Plone roles -->
       <permission-role>Manager</permission-role>
     </permission-map>
     <permission-map name="Modify portal content" acquired="False">
-      <permission-role>LabClerk</permission-role>
       <permission-role>LabManager</permission-role>
-      <!-- Plone roles -->
       <permission-role>Manager</permission-role>
-      <permission-role>Owner</permission-role>
     </permission-map>
     <permission-map name="View" acquired="False">
-      <!-- All except Anonymous -->
-      <permission-role>Analyst</permission-role>
-      <permission-role>Client</permission-role>
-      <permission-role>ClientGuest</permission-role>
       <permission-role>LabClerk</permission-role>
       <permission-role>LabManager</permission-role>
-      <permission-role>Preserver</permission-role>
-      <permission-role>RegulatoryInspector</permission-role>
-      <permission-role>Sampler</permission-role>
-      <permission-role>SamplingCoordinator</permission-role>
-      <!-- Plone roles -->
       <permission-role>Manager</permission-role>
-      <permission-role>Owner</permission-role>
-      <permission-role>Site Administrator</permission-role>
     </permission-map>
+    <!-- Do not allow to delete patients -->
+    <permission-map name="Delete objects" acquired="False" />
+    <!-- /MANAGED PERMISSIONS -->
+
   </state>
 
   <variable variable_id="action" for_catalog="False" for_status="True" update_always="True">
