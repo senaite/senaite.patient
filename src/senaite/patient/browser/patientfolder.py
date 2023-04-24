@@ -22,13 +22,14 @@ import collections
 
 from bika.lims import api
 from bika.lims import senaiteMessageFactory as _
+from bika.lims.interfaces import IClient
 from bika.lims.utils import get_email_link
 from bika.lims.utils import get_link
 from senaite.app.listing.view import ListingView
 from senaite.patient import messageFactory as _sp
-from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.api import to_identifier_type_name
 from senaite.patient.api import tuplify_identifiers
+from senaite.patient.catalog import PATIENT_CATALOG
 
 
 class PatientFolderView(ListingView):
@@ -43,7 +44,10 @@ class PatientFolderView(ListingView):
         self.contentFilter = {
             "portal_type": "Patient",
             "path": {
-                "query": api.get_path(context),
+                "query": [
+                    api.get_path(context),
+                    api.get_path(self.portal.clients),
+                ],
                 "level": 0
             },
             "sort_on": "created",
@@ -90,6 +94,9 @@ class PatientFolderView(ListingView):
             ("birthdate", {
                 "title": _("Birthdate"),
                 "index": "patient_birthdate"}),
+            ("folder", {
+                "title": _("Folder"),
+                "index": "path"}),
         ))
 
         self.review_states = [
@@ -198,5 +205,13 @@ class PatientFolderView(ListingView):
         birthdate = obj.getBirthdate()
         if birthdate:
             item["birthdate"] = self.ulocalized_time(birthdate, long_format=0)
+
+        # Folder
+        parent = api.get_parent(obj)
+        parent_url = api.get_url(parent)
+        if IClient.providedBy(parent):
+            parent_url += "/@@patients"
+        item["folder"] = parent.Title()
+        item["replace"]["folder"] = get_link(parent_url, value=parent.Title())
 
         return item
