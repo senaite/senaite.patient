@@ -224,14 +224,16 @@ def update_patient_workflows(tool):
     """
     logger.info("Update patient workflows ...")
 
-    # import workflows
+    # import rolemap, workflow and typeinfo
     portal = tool.aq_inner.aq_parent
     setup = portal.portal_setup
+    setup.runImportStepFromProfile(profile, "rolemap")
     setup.runImportStepFromProfile(profile, "workflow")
-    wf_tool = api.get_tool("portal_workflow")
+    setup.runImportStepFromProfile(profile, "typeinfo")
 
     # get patient folder + workflow
     patientsfolder = portal.patients
+    wf_tool = api.get_tool("portal_workflow")
     patients_workflow = wf_tool.getWorkflowById(PATIENT_FOLDER_WORKFLOW)
 
     # update rolemappings + object security for patients folder
