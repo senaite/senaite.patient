@@ -320,8 +320,8 @@ def allow_patients_in_clients(allow=True):
             ti._actions = tuple(actions)
     else:
         allowed_types.discard(PATIENT_TYPE)
-        if CLIENT_VIEW_ID in actions:
-            ti.deleteActions([actions.index(CLIENT_VIEW_ID)])
+        if CLIENT_VIEW_ID in action_ids:
+            ti.deleteActions([action_ids.index(CLIENT_VIEW_ID)])
 
     # set the new types
     fti.allowed_content_types = tuple(allowed_types)
