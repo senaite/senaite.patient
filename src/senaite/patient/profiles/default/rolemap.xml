@@ -14,6 +14,8 @@
       <role name="LabClerk"/>
       <role name="Manager"/>
       <role name="LabManager"/>
+      <!-- for client local patients -->
+      <role name="Owner"/>
     </permission>
 
     <!-- Add permissions -->
@@ -24,17 +26,24 @@
       <role name="LabClerk"/>
       <role name="LabManager"/>
       <role name="Manager"/>
+      <!-- for client local patients -->
+      <role name="Owner"/>
     </permission>
 
     <!-- Transition permissions -->
     <permission name="senaite.patient: Transition: Activate" acquire="False">
-      <role name="LabManager"/>
       <role name="LabClerk"/>
+      <role name="LabManager"/>
       <role name="Manager"/>
+      <!-- for client local patients -->
+      <role name="Owner"/>
     </permission>
     <permission name="senaite.patient: Transition: Deactivate" acquire="False">
+      <role name="LabClerk"/>
       <role name="LabManager"/>
       <role name="Manager"/>
+      <!-- for client local patients -->
+      <role name="Owner"/>
     </permission>
 
     <!-- Permissions for Sample fields
