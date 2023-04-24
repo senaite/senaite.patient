@@ -201,3 +201,16 @@ def fix_samples_without_middlename(tool):
         obj._p_deactivate()
 
     logger.info("Fix samples without middle name [DONE]")
+
+
+def allow_patients_in_clients(tool):
+    """Allow to create patients inside clients
+    """
+    logger.info("Allow patients in clients ...")
+
+    # import registry for controlpanel
+    portal = tool.aq_inner.aq_parent
+    setup = portal.portal_setup
+    setup.runImportStepFromProfile(profile, "plone.app.registry")
+
+    logger.info("Allow patients in clients [DONE]")

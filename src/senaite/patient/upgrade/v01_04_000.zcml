@@ -2,6 +2,15 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
+  <!-- 1407: Patients inside clients -->
+  <genericsetup:upgradeStep
+      title="SENAITE PATIENT 1.4.0: Allow patients in clients"
+      description="Allow to create patients in the context of a client"
+      source="1406"
+      destination="1407"
+      handler="senaite.patient.upgrade.v01_04_000.allow_patients_in_clients"
+      profile="senaite.patient:default"/>
+
   <!-- 1406: Fix samples without patient middle name -->
   <genericsetup:upgradeStep
       title="SENAITE PATIENT 1.4.0: Fix samples without patient middle name"

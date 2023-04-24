@@ -277,3 +277,30 @@ def to_identifier_type_name(identifier_type_key):
         name = record.get("value")
 
     return name
+
+
+def allow_patients_in_clients(allow=True):
+    """Allow patient creation in patients
+    """
+    pt = api.get_tool("portal_types")
+    # get the Client FTI
+    fti = pt.get("Client")
+    # get the current allowed types for the object
+    allowed_types = set(fti.allowed_content_types)
+    # Append or remove patient
+    if allow:
+        allowed_types.add("Patient")
+    else:
+        allowed_types.discard("Patient")
+    # set the new types
+    fti.allowed_content_types = tuple(allowed_types)
+
+    # Add view action
+
+
+def is_patient_allowed_in_client():
+    """Returns wether patients can be created in clients or not
+    """
+    allowed = api.get_registry_record(
+        "senaite.patient.allow_patients_in_clients", False)
+    return allowed

@@ -189,6 +189,7 @@ class IPatientControlPanel(Interface):
         description=_(""),
         fields=[
             "share_patients",
+            "allow_patients_in_clients",
         ],
     )
 
@@ -370,6 +371,11 @@ class IPatientControlPanel(Interface):
         description=_(u"If selected, patients created or referred on sample "
                       u"creation will automatically be shared across users "
                       u"from same client the sample belongs to")
+    )
+
+    allow_patients_in_clients = schema.Bool(
+        title=_(u"Allow patients in clients"),
+        description=_(u"If selected, patients can be created inside clients.")
     )
 
     @invariant
