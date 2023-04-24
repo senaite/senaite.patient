@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #68 Allow client local patients
 - #66 Fix widget view mode
 - #65 Fix cannot create partitions from samples with Patient assigned
 - #64 Fix samples without patient middle name
