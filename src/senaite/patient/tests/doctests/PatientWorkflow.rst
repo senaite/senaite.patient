@@ -88,7 +88,7 @@ Global add permission:
 
     >>> from senaite.patient.permissions import AddPatient
     >>> get_roles_for_permission(AddPatient, patients)
-    ['LabClerk', 'LabManager', 'Manager']
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
 
 
 Patient Permissions
