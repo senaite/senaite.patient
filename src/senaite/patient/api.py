@@ -22,6 +22,7 @@ import re
 from datetime import datetime
 
 from bika.lims import api
+from bika.lims.utils import get_client
 from bika.lims.utils import tmpID
 from dateutil.relativedelta import relativedelta
 from senaite.patient.config import PATIENT_CATALOG
@@ -155,12 +156,21 @@ def create_temporary_patient():
     return patient
 
 
-def store_temporary_patient(patient):
+def store_temporary_patient(context, patient):
     """Store temporary patient to the patients folder
+
+    :param context: The current context
+    :param patient: A temporary patient object
     """
-    portal = api.get_portal()
-    container = portal.patients
+    if is_patient_allowed_in_client():
+        # create the patient inside the client
+        container = get_client(context)
+    else:
+        portal = api.get_portal()
+        container = portal.patients
+    # Notify `ObjectCreateEvent` to generate a UID first
     notify(ObjectCreatedEvent(patient))
+    # set the patient in the container
     container._setObject(patient.id, patient)
     patient = container.get(patient.getId())
     return patient

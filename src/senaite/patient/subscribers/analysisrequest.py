@@ -98,7 +98,7 @@ def update_patient(instance):
         try:
             patient = patient_api.create_temporary_patient()
             patient_api.update_patient(patient, **values)
-            patient_api.store_temporary_patient(patient)
+            patient_api.store_temporary_patient(instance, patient)
         except ValueError as exc:
             logger.error("%s" % exc)
             logger.error("Failed to create patient for values: %r" % values)
