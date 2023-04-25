@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #69 Fix Patient Workflows and Permissions
 - #68 Allow client local patients
 - #66 Fix widget view mode
 - #65 Fix cannot create partitions from samples with Patient assigned
