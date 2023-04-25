@@ -85,6 +85,7 @@
     description="Run various configuration actions"
     handler=".setuphandlers.setup_handler">
     <depends name="typeinfo"/>
+    <depends name="workflow"/>
   </genericsetup:importStep>
 
   <!-- Uninstall profile -->

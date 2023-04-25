@@ -9,15 +9,6 @@
       <role name="LabManager"/>
     </permission>
 
-    <!-- View permissions -->
-    <permission name="senaite.patient: View Patients" acquire="False">
-      <role name="LabClerk"/>
-      <role name="Manager"/>
-      <role name="LabManager"/>
-      <!-- for client local patients -->
-      <role name="Owner"/>
-    </permission>
-
     <!-- Add permissions -->
     <permission name="senaite.patient: Add Patient Folder" acquire="False">
       <role name="Manager"/>

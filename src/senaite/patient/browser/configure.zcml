@@ -16,7 +16,7 @@
       name="view"
       for="senaite.patient.content.patientfolder.IPatientFolder"
       class=".patientfolder.PatientFolderView"
-      permission="senaite.patient.permissions.ViewPatients"
+      permission="zope2.View"
       layer="senaite.patient.interfaces.ISenaitePatientLayer"
       />
 

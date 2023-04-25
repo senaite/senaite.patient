@@ -18,11 +18,13 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-ManagePatients = "senaite.patient: Manage Patients"
-ViewPatients = "senaite.patient: View Patients"
-
-AddPatientFolder = "senaite.patient: Add PatientFolder"
+# Add permission for our custom content types.
+# Slso see `initialize` function in `__init__.py`
 AddPatient = "senaite.patient: Add Patient"
+AddPatientFolder = "senaite.patient: Add PatientFolder"
+
+# Permission that governs the control panel view
+ManagePatients = "senaite.patient: Manage Patients"
 
 # Transition permissions
 TransitionActivate = "senaite.patient: Transition: Activate"

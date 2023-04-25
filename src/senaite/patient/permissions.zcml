@@ -3,11 +3,10 @@
     i18n_domain="senaite.patient">
 
   <permission id="senaite.patient.permissions.ManagePatients" title="senaite.patient: Manage Patients"/>
-  <permission id="senaite.patient.permissions.ViewPatients" title="senaite.patient: View Patients"/>
 
-  <!-- Content permissions -->
-  <permission id="senaite.patient.permissions.AddPatientFolder" title="senaite.patient: Add Patient Folder"/>
+  <!-- Add content permissions -->
   <permission id="senaite.patient.permissions.AddPatient" title="senaite.patient: Add Patient"/>
+  <permission id="senaite.patient.permissions.AddPatientFolder" title="senaite.patient: Add Patient Folder"/>
 
   <!-- Transition permissions -->
   <permission id="senaite.patient.permissions.TransitionActivate" title="senaite.patient: Transition: Activate"/>

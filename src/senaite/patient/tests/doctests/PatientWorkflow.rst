@@ -11,17 +11,23 @@ Test Setup
 Needed Imports:
 
     >>> from AccessControl.PermissionRole import rolesForPermissionOn
+    >>> from DateTime import DateTime
+    >>> from Products.CMFCore.permissions import AccessContentsInformation
+    >>> from Products.CMFCore.permissions import AddPortalContent
+    >>> from Products.CMFCore.permissions import DeleteObjects
+    >>> from Products.CMFCore.permissions import ListFolderContents
+    >>> from Products.CMFCore.permissions import ModifyPortalContent
+    >>> from Products.CMFCore.permissions import View
     >>> from bika.lims import api
+    >>> from bika.lims.api.security import get_roles_for_permission
     >>> from bika.lims.utils.analysisrequest import create_analysisrequest
     >>> from bika.lims.utils.analysisrequest import create_partition
     >>> from bika.lims.workflow import doActionFor as do_action_for
-    >>> from bika.lims.workflow import isTransitionAllowed
     >>> from bika.lims.workflow import getAllowedTransitions
-    >>> from DateTime import DateTime
-    >>> from plone.app.testing import setRoles
+    >>> from bika.lims.workflow import isTransitionAllowed
     >>> from plone.app.testing import TEST_USER_ID
     >>> from plone.app.testing import TEST_USER_PASSWORD
-    >>> from bika.lims.api.security import get_roles_for_permission
+    >>> from plone.app.testing import setRoles
 
 Functional Helpers:
 
@@ -67,8 +73,8 @@ We need to create some basic objects for the test:
     >>> MS = api.create(setup.bika_analysisservices, "AnalysisService", title="Malaria Species", Keyword="MS", Price="10", Category=category.UID(), Accredited=True)
 
 
-Patient Folder Permissions
-..........................
+Patient Folder Workflow
+.......................
 
 Get the mapped workflow and status of the patient folder:
 
@@ -80,19 +86,55 @@ Get the mapped workflow and status of the patient folder:
     >>> api.get_workflow_status_of(patients)
     'active'
 
-Global add permission:
+
+Patient Folder Permissions
+..........................
+
+The creation of a patients folder is governed with the custom `AddPatientFolder` permission.
+Also see the `initialize` function in `__init__.py`.
 
     >>> from senaite.patient.permissions import AddPatientFolder
     >>> get_roles_for_permission(AddPatientFolder, portal)
     ['Manager']
 
-    >>> from senaite.patient.permissions import AddPatient
-    >>> get_roles_for_permission(AddPatient, patients)
-    ['LabClerk', 'LabManager', 'Manager', 'Owner']
+The `View` permission governs who is allowed to see the patients folder and if
+it is displayed in the side navigation or not:
+
+    >>> get_roles_for_permission(View, patients)
+    ['LabClerk', 'LabManager', 'Manager']
+
+The `DeleteObjects` permission governs if it is allowed to delete *any kind of
+objects* from this folder:
+
+    >>> get_roles_for_permission(DeleteObjects, patients)
+    []
+
+The `AccessContentsInformation` permission governs if the basic access to the
+folder, without necessarily viewing it:
+
+    >>> get_roles_for_permission(AccessContentsInformation, patients)
+    ['LabClerk', 'LabManager', 'Manager']
+
+The `ListFolderContents` permission governs whether you can get a listing of the patients:
+
+    >>> get_roles_for_permission(ListFolderContents, patients)
+    ['LabClerk', 'LabManager', 'Manager']
+
+The `ModifyPortalContent` permission governs whether it is allowed to change e.g. the Title of the folder:
+
+    >>> get_roles_for_permission(ModifyPortalContent, patients)
+    ['Manager']
 
 
 Patient Permissions
 ...................
+
+The creation of a patients is governed with the custom `AddPatient` permission.
+Also see the `initialize` function in `__init__.py`.
+
+    >>> from senaite.patient.permissions import AddPatient
+    >>> get_roles_for_permission(AddPatient, patients)
+    ['LabClerk', 'LabManager', 'Manager']
 
 Create a new patient:
 
