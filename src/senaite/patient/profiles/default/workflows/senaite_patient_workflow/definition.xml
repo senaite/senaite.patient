@@ -8,9 +8,13 @@
              manager_bypass="False"
              i18n:domain="senaite.patient">
 
+  <!-- MANAGED PERMISSIONS -->
+  <permission>Add portal content</permission>
+  <permission>Access contents information</permission>
+  <permission>Delete objects</permission>
+  <permission>List folder contents</permission>
   <permission>Modify portal content</permission>
   <permission>View</permission>
-
   <!-- senaite.patient: Field permissions -->
   <permission>senaite.patient: Field: Edit MRN</permission>
   <permission>senaite.patient: Field: Edit ID</permission>
@@ -19,10 +23,10 @@
   <permission>senaite.patient: Field: Edit Gender</permission>
   <permission>senaite.patient: Field: Edit Date of Birth</permission>
   <permission>senaite.patient: Field: Edit Address</permission>
-
   <!-- senaite.patient: Transition permissions -->
   <permission>senaite.patient: Transition: Activate</permission>
   <permission>senaite.patient: Transition: Deactivate</permission>
+  <!-- /MANAGED PERMISSIONS -->
 
   <!-- State: active -->
   <state state_id="active" title="Active" i18n:attributes="title">
@@ -32,12 +36,54 @@
     <!-- /TRANSITIONS -->
 
     <!-- MANAGED PERMISSIONS -->
+    <!-- This permission governs if a patient should appear in searches
+         NOTE: We add `ClientGuest` role here for shared patients, so that they
+               appear in the reference widget
+    -->
+    <permission-map name="Access contents information" acquired="False">
+      <permission-role>ClientGuest</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>Manager</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+    <!-- Roles needed to add contents inside patients.
+         Not needed at the moment, but we use the default roles -->
+    <permission-map name="Add portal content" acquired="False">
+      <permission-role>LabClerk</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>Manager</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+    <!-- Never allow to delete contents -->
+    <permission-map name="Delete objects" acquired="False">
+    </permission-map>
+    <!-- Roles needed to list contents in patients.
+         Not needed at the moment, but we use the default roles -->
+    <permission-map name="List folder contents" acquired="False">
+      <permission-role>ClientGuest</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>Manager</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+    <!-- We allow the Owner role here to edit client local patients, but not the
+         `ClientGuest` to edit shared patients! -->
     <permission-map name="Modify portal content" acquired="False">
       <permission-role>LabClerk</permission-role>
       <permission-role>LabManager</permission-role>
       <permission-role>Manager</permission-role>
       <permission-role>Owner</permission-role>
     </permission-map>
+    <!-- We allow the `Owner` role to view patients, to allow client contacts to
+         see "client local" patients.
+
+         We also allow the `ClientGuest` role to view patients, if e.g. a lab
+         manager creates a sample with a patient referenced from the global
+         patients folder.
+         This allows to view the patient when clicked on the link inside the
+         samples listing w/o getting insufficient privileges
+    -->
     <permission-map name="View" acquired="False">
       <permission-role>ClientGuest</permission-role>
       <permission-role>LabClerk</permission-role>
@@ -45,6 +91,8 @@
       <permission-role>Manager</permission-role>
       <permission-role>Owner</permission-role>
     </permission-map>
+
+    <!-- Custom field permissions (Use default roles from rolemap) -->
     <permission-map name="senaite.patient: Field: Edit MRN" acquired="True" />
     <permission-map name="senaite.patient: Field: Edit ID" acquired="True" />
     <permission-map name="senaite.patient: Field: Edit Fullname" acquired="True" />
@@ -65,7 +113,44 @@
     <!-- /TRANSITIONS -->
 
     <!-- MANAGED PERMISSIONS -->
-    <permission-map name="Modify portal content" acquired="False" />
+    <!-- This permission governs if a patient should appear in searches
+         NOTE: We add `ClientGuest` role here for shared patients, so that they
+               appear in the reference widget
+    -->
+    <permission-map name="Access contents information" acquired="False">
+      <permission-role>ClientGuest</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>Manager</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+    <!-- No longer allow to add contents to a deactivated patient -->
+    <permission-map name="Add portal content" acquired="False">
+    </permission-map>
+    <!-- Never allow to delete contents -->
+    <permission-map name="Delete objects" acquired="False">
+    </permission-map>
+    <!-- Roles needed to list contents in deactivated patients.
+         Not needed at the moment, but we use the default roles -->
+    <permission-map name="List folder contents" acquired="False">
+      <permission-role>ClientGuest</permission-role>
+      <permission-role>LabClerk</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>Manager</permission-role>
+      <permission-role>Owner</permission-role>
+    </permission-map>
+    <!-- Do not allow to edit deactivated patients -->
+    <permission-map name="Modify portal content" acquired="False">
+    </permission-map>
+    <!-- We allow the `Owner` role to view patients, to allow client contacts to
+         see "client local" patients.
+
+         We also allow the `ClientGuest` role to view patients, if e.g. a lab
+         manager creates a sample with a patient referenced from the global
+         patients folder.
+         This allows to view the patient when clicked on the link inside the
+         samples listing w/o getting insufficient privileges
+    -->
     <permission-map name="View" acquired="False">
       <permission-role>ClientGuest</permission-role>
       <permission-role>LabClerk</permission-role>
@@ -73,6 +158,8 @@
       <permission-role>Manager</permission-role>
       <permission-role>Owner</permission-role>
     </permission-map>
+
+    <!-- Disallow to edit fields -->
     <permission-map name="senaite.patient: Field: Edit MRN" acquired="False" />
     <permission-map name="senaite.patient: Field: Edit ID" acquired="False" />
     <permission-map name="senaite.patient: Field: Edit Fullname" acquired="False" />

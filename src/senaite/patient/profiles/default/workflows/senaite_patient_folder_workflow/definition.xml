@@ -36,9 +36,12 @@
       <permission-role>LabManager</permission-role>
       <permission-role>Manager</permission-role>
     </permission-map>
-    <!-- Inherit the default add permissions to allow add-ons to create other
-         contents besides patients w/o the need to change permissions. -->
-    <permission-map name="Add portal content" acquired="True">
+    <!-- Roles needed to add other contents inside the patients folder.
+         Not needed at the moment, but we use the default roles -->
+    <permission-map name="Add portal content" acquired="False">
+      <permission-role>LabClerk</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>Manager</permission-role>
     </permission-map>
     <!-- Roles that are needed to create a new Patient -->
     <permission-map name="senaite.patient: Add Patient" acquired="False">
@@ -46,7 +49,7 @@
       <permission-role>LabManager</permission-role>
       <permission-role>Manager</permission-role>
     </permission-map>
-    <!-- Do not allow to delete patients (or other contents) of this folder -->
+    <!-- Never allow to delete contents -->
     <permission-map name="Delete objects" acquired="False">
     </permission-map>
     <!-- Roles needed to list all patients -->
