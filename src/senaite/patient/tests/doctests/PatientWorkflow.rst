@@ -155,6 +155,52 @@ Allowed transitions:
    >>> getAllowedTransitions(patient)
    ['deactivate']
 
+
+Default permissions in **active** state:
+
+The following roles can `Access contents information` of patients, e.g. to see
+the results in the reference widget:
+
+    >>> get_roles_for_permission(AccessContentsInformation, patient)
+    ['ClientGuest', 'LabClerk', 'LabManager', 'Manager', 'Owner']
+
+The `AddPortalContent` permission governs wether it is allowed to add contents
+inside a patient.
+
+Although it is not used currently, we use the default permissions including the
+`Owner` for client-local patients:
+
+    >>> get_roles_for_permission(AddPortalContent, patient)
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
+
+The `DeleteObjects` permission governs wether it is allowed to removed contents
+inside a patient. We (almost) never allow this:
+
+    >>> get_roles_for_permission(DeleteObjects, patient)
+    []
+
+The `ListFolderContents` permission governs wether it is allowed list contents
+inside patients.
+
+Although it is not used currently, we use the default roles including the
+`Owner` for client-local and `ClientGuest` for shared patients:
+
+    >>> get_roles_for_permission(ListFolderContents, patient)
+    ['ClientGuest', 'LabClerk', 'LabManager', 'Manager', 'Owner']
+
+The `ModifyPortalContent` permission governs wether it is allowed to edit a patient.
+Note that we do not allow this for `ClientGuest` role, because we do not want that
+shared patients can be edited from basically client contacts:
+
+    >>> get_roles_for_permission(ModifyPortalContent, patient)
+    ['LabClerk', 'LabManager', 'Manager', 'Owner']
+
+The `View` permission governs if the patient can be viewed:
+
+    >>> get_roles_for_permission(View, patient)
+    ['ClientGuest', 'LabClerk', 'LabManager', 'Manager', 'Owner']
+
+
 Field permission in **active** state:
 
     >>> from senaite.patient.permissions import FieldEditMRN
@@ -186,6 +232,40 @@ Deactivating the patient
     >>> transitioned = do_action_for(patient, "deactivate")
     >>> api.get_workflow_status_of(patient)
     'inactive'
+
+
+Default permissions in **inactive** state:
+
+Accessing the patient is possible for the same roles:
+
+    >>> get_roles_for_permission(AccessContentsInformation, patient)
+    ['ClientGuest', 'LabClerk', 'LabManager', 'Manager', 'Owner']
+
+It should be no longer possible to add contents to a deactivated patient:
+
+    >>> get_roles_for_permission(AddPortalContent, patient)
+    []
+
+Deleting contents is not allowed:
+
+    >>> get_roles_for_permission(DeleteObjects, patient)
+    []
+
+Inactive clients should be still listed for the same roles:
+
+    >>> get_roles_for_permission(ListFolderContents, patient)
+    ['ClientGuest', 'LabClerk', 'LabManager', 'Manager', 'Owner']
+
+No modifications are allowed for inactive patients:
+
+    >>> get_roles_for_permission(ModifyPortalContent, patient)
+    []
+
+Viewing an inactive client is still possible for the same roles
+
+    >>> get_roles_for_permission(View, patient)
+    ['ClientGuest', 'LabClerk', 'LabManager', 'Manager', 'Owner']
+
 
 Field permission in **inactive** state:
 
