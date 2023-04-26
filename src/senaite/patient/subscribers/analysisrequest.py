@@ -93,6 +93,7 @@ def update_patient(instance):
     if mrn is None:
         return
     patient = patient_api.get_patient_by_mrn(mrn, include_inactive=True)
+    # Create a new patient
     if patient is None:
         if patient_api.is_patient_allowed_in_client():
             # create the patient in the client
@@ -107,7 +108,6 @@ def update_patient(instance):
                             api.user.get_user_id(), api.get_path(container)))
             # make the MRN temporary
             # XXX: Refactor logic from Widget -> Field/DataManager
-
             mrn_field = instance.getField("MedicalRecordNumber")
             mrn = dict(mrn_field.get(instance))
             mrn["temporary"] = True
