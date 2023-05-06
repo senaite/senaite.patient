@@ -29,4 +29,10 @@
       handler=".patient.on_before_transition"
       />
 
+  <subscriber
+      for="senaite.patient.browser.controlpanel.IPatientControlPanel
+           zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+      handler=".controlpanel.on_patient_settings_changed"
+      />
+
 </configure>

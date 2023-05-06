@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser">
+
+  <!-- Patients View -->
+  <browser:page
+      name="patients"
+      for="bika.lims.interfaces.IClient"
+      class=".patients.PatientsView"
+      permission="zope2.View"
+      />
+
+</configure>

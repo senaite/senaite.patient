@@ -19,16 +19,31 @@
 # Some rights reserved, see README and LICENSE.
 
 import re
+from datetime import datetime
+
 from bika.lims import api
 from bika.lims.utils import tmpID
+from dateutil.relativedelta import relativedelta
 from senaite.patient.config import PATIENT_CATALOG
 from zope.component import getUtility
 from zope.component.interfaces import IFactory
 from zope.event import notify
 from zope.lifecycleevent import ObjectCreatedEvent
-from dateutil.relativedelta import relativedelta
-from datetime import datetime
 
+CLIENT_TYPE = "Client"
+PATIENT_TYPE = "Patient"
+CLIENT_VIEW_ID = "patients"
+CLIENT_VIEW_ACTION = {
+    "id": CLIENT_VIEW_ID,
+    "name": "Patients",
+    "action": "string:${object_url}/patients",
+    "permission": "View",
+    "category": "object",
+    "visible": True,
+    "icon_expr": "",
+    "link_target": "",
+    "condition": "",
+}
 
 _marker = object()
 
@@ -277,3 +292,44 @@ def to_identifier_type_name(identifier_type_key):
         name = record.get("value")
 
     return name
+
+
+def allow_patients_in_clients(allow=True):
+    """Allow patient creation in patients
+    """
+    pt = api.get_tool("portal_types")
+    # get the Client Type Info
+    ti = pt.getTypeInfo(CLIENT_TYPE)
+    # get the Client FTI
+    fti = pt.get(CLIENT_TYPE)
+    # get the current allowed types
+    allowed_types = set(fti.allowed_content_types)
+    # get the current actions
+    action_ids = map(lambda a: a.id, ti._actions)
+
+    # Enable / Disable Patient
+    if allow:
+        allowed_types.add(PATIENT_TYPE)
+        if CLIENT_VIEW_ID not in action_ids:
+            ti.addAction(**CLIENT_VIEW_ACTION)
+            # move before contacts
+            ref_index = action_ids.index("contacts")
+            actions = ti._cloneActions()
+            action = actions.pop()
+            actions.insert(ref_index - 1, action)
+            ti._actions = tuple(actions)
+    else:
+        allowed_types.discard(PATIENT_TYPE)
+        if CLIENT_VIEW_ID in action_ids:
+            ti.deleteActions([action_ids.index(CLIENT_VIEW_ID)])
+
+    # set the new types
+    fti.allowed_content_types = tuple(allowed_types)
+
+
+def is_patient_allowed_in_client():
+    """Returns wether patients can be created in clients or not
+    """
+    allowed = api.get_registry_record(
+        "senaite.patient.allow_patients_in_clients", False)
+    return allowed

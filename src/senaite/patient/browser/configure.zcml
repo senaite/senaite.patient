@@ -5,6 +5,7 @@
     i18n_domain="senaite.patient">
 
   <!-- Package includes -->
+  <include package=".client"/>
   <include package=".patient"/>
   <include package=".theme"/>
   <include package=".viewlets"/>
