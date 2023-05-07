@@ -22,11 +22,14 @@ import transaction
 import unittest2 as unittest
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import TEST_USER_ID
+from plone.app.testing import TEST_USER_NAME
+from plone.app.testing import TEST_USER_PASSWORD
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import setRoles
 from plone.testing import zope
+from plone.testing.z2 import Browser
 
 
 class SimpleTestLayer(PloneSandboxLayer):
@@ -38,11 +41,11 @@ class SimpleTestLayer(PloneSandboxLayer):
         super(SimpleTestLayer, self).setUpZope(app, configurationContext)
 
         import bika.lims
-        import senaite.lims
-        import senaite.core
         import senaite.app.listing
-        import senaite.impress
         import senaite.app.spotlight
+        import senaite.core
+        import senaite.impress
+        import senaite.lims
         import senaite.patient
 
         # Load ZCML
@@ -91,6 +94,23 @@ class SimpleTestCase(unittest.TestCase):
         self.request = self.layer["request"]
         self.request["ACTUAL_URL"] = self.portal.absolute_url()
         setRoles(self.portal, TEST_USER_ID, ["LabManager", "Manager"])
+
+    def getBrowser(self,
+                   username=TEST_USER_NAME,
+                   password=TEST_USER_PASSWORD,
+                   loggedIn=True):
+
+        # Instantiate and return a testbrowser for convenience
+        browser = Browser(self.portal)
+        browser.addHeader("Accept-Language", "en-US")
+        browser.handleErrors = False
+        if loggedIn:
+            browser.open(self.portal.absolute_url())
+            browser.getControl("Login Name").value = username
+            browser.getControl("Password").value = password
+            browser.getControl("Log in").click()
+            self.assertTrue("You are now logged in" in browser.contents)
+        return browser
 
 
 class FunctionalTestCase(unittest.TestCase):

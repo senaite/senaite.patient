@@ -19,18 +19,21 @@
 # Some rights reserved, see README and LICENSE.
 
 import transaction
-
 from bika.lims import api
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
 from senaite.patient.api import patient_search
+from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import PRODUCT_NAME
 from senaite.patient.setuphandlers import setup_catalogs
 
 version = "1.4.0"
 profile = "profile-{0}:default".format(PRODUCT_NAME)
+
+PATIENT_WORKFLOW = "senaite_patient_workflow"
+PATIENT_FOLDER_WORKFLOW = "senaite_patient_folder_workflow"
 
 
 @upgradestep(PRODUCT_NAME, version)
@@ -214,3 +217,50 @@ def allow_patients_in_clients(tool):
     setup.runImportStepFromProfile(profile, "plone.app.registry")
 
     logger.info("Allow patients in clients [DONE]")
+
+
+@upgradestep(PRODUCT_NAME, version)
+def update_patient_workflows(tool):
+    """Update patient workflows and security settings
+    """
+    logger.info("Update patient workflows ...")
+
+    # import rolemap, workflow and typeinfo
+    portal = tool.aq_inner.aq_parent
+    setup = portal.portal_setup
+    setup.runImportStepFromProfile(profile, "rolemap")
+    setup.runImportStepFromProfile(profile, "workflow")
+    setup.runImportStepFromProfile(profile, "typeinfo")
+
+    # get patient folder + workflow
+    patientsfolder = portal.patients
+    wf_tool = api.get_tool("portal_workflow")
+    patients_workflow = wf_tool.getWorkflowById(PATIENT_FOLDER_WORKFLOW)
+
+    # update rolemappings + object security for patients folder
+    patients_workflow.updateRoleMappingsFor(patientsfolder)
+    patientsfolder.reindexObject(idxs=["allowedRolesAndUsers"])
+
+    # fetch patients + workflow
+    patients = api.search({"portal_type": "Patient"}, PATIENT_CATALOG)
+    total = len(patients)
+    patient_workflow = wf_tool.getWorkflowById(PATIENT_WORKFLOW)
+
+    for num, patient in enumerate(patients):
+        obj = api.get_object(patient)
+        logger.info("Processing patient %s/%s: %s"
+                    % (num+1, total, obj.Title()))
+
+        # update rolemappings + object security for patient
+        patient_workflow.updateRoleMappingsFor(obj)
+        obj.reindexObject(idxs=["allowedRolesAndUsers"])
+
+        if num and num % 10 == 0:
+            logger.info("Commiting patient %s/%s" % (num+1, total))
+            transaction.commit()
+            logger.info("Commit done")
+
+        # Flush the object from memory
+        obj._p_deactivate()
+
+    logger.info("Update patient workflows [DONE]")

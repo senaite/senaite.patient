@@ -8,77 +8,68 @@
              manager_bypass="False"
              i18n:domain="senaite.patient">
 
-  <!-- PLONE permissions -->
+  <!-- MANAGED PERMISSIONS -->
   <permission>Add portal content</permission>
   <permission>Access contents information</permission>
   <permission>Delete objects</permission>
   <permission>List folder contents</permission>
   <permission>Modify portal content</permission>
   <permission>View</permission>
+  <!-- Custom Add permission to create Patients in this folder
+       Also see `initialize` function in `__init__.py`
+  -->
+  <permission>senaite.patient: Add Patient</permission>
+  <!-- /MANAGED PERMISSIONS -->
 
-  <!-- State: active -->
+
+  <!-- State: active (initial) -->
   <state state_id="active" title="Active" i18n:attributes="title">
+
+    <!-- TRANSITIONS -->
     <exit-transition transition_id="" />
+    <!-- /TRANSITIONS -->
+
+    <!-- PERMISSION MAPPINGS -->
+    <!-- This permission governs if the patients folder should appear in searches -->
     <permission-map name="Access contents information" acquired="False">
-      <!-- All except Anonymous and Client -->
-      <permission-role>Analyst</permission-role>
-      <permission-role>ClientGuest</permission-role>
       <permission-role>LabClerk</permission-role>
       <permission-role>LabManager</permission-role>
-      <permission-role>Preserver</permission-role>
-      <permission-role>RegulatoryInspector</permission-role>
-      <permission-role>Sampler</permission-role>
-      <permission-role>SamplingCoordinator</permission-role>
-      <!-- Plone roles -->
       <permission-role>Manager</permission-role>
-      <permission-role>Owner</permission-role>
-      <permission-role>Site Administrator</permission-role>
     </permission-map>
-    <permission-map name="Delete objects" acquired="False" />
-    <permission-map name="List folder contents" acquired="False">
-      <!-- All except Anonymous and Client -->
-      <permission-role>Analyst</permission-role>
-      <permission-role>ClientGuest</permission-role>
-      <permission-role>LabClerk</permission-role>
-      <permission-role>LabManager</permission-role>
-      <permission-role>Preserver</permission-role>
-      <permission-role>RegulatoryInspector</permission-role>
-      <permission-role>Sampler</permission-role>
-      <permission-role>SamplingCoordinator</permission-role>
-      <!-- Plone roles -->
-      <permission-role>Manager</permission-role>
-      <permission-role>Site Administrator</permission-role>
-    </permission-map>
+    <!-- Roles needed to add other contents inside the patients folder.
+         Not needed at the moment, but we use the default roles -->
     <permission-map name="Add portal content" acquired="False">
-      <permission-role>Client</permission-role>
       <permission-role>LabClerk</permission-role>
       <permission-role>LabManager</permission-role>
-      <!-- Plone roles -->
       <permission-role>Manager</permission-role>
     </permission-map>
+    <!-- Roles that are needed to create a new Patient -->
+    <permission-map name="senaite.patient: Add Patient" acquired="False">
+      <permission-role>LabClerk</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>Manager</permission-role>
+    </permission-map>
+    <!-- Never allow to delete contents -->
+    <permission-map name="Delete objects" acquired="False">
+    </permission-map>
+    <!-- Roles needed to list all patients -->
+    <permission-map name="List folder contents" acquired="False">
+      <permission-role>LabClerk</permission-role>
+      <permission-role>LabManager</permission-role>
+      <permission-role>Manager</permission-role>
+    </permission-map>
+    <!-- Only the Manager can modify the folder -->
     <permission-map name="Modify portal content" acquired="False">
-      <permission-role>LabClerk</permission-role>
-      <permission-role>LabManager</permission-role>
-      <!-- Plone roles -->
       <permission-role>Manager</permission-role>
-      <permission-role>Owner</permission-role>
     </permission-map>
+    <!-- Roles that are needed to see the patients folder / that it appears in
+         the side navigation bar -->
     <permission-map name="View" acquired="False">
-      <!-- All except Anonymous -->
-      <permission-role>Analyst</permission-role>
-      <permission-role>Client</permission-role>
-      <permission-role>ClientGuest</permission-role>
       <permission-role>LabClerk</permission-role>
       <permission-role>LabManager</permission-role>
-      <permission-role>Preserver</permission-role>
-      <permission-role>RegulatoryInspector</permission-role>
-      <permission-role>Sampler</permission-role>
-      <permission-role>SamplingCoordinator</permission-role>
-      <!-- Plone roles -->
       <permission-role>Manager</permission-role>
-      <permission-role>Owner</permission-role>
-      <permission-role>Site Administrator</permission-role>
     </permission-map>
+    <!-- /PERMISSION MAPPINGS -->
   </state>
 
   <variable variable_id="action" for_catalog="False" for_status="True" update_always="True">

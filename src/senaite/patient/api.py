@@ -25,6 +25,7 @@ from bika.lims import api
 from bika.lims.utils import tmpID
 from dateutil.relativedelta import relativedelta
 from senaite.patient.config import PATIENT_CATALOG
+from senaite.patient.permissions import AddPatient
 from zope.component import getUtility
 from zope.component.interfaces import IFactory
 from zope.event import notify
@@ -155,12 +156,15 @@ def create_temporary_patient():
     return patient
 
 
-def store_temporary_patient(patient):
+def store_temporary_patient(container, patient):
     """Store temporary patient to the patients folder
+
+    :param container: The container where the patient should be stored
+    :param patient: A temporary patient object
     """
-    portal = api.get_portal()
-    container = portal.patients
+    # Notify `ObjectCreateEvent` to generate a UID first
     notify(ObjectCreatedEvent(patient))
+    # set the patient in the container
     container._setObject(patient.id, patient)
     patient = container.get(patient.getId())
     return patient
@@ -333,3 +337,22 @@ def is_patient_allowed_in_client():
     allowed = api.get_registry_record(
         "senaite.patient.allow_patients_in_clients", False)
     return allowed
+
+
+def get_patient_folder():
+    """Returns the global patient folder
+
+    :returns: global patients folder
+    """
+    portal = api.get_portal()
+    return portal.patients
+
+
+def is_patient_creation_allowed(container):
+    """Check if the security context allows to add a new patient
+
+    :param container: The container to check the permission
+    :returns: True if it is allowed to create a patient in the container,
+              otherwise False
+    """
+    return api.security.check_permission(AddPatient, container)

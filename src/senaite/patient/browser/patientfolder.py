@@ -30,6 +30,7 @@ from senaite.patient import messageFactory as _sp
 from senaite.patient.api import to_identifier_type_name
 from senaite.patient.api import tuplify_identifiers
 from senaite.patient.catalog import PATIENT_CATALOG
+from senaite.patient.permissions import AddPatient
 
 
 class PatientFolderView(ListingView):
@@ -57,7 +58,7 @@ class PatientFolderView(ListingView):
         self.context_actions = {
             _("Add"): {
                 "url": "++add++Patient",
-                "permission": "Add portal content",
+                "permission": AddPatient,
                 "icon": "++resource++bika.lims.images/add.png"}
             }
 

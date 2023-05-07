@@ -2,6 +2,15 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
+  <!-- 1408: Patients inside clients -->
+  <genericsetup:upgradeStep
+      title="SENAITE PATIENT 1.4.0: Update Patient Workflows"
+      description="Update the patient workflows and permission mappings"
+      source="1407"
+      destination="1408"
+      handler="senaite.patient.upgrade.v01_04_000.update_patient_workflows"
+      profile="senaite.patient:default"/>
+
   <!-- 1407: Patients inside clients -->
   <genericsetup:upgradeStep
       title="SENAITE PATIENT 1.4.0: Allow patients in clients"
