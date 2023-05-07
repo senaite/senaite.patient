@@ -97,7 +97,7 @@ def update_patient(instance):
     if patient is None:
         if patient_api.is_patient_allowed_in_client():
             # create the patient in the client
-            container = patient_api.get_patient_folder()
+            container = instance.getClient()
         else:
             # create the patient in the global patients folder
             container = patient_api.get_patient_folder()
