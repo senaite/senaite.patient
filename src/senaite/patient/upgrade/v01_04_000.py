@@ -219,6 +219,7 @@ def allow_patients_in_clients(tool):
     logger.info("Allow patients in clients [DONE]")
 
 
+@upgradestep(PRODUCT_NAME, version)
 def update_patient_workflows(tool):
     """Update patient workflows and security settings
     """
