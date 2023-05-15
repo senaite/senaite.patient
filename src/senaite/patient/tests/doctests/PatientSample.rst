@@ -152,7 +152,7 @@ stores the values in the registry:
     >>> reg_key = "senaite.patient.identifiers"
     >>> record = api.get_registry_record(reg_key)
     >>> tuplify_identifiers(record)
-    [(u'passport_id', u'Passport ID'), (u'national_id', u'National ID'), (u'driver_id', u'Driver ID'), (u'voter_id', u'Voter ID')]
+    [(u'patient_id', u'Patient ID'), (u'passport_id', u'Passport ID'), (u'national_id', u'National ID'), (u'driver_id', u'Driver ID'), (u'voter_id', u'Voter ID')]
 
 Let's add a passport ID for our patient:
 

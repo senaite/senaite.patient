@@ -18,7 +18,6 @@ class TemporaryIdentifierWidgetController
     # NOTE: custom events fired from QuerySelect widget!
     $("body").on "select", ".TemporaryIdentifier", @on_mrn_selected
     $("body").on "deselect", ".TemporaryIdentifier", @on_mrn_deselected
-    $("body").on "select", "tr[fieldname=PatientID] textarea", @on_patient_id_selected
 
     return @
 
@@ -47,9 +46,6 @@ class TemporaryIdentifierWidgetController
       input_field = field.querySelector("textarea")
       @native_set_value input_field, ""
 
-      # reset Patient ID
-      @set_sibling_value field, "PatientID", ""
-
 
   ###
    * Set all patient related fields
@@ -64,7 +60,6 @@ class TemporaryIdentifierWidgetController
       "Age": "",
       "Sex": "",
       "Gender": "",
-      "PatientID": "",
     }
     record = Object.assign(record, data)
 
@@ -146,52 +141,6 @@ class TemporaryIdentifierWidgetController
         "Age": data.age,
         "Sex": data.sex,
         "Gender": data.gender,
-        "PatientID": data.patient_id,
-        "review_state": data.review_state,
-      }
-
-      @set_patient_data el, record
-
-
-  ###
-   * Existing Patient ID selected or new entered
-  ###
-  on_patient_id_selected: (event) =>
-    @debug "°°° TemporaryIdentifierWidget::on_patient_id_selected °°°"
-
-    el = event.currentTarget
-    patient_id = event.detail.value
-
-    el = event.currentTarget
-
-    # Search for an existing MRN
-    @search_patient {patient_id:patient_id}
-    .done (data) =>
-      return unless data
-
-      # Generate a physical address line
-      physical_address = data.address[0]
-      address = [
-        physical_address.address,
-        physical_address.zip,
-        physical_address.city,
-        physical_address.country
-      ].filter((value) -> value).join(", ")
-
-      # Write back the physical address line for the template
-      data.address_line = address
-
-      # map patient fields -> Sample fields
-      record = {
-        "MedicalRecordNumber": data.mrn,
-        "PatientFullName.firstname": data.firstname,
-        "PatientFullName.lastname": data.lastname,
-        "PatientAddress": address,
-        "DateOfBirth.dob": @format_date(data.birthdate),
-        "Age": data.age,
-        "Sex": data.sex,
-        "Gender": data.gender,
-        "PatientID": data.patient_id,
         "review_state": data.review_state,
       }
 
@@ -297,7 +246,6 @@ class TemporaryIdentifierWidgetController
     # Fields to include on search results
     fields = [
       "mrn"
-      "patient_id"
       "firstname"
       "lastname"
       "age"

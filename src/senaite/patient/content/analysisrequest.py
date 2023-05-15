@@ -46,10 +46,8 @@ from senaite.patient.permissions import FieldEditAddress
 from senaite.patient.permissions import FieldEditDateOfBirth
 from senaite.patient.permissions import FieldEditFullName
 from senaite.patient.permissions import FieldEditGender
-from senaite.patient.permissions import FieldEditID
 from senaite.patient.permissions import FieldEditMRN
 from senaite.patient.permissions import FieldEditSex
-from senaite.patient.validators import PatientIDValidator
 from senaite.patient.validators import TemporaryIdentifierValidator
 from zope.component import adapts
 from zope.interface import implementer
@@ -93,60 +91,6 @@ MedicalRecordNumberField = TemporaryIdentifierField(
                 "width": "25",
                 "align": "left",
                 "label": _(u"MRN"),
-            }, {
-                "name": "firstname",
-                "width": "25",
-                "align": "left",
-                "label": _(u"Firstname"),
-            }, {
-                "name": "middlename",
-                "width": "25",
-                "align": "left",
-                "label": _(u"Middlename"),
-            }, {
-                "name": "lastname",
-                "width": "25",
-                "align": "left",
-                "label": _(u"Lastname"),
-            },
-        ],
-        limit=3,
-    )
-)
-
-PatientIDField = ExtStringField(
-    "PatientID",
-    validators=(PatientIDValidator(), ),
-    read_permission=View,
-    write_permission=FieldEditID,
-    widget=QuerySelectWidget(
-        label=_("Patient ID"),
-        render_own_label=True,
-        visible={
-            "add": "edit",
-            "secondary": "disabled",
-            "header_table": "prominent",
-        },
-        # Queryselect widget
-        catalog=PATIENT_CATALOG,
-        query={
-            "portal_type": "Patient",
-            "is_active": True,
-            "sort_on": "title",
-            "sort_order": "ascending",
-        },
-        search_index="patient_searchable_id",
-        value_key="patient_id",
-        search_wildcard=True,
-        multi_valued=False,
-        allow_user_value=True,
-        hide_input_after_select=False,
-        columns=[
-            {
-                "name": "patient_id",
-                "width": "30",
-                "align": "left",
-                "label": _(u"Patient ID"),
             }, {
                 "name": "firstname",
                 "width": "25",
@@ -264,7 +208,6 @@ class AnalysisRequestSchemaExtender(object):
     def getFields(self):
         return [
             MedicalRecordNumberField,
-            PatientIDField,
             PatientFullNameField,
             PatientAddressField,
             DateOfBirthField,
