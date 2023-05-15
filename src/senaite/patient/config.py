@@ -62,6 +62,7 @@ NAME_ENTRY_MODES = (
 
 
 IDENTIFIERS = (
+    (u"patient_id", _(u"Patient ID")),
     (u"passport_id", _(u"Passport ID")),
     (u"national_id", _(u"National ID")),
     (u"driver_id", _(u"Driver ID")),

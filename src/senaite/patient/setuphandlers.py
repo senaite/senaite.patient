@@ -52,7 +52,6 @@ COLUMNS = [
     (SAMPLE_CATALOG, "isMedicalRecordTemporary"),
     (SAMPLE_CATALOG, "getMedicalRecordNumberValue"),
     (SAMPLE_CATALOG, "getPatientFullName"),
-    (SAMPLE_CATALOG, "getPatientID"),
 ]
 
 NAVTYPES = [

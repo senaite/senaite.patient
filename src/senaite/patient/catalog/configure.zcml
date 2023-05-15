@@ -18,7 +18,6 @@
   <adapter name="patient_birthdate" factory=".indexers.patient_birthdate" />
   <adapter name="patient_fullname" factory=".indexers.patient_fullname" />
   <adapter name="patient_searchable_text" factory=".indexers.patient_searchable_text" />
-  <adapter name="patient_searchable_id" factory=".indexers.patient_searchable_id" />
   <adapter name="patient_searchable_mrn" factory=".indexers.patient_searchable_mrn" />
 
 </configure>

@@ -20,8 +20,6 @@
 
 from string import Template
 
-from six import string_types
-
 from AccessControl import ClassSecurityInfo
 from bika.lims import api
 from bika.lims.api.mail import is_valid_email_address
@@ -49,6 +47,7 @@ from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
 from senaite.patient.config import SEXES
 from senaite.patient.interfaces import IPatient
+from six import string_types
 from z3c.form.interfaces import NO_VALUE
 from zope import schema
 from zope.interface import Invalid
@@ -109,12 +108,6 @@ class IPatientSchema(model.Schema):
         title=_(u"label_patient_mrn", default=u"Medical Record #"),
         description=_(u"Patient Medical Record Number"),
         required=True,
-    )
-
-    patient_id = schema.TextLine(
-        title=_(u"label_patient_id", default=u"ID"),
-        description=_(u"Unique Patient ID"),
-        required=False,
     )
 
     directives.widget(
@@ -331,34 +324,6 @@ class IPatientSchema(model.Schema):
             raise Invalid(_("Patient Medical Record # must be unique"))
 
     @invariant
-    def validate_patient_id(data):
-        """Checks if the patient ID is unique
-        """
-        pid = data.patient_id
-
-        # field is not required
-        if not pid:
-            return
-
-        # https://community.plone.org/t/dexterity-unique-field-validation
-        context = getattr(data, "__context__", None)
-        if context is not None:
-            if context.patient_id == pid:
-                # nothing changed
-                return
-
-        query = {
-            "portal_type": "Patient",
-            "patient_id": pid,
-            "is_active": True,
-        }
-
-        patient = patient_api.patient_search(query)
-
-        if patient:
-            raise Invalid(_("Patient ID must be unique"))
-
-    @invariant
     def validate_email_report(data):
         """Checks if an email is set
         """
@@ -467,30 +432,6 @@ class Patient(Container):
 
         mutator = self.mutator("mrn")
         return mutator(self, api.safe_unicode(value))
-
-    @security.protected(permissions.View)
-    def getPatientID(self):
-        """Returns the Patient ID with the field accessor
-        """
-        accessor = self.accessor("patient_id")
-        value = accessor(self) or ""
-        return value.encode("utf-8")
-
-    @security.protected(permissions.ModifyPortalContent)
-    def setPatientID(self, value):
-        """Set Patient ID by the field accessor
-        """
-        if not isinstance(value, string_types):
-            value = u""
-        if value:
-            value = value.strip()
-            query = {"portal_type": "Patient", "patient_id": value}
-            results = patient_api.patient_search(query)
-            if len(results) > 0:
-                raise ValueError("A patient with that ID already exists!")
-
-        mutator = self.mutator("patient_id")
-        mutator(self, api.safe_unicode(value.strip()))
 
     @security.protected(permissions.View)
     def getIdentifiers(self):

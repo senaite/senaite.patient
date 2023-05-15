@@ -23,7 +23,6 @@ from bika.lims.utils import to_utf8
 from Products.validation import validation
 from Products.validation.interfaces.IValidator import IValidator
 from senaite.patient import messageFactory as _
-from senaite.patient.api import patient_search
 from zope.interface import implementer
 
 
@@ -50,41 +49,3 @@ class TemporaryIdentifierValidator(object):
 
 # Register validators
 validation.register(TemporaryIdentifierValidator())
-
-
-@implementer(IValidator)
-class PatientIDValidator(object):
-    """Verifies that the Patient ID is unique
-    """
-    name = "patient_id_validator"
-
-    def __call__(self, value, instance=None, *args, **kwargs):
-        field = kwargs.get("field", None)
-        if not field:
-            return True
-
-        # get the MRN from the request (might have changed as well)
-        request = instance.REQUEST
-        request_mrn = request.form.get("MedicalRecordNumber", {})
-        request_mrn_value = request_mrn.get("value")
-
-        query = {
-            "portal_type": "Patient",
-            "patient_id": api.safe_unicode(value).encode("utf8"),
-            "is_active": True,
-        }
-
-        patients = patient_search(query)
-
-        for patient in patients:
-            if patient.mrn != request_mrn_value:
-                msg = _("ID '%s' is already used for the patient MRN '%s'"
-                        % (value, patient.mrn))
-                ts = api.get_tool("translation_service")
-                return to_utf8(ts.translate(msg))
-
-        return True
-
-
-# Register validators
-validation.register(PatientIDValidator())

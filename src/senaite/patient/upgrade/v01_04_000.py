@@ -20,6 +20,9 @@
 
 import transaction
 from bika.lims import api
+from plone import api as ploneapi
+from senaite.core.api.catalog import del_column
+from senaite.core.api.catalog import del_index
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
@@ -34,6 +37,10 @@ profile = "profile-{0}:default".format(PRODUCT_NAME)
 
 PATIENT_WORKFLOW = "senaite_patient_workflow"
 PATIENT_FOLDER_WORKFLOW = "senaite_patient_folder_workflow"
+PATIENT_ID = "patient_id"
+IDENTIFIERS = "senaite.patient.identifiers"
+
+_marker = object()
 
 
 @upgradestep(PRODUCT_NAME, version)
@@ -264,3 +271,76 @@ def update_patient_workflows(tool):
         obj._p_deactivate()
 
     logger.info("Update patient workflows [DONE]")
+
+
+@upgradestep(PRODUCT_NAME, version)
+def migrate_patient_id_to_identifiers(tool):
+    """Migrate Patient ID field to indentifiers
+    """
+    logger.info("Migrate patient ID to identifiers ...")
+
+    # ensure PATIENT ID is in controlpanel records
+    records = ploneapi.portal.get_registry_record(IDENTIFIERS, default=[])
+    identifier_ids = map(lambda r: r.get("key"), records)
+    if PATIENT_ID not in identifier_ids:
+        records.append({
+            "key": u"patient_id",
+            "value": u"Patient ID",
+        })
+    ploneapi.portal.set_registry_record(IDENTIFIERS, value=records)
+
+    query = {"portal_type": "Patient"}
+    brains = api.search(query, PATIENT_CATALOG)
+    total = len(brains)
+
+    for num, brain in enumerate(brains):
+        obj = api.get_object(brain)
+        logger.info("Processing patient %s/%s: %s"
+                    % (num+1, total, obj.getId()))
+
+        value = getattr(obj, PATIENT_ID, _marker)
+        if value is _marker:
+            continue
+
+        if api.is_string(value):
+            patient_id = value
+        elif isinstance(value, list):
+            if len(filter(None, value)) > 0:
+                patient_id = value[0]
+        else:
+            patient_id = ""
+
+        delattr(obj, PATIENT_ID)
+
+        if not patient_id:
+            continue
+
+        # patient ID already set
+        if PATIENT_ID in obj.get_identifier_ids():
+            continue
+
+        # set Patient ID to identifiers
+        identifiers = obj.get_identifier_items()
+        identifiers.append({"key": PATIENT_ID, "value": patient_id})
+        obj.setIdentifiers(identifiers)
+
+        logger.info("Migrated Patient ID %s to identifiers" % patient_id)
+
+    logger.info("Migrate patient ID to identifiers [DONE]")
+
+
+@upgradestep(PRODUCT_NAME, version)
+def remove_stale_patient_id_catalog_entries(tool):
+    """Remove stale Patient ID catalog entries
+    """
+    logger.info("Remove stale Patient ID catalog entries ...")
+
+    # Patient Catalog
+    del_index(PATIENT_CATALOG, "patient_id")
+    del_index(PATIENT_CATALOG, "patient_searchable_id")
+    del_column(PATIENT_CATALOG, "patient_id")
+
+    # Sample Catalog
+    del_column(SAMPLE_CATALOG, "getPatientID")
+
+    logger.info("Remove stale Patient ID catalog entries [DONE]")
