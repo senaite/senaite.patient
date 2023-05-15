@@ -321,6 +321,10 @@ class IPatientSchema(model.Schema):
                 # nothing changed
                 return
 
+        if not patient_api.is_patient_required():
+            # MRN is not a required field
+            return
+
         if not data.mrn:
             raise Invalid(_("Patient Medical Record is missing or empty"))
 
