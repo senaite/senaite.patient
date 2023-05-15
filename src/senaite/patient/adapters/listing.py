@@ -50,12 +50,6 @@ ADD_STATUSES = [{
 
 # Columns to add
 ADD_COLUMNS = [
-    ("PatientID", {
-        "title": _("Patient ID"),
-        "sortable": False,
-        "index": "patient_id",
-        "after": "getId",
-    }),
     ("Patient", {
         "title": _("Patient"),
         "sortable": False,
@@ -113,11 +107,9 @@ class SamplesListingAdapter(object):
 
         sample_patient_mrn = obj.getMedicalRecordNumberValue
         sample_patient_fullname = obj.getPatientFullName
-        sample_patient_id = obj.getPatientID
 
         item["MRN"] = sample_patient_mrn
         item["Patient"] = sample_patient_fullname
-        item["PatientID"] = sample_patient_id
 
         # get the patient object
         patient = self.get_patient_by_mrn(sample_patient_mrn)
@@ -130,12 +122,8 @@ class SamplesListingAdapter(object):
         if sample_patient_mrn:
             item["replace"]["MRN"] = get_link(
                 patient_url, sample_patient_mrn)
-        if sample_patient_id:
-            item["replace"]["PatientID"] = get_link(
-                patient_url, sample_patient_id)
 
         patient_mrn = patient.getMRN()
-        patient_id = patient.getPatientID()
         patient_fullname = patient.getFullname()
 
         # patient MRN is different
@@ -150,12 +138,6 @@ class SamplesListingAdapter(object):
             val = api.safe_unicode(patient_fullname) or _("<no value>")
             icon_args = {"width": 16, "title": api.to_utf8(msg % val)}
             item["after"]["Patient"] = self.icon_tag("info", **icon_args)
-
-        if sample_patient_id != patient_id:
-            msg = _("Patient ID of sample is not equal to %s")
-            val = api.safe_unicode(patient_id) or _("<no value>")
-            icon_args = {"width": 16, "title": api.to_utf8(msg % val)}
-            item["after"]["PatientID"] = self.icon_tag("info", **icon_args)
 
     @viewcache
     def get_patient_by_mrn(self, mrn):

@@ -74,9 +74,6 @@ class PatientFolderView(ListingView):
             ("mrn", {
                 "title": _("Medical Record #"),
                 "index": "patient_mrn"}),
-            ("patient_id", {
-                "title": _("Patient ID"),
-                "index": "patient_id"}),
             ("identifiers", {
                 "title": _("Identifiers"), }),
             ("fullname", {
@@ -163,14 +160,6 @@ class PatientFolderView(ListingView):
             item["mrn"] = mrn
             item["replace"]["mrn"] = get_link(
                 url, value=mrn)
-
-        # Patient ID
-        pid = obj.getPatientID()
-        if pid:
-            pid = api.safe_unicode(pid).encode("utf8")
-            item["patient_id"] = pid
-            item["replace"]["patient_id"] = get_link(
-                url, value=pid)
 
         # Patient Identifiers
         identifiers = obj.getIdentifiers()

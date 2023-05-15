@@ -2,6 +2,24 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
+  <!-- 1410: Remove stale patient ID entries-->
+  <genericsetup:upgradeStep
+      title="SENAITE PATIENT 1.4.0: Remove stale patient ID catalog entries"
+      description="Remove all Patient ID related catalog entries"
+      source="1409"
+      destination="1410"
+      handler="senaite.patient.upgrade.v01_04_000.remove_stale_patient_id_catalog_entries"
+      profile="senaite.patient:default"/>
+
+  <!-- 1409: Migrate Patient ID to Identifiers -->
+  <genericsetup:upgradeStep
+      title="SENAITE PATIENT 1.4.0: Migrate Patient ID to identifiers"
+      description="Remove Patient ID field and move existing values to identifiers"
+      source="1408"
+      destination="1409"
+      handler="senaite.patient.upgrade.v01_04_000.migrate_patient_id_to_identifiers"
+      profile="senaite.patient:default"/>
+
   <!-- 1408: Patients inside clients -->
   <genericsetup:upgradeStep
       title="SENAITE PATIENT 1.4.0: Update Patient Workflows"
