@@ -321,8 +321,8 @@ def migrate_patient_id_to_identifiers(tool):
 
         # set Patient ID to identifiers
         identifiers = obj.get_identifier_items()
-        identifiers.append({"key": PATIENT_ID, "value": patient_id})
-        obj.setIdentifiers(identifiers)
+        identifiers.append((PATIENT_ID, patient_id),)
+        obj.setIdentifiers(dict(identifiers))
 
         logger.info("Migrated Patient ID %s to identifiers" % patient_id)
 
