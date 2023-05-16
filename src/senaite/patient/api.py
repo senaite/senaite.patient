@@ -19,6 +19,7 @@
 # Some rights reserved, see README and LICENSE.
 
 import re
+from bika.lims import deprecated
 from datetime import datetime
 
 from bika.lims import api
@@ -187,6 +188,7 @@ def update_patient(patient, **values):
     patient.reindexObject()
 
 
+@deprecated("Us senaite.core.api.dtime.to_dt instead")
 def to_datetime(date_value, default=None, tzinfo=None):
     if isinstance(date_value, datetime):
         return date_value
@@ -256,7 +258,7 @@ def get_birth_date(age_ymd, on_date=None, default=_marker):
             raise AttributeError("No valid ymd: {}".format(age_ymd))
         return default
 
-    on_date = to_datetime(on_date, default=datetime.now())
+    on_date = dtime.to_dt(on_date) or datetime.now()
     dob = on_date - relativedelta(years=years, months=months, days=days)
     return dob
 
@@ -268,20 +270,12 @@ def get_age_ymd(birth_date, on_date=None):
     return to_ymd(delta)
 
 
+@deprecated("Use senaite.core.api.dtime.get_relative_delta instead")
 def get_relative_delta(from_date, to_date=None):
     """Returns the relative delta between two dates. If to_date is None,
     compares the from_date with now
     """
-    from_date = to_datetime(from_date)
-    if not from_date:
-        raise TypeError("Type not supported: from_date")
-
-    to_date = to_date or datetime.now()
-    to_date = to_datetime(to_date)
-    if not to_date:
-        raise TypeError("Type not supported: to_date")
-
-    return relativedelta(to_date, from_date)
+    return dtime.get_relative_delta(from_date, to_date)
 
 
 def tuplify_identifiers(identifiers):
