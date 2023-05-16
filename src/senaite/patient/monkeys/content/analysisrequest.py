@@ -19,7 +19,6 @@
 # Some rights reserved, see README and LICENSE.
 
 from senaite.patient import check_installed
-from senaite.patient.api import get_age_ymd
 
 
 @check_installed(False)
