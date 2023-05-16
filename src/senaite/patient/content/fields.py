@@ -175,33 +175,22 @@ class AgeDateOfBirthField(ExtensionField, ObjectField):
         val = (dob, from_age, estimated) if dob else self.getDefault(instance)
         super(AgeDateOfBirthField, self).set(instance, val)
 
-    def get(self, instance, **kwargs):
-        val = super(AgeDateOfBirthField, self).get(instance, **kwargs)
-        if dtime.is_date(val):
-            dob = dtime.to_dt(val)
-            return (
-                dob,
-                getattr(instance, "_AgeDoBWidget_age_selected", False),
-                getattr(instance, "_AgeDoBWidget_dob_estimated", False)
-            )
-        return val
-
     def get_date_of_birth(self, instance):
         """Returns whether the date of birth
         """
         return self.get(instance)[:][0]
 
-    def get_ymd(self, instance):
-        """Returns the age in ymd format at current date
+    def get_age_ymd(self, instance, on_date=None):
+        """Returns the age in ymd format at on_date or current date
         """
-        dob = self.get_date_of_birth(instance)
-        return patient_api.get_age_ymd(dob)
+        age = self.get_age(instance, on_date=on_date)
+        return patient_api.to_ymd(age, default=None)
 
-    def get_age(self, instance):
-        """Returns the age as a relative delta at current date
+    def get_age(self, instance, on_date=None):
+        """Returns the age as a relative delta at on_date or current data
         """
         dob = self.get_date_of_birth(instance)
-        return dtime.get_relative_delta(dob)
+        return dtime.get_relative_delta(dob, on_date)
 
     def get_from_age(self, instance):
         """Returns whether the date of birth is calculated from age

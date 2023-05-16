@@ -85,9 +85,9 @@ def getDateOfBirth(self):  # noqa camelcase
 def getAge(self):  # noqa camelcase
     """Returns the patient's age when the sample was collected
     """
-    dob = self.getDateOfBirth()
+    field = self.getField("DateOfBirth")
     sampled = self.getDateSampled()
-    return get_age_ymd(dob, sampled)
+    return field.get_age_ymd(self, on_date=sampled)
 
 
 @check_installed(None)
