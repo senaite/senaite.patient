@@ -7,6 +7,7 @@ Changelog
 
 - #74 Migrate sample's DateOfBirth field to AgeDateOfBirthField
 - #72 Move Patient ID to identifiers
+- #70 Ensure Require MRN setting is honoured
 - #69 Fix Patient Workflows and Permissions
 - #68 Allow client local patients
 - #66 Fix widget view mode
