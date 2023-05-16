@@ -28,6 +28,11 @@ def on_before_transition(instance, event):
     # we only care when reactivating the patient
     if event.new_state.getId() != "active":
         return
+
+    if not patient_api.is_patient_required():
+        # MRN is not a required field
+        return
+
     mrn = instance.getMRN()
     patient = patient_api.get_patient_by_mrn(mrn, full_object=False)
     if not patient:
