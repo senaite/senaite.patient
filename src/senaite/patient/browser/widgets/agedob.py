@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from AccessControl import ClassSecurityInfo
-from bika.lims import api
+from senaite.core.api import dtime
 from Products.Archetypes.Registry import registerWidget
 from senaite.core.browser.widgets import DateTimeWidget
 from senaite.patient import api as patient_api
@@ -19,53 +19,16 @@ class AgeDoBWidget(DateTimeWidget):
         "macro": "senaite_patient_widgets/agedobwidget",
     })
 
-    def get_age_selected(self, context):
-        name = self.getName()
-        attr = "_%s_age_selected" % name
-        return getattr(context, attr, False)
-
-    def set_age_selected(self, context, value):
-        name = self.getName()
-        attr = "_%s_age_selected" % name
-        setattr(context, attr, bool(value))
-
-    def get_dob_estimated(self, context):
-        name = self.getName()
-        attr = "_%s_dob_estimated" % name
-        return getattr(context, attr, self.get_age_selected(context))
-
-    def set_dob_estimated(self, context, value):
-        name = self.getName()
-        attr = "_%s_dob_estimated" % name
-        setattr(context, attr, bool(value))
-
-    def get_current_age(self, dob):
-        """Returns a dict with keys "years", "months", "days"
-        """
-        if not api.is_date(dob):
-            return {}
-
-        delta = patient_api.get_relative_delta(dob)
-        return {
-            "years": delta.years,
-            "months": delta.months,
-            "days": delta.days,
-        }
-
-    def is_age_supported(self, context):
+    def is_age_supported(self):
         """Returns whether the introduction of age is supported or not
         """
         return patient_api.is_age_supported()
 
-    def is_years_only(self, dob):
+    def is_years_only(self):
         """Returns whether months and days are not displayed when the age is
         greater than one year
         """
-        if not patient_api.is_age_in_years():
-            return False
-        dob = self.get_current_age(dob)
-        years = dob.get("years", 0)
-        return years >= 1
+        return patient_api.is_age_in_years()
 
     def process_form(self, instance, field, form, empty_marker=None,
                      emptyReturnsMarker=False, validating=True):
@@ -79,26 +42,26 @@ class AgeDoBWidget(DateTimeWidget):
         if not value:
             return None, {}
 
-        # handle DateTime object when creating partitions
-        if api.is_date(value):
-            self.set_age_selected(instance, False)
-            return value, {}
+        # We always return a dict suitable for the field
+        output = dict.fromkeys(["dob", "from_age", "estimated"], False)
 
-        # Grab the input for DoB first
-        dob = value.get("dob", "")
-        dob = patient_api.to_datetime(dob)
-        age_selected = value.get("selector") == "age"
+        if dtime.is_date(value):
+            # handle date-like objects directly
+            output["dob"] = dtime.to_dt(value)
+            return output, {}
 
-        # remember what was selected
-        self.set_age_selected(instance, age_selected)
+        elif patient_api.is_ymd(value):
+            # handle age-like inputs directly
+            output["dob"] = patient_api.get_birth_date(value)
+            output["from_age"] = True
+            return output, {}
 
-        # Maybe user entered age instead of DoB
-        if age_selected:
-            # Validate the age entered
+        if value.get("selector") == "age":
+            # Age entered
             ymd = map(lambda p: value.get(p), ["years", "months", "days"])
             if not any(ymd):
                 # No values set
-                return None
+                return None, {}
 
             # Age in ymd format
             ymd = filter(lambda p: p[0], zip(ymd, 'ymd'))
@@ -106,26 +69,31 @@ class AgeDoBWidget(DateTimeWidget):
 
             # Calculate the DoB
             dob = patient_api.get_birth_date(ymd)
+            output["dob"] = dob
+            output["from_age"] = True
 
             # Consider DoB as estimated?
             orig_dob = value.get("original")
-            orig_dob = patient_api.to_datetime(orig_dob)
+            orig_dob = dtime.to_dt(orig_dob)
             if not orig_dob:
                 # First time age is set, assume dob is estimated
-                self.set_dob_estimated(instance, True)
+                output["estimated"] = True
             else:
                 # Do not update estimated unless value changed. Maybe the user
                 # set the DoB at the beginning and now is just viewing the
                 # Age value in edit mode. We do not want the property
                 # "estimated" to change if he/she presses the Save button
                 # without the dob value being changed
-                if orig_dob.strftime("%y%m%d") != dob.strftime("%y%m%d"):
-                    self.set_dob_estimated(instance, True)
-        else:
-            # User entered date of birth, so is not estimated
-            self.set_dob_estimated(instance, False)
+                orig_ansi = dtime.to_ansi(orig_dob, show_time=False)
+                dob_ansi = dob.to_ansi(dob, show_time=False)
+                output["estimated"] = orig_ansi != dob_ansi
 
-        return dob, {}
+        else:
+            # User entered date of birth, not estimated
+            dob = value.get("dob", "")
+            output["dob"] = dtime.to_dt(dob)
+
+        return output, {}
 
 
 registerWidget(AgeDoBWidget, title="AgeDoBWidget")

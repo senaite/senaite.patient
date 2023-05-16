@@ -24,6 +24,7 @@ from datetime import datetime
 from bika.lims import api
 from bika.lims.utils import tmpID
 from dateutil.relativedelta import relativedelta
+from senaite.core.api import dtime
 from senaite.patient.config import PATIENT_CATALOG
 from senaite.patient.permissions import AddPatient
 from zope.component import getUtility
@@ -202,14 +203,18 @@ def to_datetime(date_value, default=None, tzinfo=None):
     return date_value.replace(tzinfo=tzinfo)
 
 
-def to_ymd(delta):
+def to_ymd(val, default=_marker):
     """Returns a representation of a relative delta in ymd format
     """
-    if not isinstance(delta, relativedelta):
-        raise TypeError("delta parameter must be a relative_delta")
+    if not isinstance(val, relativedelta):
+        if is_ymd(val):
+            return val
+        if default is _marker:
+            raise TypeError("delta parameter must be a relative_delta")
+        return default
 
     ymd = list("ymd")
-    diff = map(str, (delta.years, delta.months, delta.days))
+    diff = map(str, (val.years, val.months, val.days))
     age = filter(lambda it: int(it[0]), zip(diff, ymd))
     return " ".join(map("".join, age))
 
@@ -217,27 +222,41 @@ def to_ymd(delta):
 def is_ymd(ymd):
     """Returns whether the string represents a period in ymd format
     """
-    valid = map(lambda p: p in ymd, "ymd")
-    return any(valid)
+    values = get_years_months_days(ymd, default=None)
+    return values is not None
 
 
-def get_birth_date(age_ymd, on_date=None):
+def get_years_months_days(ymd, default=_marker):
+    """Returns a tuple of (years, month, days)
+    """
+    def extract_period(val, period):
+        num = re.findall(r'(\d{1,2})'+period, str(val)) or [0]
+        return api.to_int(num[0], default=0)
+
+    years = extract_period(ymd, "y")
+    months = extract_period(ymd, "m")
+    days = extract_period(ymd, "d")
+    if not any([years, months, days]):
+        if default is _marker:
+            raise AttributeError("No valid ymd: {}".format(ymd))
+        return default
+
+    return years, months, days
+
+
+def get_birth_date(age_ymd, on_date=None, default=_marker):
     """Returns the birth date given an age in ymd format and the date when age
     was recorded or current datetime if None
     """
+    try:
+        ymd = to_ymd(age_ymd)
+        years, months, days = get_years_months_days(ymd)
+    except AttributeError:
+        if default is _marker:
+            raise AttributeError("No valid ymd: {}".format(age_ymd))
+        return default
+
     on_date = to_datetime(on_date, default=datetime.now())
-
-    def extract_period(val, period):
-        num = re.findall(r'(\d{1,2})'+period, val) or [0]
-        return api.to_int(num[0], default=0)
-
-    # Extract the periods
-    years = extract_period(age_ymd, "y")
-    months = extract_period(age_ymd, "m")
-    days = extract_period(age_ymd, "d")
-    if not any([years, months, days]):
-        raise AttributeError("No valid ymd: {}".format(age_ymd))
-
     dob = on_date - relativedelta(years=years, months=months, days=days)
     return dob
 
@@ -245,7 +264,7 @@ def get_birth_date(age_ymd, on_date=None):
 def get_age_ymd(birth_date, on_date=None):
     """Returns the age at on_date if not None. Otherwise, current age
     """
-    delta = get_relative_delta(birth_date, on_date)
+    delta = dtime.get_relative_delta(birth_date, on_date)
     return to_ymd(delta)
 
 

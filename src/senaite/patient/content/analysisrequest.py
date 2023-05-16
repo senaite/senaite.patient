@@ -25,7 +25,6 @@ from bika.lims.browser.widgets import SelectionWidget
 from bika.lims.interfaces import IAnalysisRequest
 from Products.Archetypes.Widget import TextAreaWidget
 from Products.CMFCore.permissions import View
-from senaite.core.browser.widgets import QuerySelectWidget
 from senaite.patient import messageFactory as _
 from senaite.patient.api import get_patient_name_entry_mode
 from senaite.patient.api import is_age_supported
@@ -36,9 +35,9 @@ from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
 from senaite.patient.config import SEXES
-from senaite.patient.content import ExtDateTimeField
 from senaite.patient.content import ExtStringField
 from senaite.patient.content import ExtTextField
+from senaite.patient.content.fields import AgeDateOfBirthField
 from senaite.patient.content.fields import FullnameField
 from senaite.patient.content.fields import TemporaryIdentifierField
 from senaite.patient.interfaces import ISenaitePatientLayer
@@ -142,7 +141,7 @@ PatientAddressField = ExtTextField(
     )
 )
 
-DateOfBirthField = ExtDateTimeField(
+dob_field = AgeDateOfBirthField(
     "DateOfBirth",
     required=False,
     read_permission=View,
@@ -210,7 +209,7 @@ class AnalysisRequestSchemaExtender(object):
             MedicalRecordNumberField,
             PatientFullNameField,
             PatientAddressField,
-            DateOfBirthField,
+            dob_field,
             SexField,
             GenderField,
         ]
