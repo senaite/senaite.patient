@@ -59,15 +59,6 @@ def on_object_created(instance, event):
 def on_object_edited(instance, event):
     """Event handler when a sample was edited
     """
-    # XXX "save" from Sample's header view does not call widget's process_form
-    request = api.get_request()
-    field_name = "DateOfBirth"
-    if field_name in request.form:
-        dob_field = instance.getField(field_name)
-        dob = dob_field.widget.process_form(instance, dob_field, request.form)
-        if dob is not None:
-            dob_field.set(instance, dob[0])
-
     update_patient(instance)
 
 
