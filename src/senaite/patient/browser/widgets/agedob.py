@@ -34,10 +34,6 @@ class AgeDoBWidget(DateTimeWidget):
                      emptyReturnsMarker=False, validating=True):
         value = form.get(field.getName())
 
-        # Not interested in the hidden field, but in the age + dob specific
-        if isinstance(value, (list, tuple)):
-            value = value[0] or None
-
         # Allow non-required fields
         if not value:
             return None, {}
@@ -85,13 +81,14 @@ class AgeDoBWidget(DateTimeWidget):
                 # "estimated" to change if he/she presses the Save button
                 # without the dob value being changed
                 orig_ansi = dtime.to_ansi(orig_dob, show_time=False)
-                dob_ansi = dob.to_ansi(dob, show_time=False)
+                dob_ansi = dtime.to_ansi(dob, show_time=False)
                 output["estimated"] = orig_ansi != dob_ansi
 
         else:
-            # User entered date of birth, not estimated
             dob = value.get("dob", "")
             output["dob"] = dtime.to_dt(dob)
+            output["from_age"] = value.get("from_age", False)
+            output["estimated"] = value.get("estimated", False)
 
         return output, {}
 

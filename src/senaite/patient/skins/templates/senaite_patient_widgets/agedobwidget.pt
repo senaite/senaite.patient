@@ -177,7 +177,7 @@
                  'onchange' is not triggered for hidden fields -->
             <input type="text" style="display:none;visibility:hidden;"
                    tal:attributes="id string:${fieldName}-dob-fallback;
-                         name string:${fieldName};
+                         name string:${fieldName}-dob-fallback:record;
                          value string:${value}"/>
           </div>
         </div>
