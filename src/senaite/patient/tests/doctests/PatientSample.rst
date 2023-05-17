@@ -1,5 +1,5 @@
-Patient Workflow
-----------------
+Patient Sample
+--------------
 
 Running this test from the buildout directory:
 
@@ -22,6 +22,7 @@ Needed Imports:
     >>> from plone.app.testing import TEST_USER_ID
     >>> from plone.app.testing import TEST_USER_PASSWORD
     >>> from bika.lims.api.security import get_roles_for_permission
+    >>> from senaite.core.api import dtime
     >>> from senaite.patient.api import tuplify_identifiers
     >>> from senaite.patient.api import to_identifier_type_name
 
@@ -95,69 +96,68 @@ Get the patient's full name:
     >>> sample.getPatientFullName()
     'Clark Kent'
 
-Get the patient's date of birth:
+Get the patient's date of birth full information:
 
     >>> sample.getDateOfBirth()
-    ('1980-02-25', False, False)
+    (datetime.datetime(1980, 2, 25, 0, 0, tzinfo=<StaticTzInfo 'Etc/GMT'>), False, False)
 
-Get the patient's age when sample was collected:
+Get the patient's age when sample was collected as timedelta:
 
-    >>> field = sample.getAge()
+    >>> sample.getAge()
+    relativedelta(years=+43, months=+2, days=+21, hours=+22)
 
-Directly get the Date of Birth from the field:
+Get the patient's age when the sample was collected in ymd format:
 
-    >>> dob_field = sample.getField("DateOfBirth")
-    >>> dob_field.get_date_of_birth(sample)
-
-Get the age of the patient at current time:
-
-    >>> dob_field.get_age(sample)
-
-Get the age of the patient when sample was collected using the field:
-
-    >>> dob_field.get_age(sample, sample.getDateSampled())
-
-Get the age in ymd of the patient when sample was collected:
-
-    >>> dob_field.get_age_ymd(sample, sample.getDateSampled())
-
-Check whether the date of birth is estimated:
-
-    >>> dob_field.get_estimated()
-    False
-
-Check whether the date of birth was calculated from age:
-
-    >>> dob_field.get_from_age()
-    False
+    >>> sample.getAgeYmd()
+    '43y 2m 21d'
 
 We can manually set a birth date though, in str/datetime/date format:
 
     >>> sample.setDateOfBirth("1980-01-25")
     >>> sample.getDateOfBirth()
-    ('1980-01-25', False, False)
+    (datetime.datetime(1980, 1, 25, 0, 0, tzinfo=<StaticTzInfo 'Etc/GMT'>), False, False)
 
     >>> sample.setDateOfBirth(DateTime("1980-03-25"))
     >>> sample.getDateOfBirth()
-    ('1980-03-25', False, False)
+    (datetime.datetime(1980, 3, 25, 0, 0, tzinfo=<StaticTzInfo 'Etc/GMT'>), False, False)
 
     >>> from datetime import datetime
     >>> sample.setDateOfBirth(datetime(1980, 4, 25))
     >>> sample.getDateOfBirth()
-    ('1980-04-25', False, False)
+    (datetime.datetime(1980, 4, 25, 0, 0), False, False)
 
-    >>> sample.setDateOfBirth(datetime.date(1980, 4, 25))
+    >>> from datetime import date
+    >>> sample.setDateOfBirth(date(1980, 4, 25))
     >>> sample.getDateOfBirth()
-    ('1980-04-25', False, False)
+    (datetime.datetime(1980, 4, 25, 0, 0), False, False)
+
+And system knows the DoB was directly set as a birth date:
+
+    >>> sample.getDateOfBirthFromAge()
+    False
+
+And that is not estimated:
+
+    >>> sample.getDateOfBirthEstimated()
+    False
 
 Or we can simply set the Birth date with age in ymd format. In such case, the
 system recognizes the date of birth was set from age:
 
-    >>> sample.setDateOfBirth("32y5m")
-    >>> sample.getDateOfBirth()
-    ('1980-04-25', True, False)
+    >>> ymd = sample.getAgeYmd()
+    >>> sample.setDateOfBirth(ymd)
+    >>> dob = sample.getDateOfBirth()
+    >>> dtime.to_ansi(dob[0], show_time=False)
+    '19800426'
 
-    >>> dob_field.get_from_age()
+And system knows the DoB was calculated from Age:
+
+    >>> sample.getDateOfBirthFromAge()
+    True
+
+And also knows it is estimated because of the same reason:
+
+    >>> sample.getDateOfBirthEstimated()
     True
 
 Get the patient's sex:

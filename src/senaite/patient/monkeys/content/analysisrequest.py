@@ -93,7 +93,32 @@ def getAge(self):  # noqa camelcase
     """
     field = self.getField("DateOfBirth")
     sampled = self.getDateSampled()
+    return field.get_age(self, on_date=sampled)
+
+
+@check_installed(None)
+def getAgeYmd(self):  # noqa camelcase
+    """Returns the patient's age when the sample was collected in ymd format
+    """
+    field = self.getField("DateOfBirth")
+    sampled = self.getDateSampled()
     return field.get_age_ymd(self, on_date=sampled)
+
+
+@check_installed(None)
+def getDateOfBirthEstimated(self):  # noqa camelcase
+    """Returns whether the date of birth is estimated
+    """
+    field = self.getField("DateOfBirth")
+    return field.get_estimated(self)
+
+
+@check_installed(None)
+def getDateOfBirthFromAge(self):  # noqa camelcase
+    """Returns whether the date of birth was inferred from age
+    """
+    field = self.getField("DateOfBirth")
+    return field.get_from_age(self)
 
 
 @check_installed(None)
