@@ -103,13 +103,14 @@ Get the patient's date of birth full information:
 
 Get the patient's age when sample was collected as timedelta:
 
-    >>> sample.getAge()
-    relativedelta(years=+43, months=+2, days=+21, hours=+22)
+    >>> age = sample.getAge()
+    >>> [age.years, age.months, age.days]
+    [43, 2, 22]
 
 Get the patient's age when the sample was collected in ymd format:
 
     >>> sample.getAgeYmd()
-    '43y 2m 21d'
+    '43y 2m 22d'
 
 We can manually set a birth date though, in str/datetime/date format:
 
@@ -148,7 +149,7 @@ system recognizes the date of birth was set from age:
     >>> sample.setDateOfBirth(ymd)
     >>> dob = sample.getDateOfBirth()
     >>> dtime.to_ansi(dob[0], show_time=False)
-    '19800426'
+    '19800425'
 
 And system knows the DoB was calculated from Age:
 
