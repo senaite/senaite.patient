@@ -81,6 +81,13 @@ def getDateOfBirth(self):  # noqa camelcase
 
 
 @check_installed(None)
+def setDateOfBirth(self, value):  # noqa camelcase
+    """Sets the date of birth or age to sample's patient
+    """
+    return self.getField("DateOfBirth").set(self, value)
+
+
+@check_installed(None)
 def getAge(self):  # noqa camelcase
     """Returns the patient's age when the sample was collected
     """

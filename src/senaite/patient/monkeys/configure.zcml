@@ -51,11 +51,17 @@
 
   <!-- Patient Date of Birth -->
   <monkey:patch
-    description="Patient's date of birth"
+    description="Patient's date of birth or age"
     class="bika.lims.content.analysisrequest.AnalysisRequest"
     original="getDateOfBirth"
     ignoreOriginal="True"
     replacement=".content.analysisrequest.getDateOfBirth" />
+  <monkey:patch
+      description="Patient's date of birth or age"
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="setDateOfBirth"
+      ignoreOriginal="True"
+      replacement=".content.analysisrequest.setDateOfBirth" />
 
   <!-- Patient Age -->
   <monkey:patch
