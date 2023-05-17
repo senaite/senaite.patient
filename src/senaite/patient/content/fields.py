@@ -184,13 +184,19 @@ class AgeDateOfBirthField(ExtensionField, ObjectField):
         """Returns the age in ymd format at on_date or current date
         """
         age = self.get_age(instance, on_date=on_date)
-        return patient_api.to_ymd(age, default=None)
+        try:
+            return patient_api.to_ymd(age, default=None)
+        except TypeError:
+            return None
 
     def get_age(self, instance, on_date=None):
         """Returns the age as a relative delta at on_date or current data
         """
         dob = self.get_date_of_birth(instance)
-        return dtime.get_relative_delta(dob, on_date)
+        try:
+            return dtime.get_relative_delta(dob, on_date)
+        except ValueError:
+            return None
 
     def get_from_age(self, instance):
         """Returns whether the date of birth is calculated from age

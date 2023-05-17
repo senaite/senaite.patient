@@ -212,7 +212,7 @@ def to_ymd(val, default=_marker):
         if is_ymd(val):
             return val
         if default is _marker:
-            raise TypeError("delta parameter must be a relative_delta")
+            raise TypeError("delta parameter must be a relative_delta or ymd")
         return default
 
     ymd = list("ymd")
@@ -266,8 +266,11 @@ def get_birth_date(age_ymd, on_date=None, default=_marker):
 def get_age_ymd(birth_date, on_date=None):
     """Returns the age at on_date if not None. Otherwise, current age
     """
-    delta = dtime.get_relative_delta(birth_date, on_date)
-    return to_ymd(delta)
+    try:
+        delta = dtime.get_relative_delta(birth_date, on_date)
+        return to_ymd(delta)
+    except (ValueError, TypeError):
+        return None
 
 
 @deprecated("Use senaite.core.api.dtime.get_relative_delta instead")
