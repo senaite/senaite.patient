@@ -316,7 +316,8 @@ def update_workflow_state(workflow, status_id, settings):
 
     # Set basic info (title, description, etc.)
     new_status.title = settings.get("title", new_status.title)
-    new_status.description = settings.get("description", new_status.description)
+    description = new_status.description
+    new_status.description = settings.get("description", description)
 
     # Set transitions
     trans = settings.get("transitions", ())
