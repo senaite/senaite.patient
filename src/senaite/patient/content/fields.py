@@ -159,7 +159,10 @@ class AgeDateOfBirthField(ExtensionField, ObjectField):
             if not dob:
                 age = value.get("age")
                 dob = patient_api.get_birth_date(age, default=None)
+                # DoB is inferred from age, so it must be estimated,
+                # regardless of what is coming with the dict
                 from_age = dob is not None
+                estimated = dob is not None
 
         elif dtime.is_date(value):
             dob = dtime.to_dt(value)
@@ -168,8 +171,7 @@ class AgeDateOfBirthField(ExtensionField, ObjectField):
 
         elif patient_api.is_ymd(value):
             dob = patient_api.get_birth_date(value)
-            estimated = is_true(kwargs.get("estimated", False))
-            from_age = True
+            from_age = estimated = True
 
         # store the tuple or default
         val = (dob, from_age, estimated) if dob else self.getDefault(instance)
