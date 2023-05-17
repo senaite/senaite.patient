@@ -97,8 +97,68 @@ Get the patient's full name:
 
 Get the patient's date of birth:
 
-    >>> sample.getDateOfBirth().strftime("%Y-%m-%d")
-    '1980-02-25'
+    >>> sample.getDateOfBirth()
+    ('1980-02-25', False, False)
+
+Get the patient's age when sample was collected:
+
+    >>> field = sample.getAge()
+
+Directly get the Date of Birth from the field:
+
+    >>> dob_field = sample.getField("DateOfBirth")
+    >>> dob_field.get_date_of_birth(sample)
+
+Get the age of the patient at current time:
+
+    >>> dob_field.get_age(sample)
+
+Get the age of the patient when sample was collected using the field:
+
+    >>> dob_field.get_age(sample, sample.getDateSampled())
+
+Get the age in ymd of the patient when sample was collected:
+
+    >>> dob_field.get_age_ymd(sample, sample.getDateSampled())
+
+Check whether the date of birth is estimated:
+
+    >>> dob_field.get_estimated()
+    False
+
+Check whether the date of birth was calculated from age:
+
+    >>> dob_field.get_from_age()
+    False
+
+We can manually set a birth date though, in str/datetime/date format:
+
+    >>> sample.setDateOfBirth("1980-01-25")
+    >>> sample.getDateOfBirth()
+    ('1980-01-25', False, False)
+
+    >>> sample.setDateOfBirth(DateTime("1980-03-25"))
+    >>> sample.getDateOfBirth()
+    ('1980-03-25', False, False)
+
+    >>> from datetime import datetime
+    >>> sample.setDateOfBirth(datetime(1980, 4, 25))
+    >>> sample.getDateOfBirth()
+    ('1980-04-25', False, False)
+
+    >>> sample.setDateOfBirth(datetime.date(1980, 4, 25))
+    >>> sample.getDateOfBirth()
+    ('1980-04-25', False, False)
+
+Or we can simply set the Birth date with age in ymd format. In such case, the
+system recognizes the date of birth was set from age:
+
+    >>> sample.setDateOfBirth("32y5m")
+    >>> sample.getDateOfBirth()
+    ('1980-04-25', True, False)
+
+    >>> dob_field.get_from_age()
+    True
 
 Get the patient's sex:
 
