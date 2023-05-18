@@ -228,22 +228,22 @@ def is_ymd(ymd):
     return values is not None
 
 
-def get_years_months_days(ymd, default=_marker):
-    """Returns a tuple of (years, month, days)
+def get_years_months_days(ymd):
+    """Returns a tuple of (years, months, days) given a period in ymd format.
+
+    Returns (0, 0, 0) if not possible to extract the years, months and days
+    from the given ymd.
+
+    :param ymd: period in ymd format
+    :type ymd: str
+    :returns: a tuple with the years, months and days
+    :rtype: tuple
     """
     def extract_period(val, period):
         num = re.findall(r'(\d{1,2})'+period, str(val)) or [0]
         return api.to_int(num[0], default=0)
 
-    years = extract_period(ymd, "y")
-    months = extract_period(ymd, "m")
-    days = extract_period(ymd, "d")
-    if not any([years, months, days]):
-        if default is _marker:
-            raise AttributeError("No valid ymd: {}".format(ymd))
-        return default
-
-    return years, months, days
+    return tuple([extract_period(ymd, part) for part in "ymd"])
 
 
 def get_birth_date(age_ymd, on_date=None, default=_marker):
