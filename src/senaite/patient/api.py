@@ -188,7 +188,7 @@ def update_patient(patient, **values):
     patient.reindexObject()
 
 
-@deprecated("Us senaite.core.api.dtime.to_dt instead")
+@deprecated("Use senaite.core.api.dtime.to_dt instead")
 def to_datetime(date_value, default=None, tzinfo=None):
     if isinstance(date_value, datetime):
         return date_value
