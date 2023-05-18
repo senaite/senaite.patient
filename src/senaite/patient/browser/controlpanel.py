@@ -258,10 +258,10 @@ class IPatientControlPanel(Interface):
     age_supported = schema.Bool(
         title=_(u"Age introduction"),
         description=_(
-            u"If selected, a control for the introduction of either the age or "
-            u"date of birth will be displayed in Sample registration form and "
-            u"view. Otherwise, only the control for the introduction of the "
-            u"date of birth will be displayed"
+            u"If selected, a control for the introduction of either the age "
+            u"or date of birth will be displayed in Sample registration form "
+            u"and view. Otherwise, only the control for the introduction of "
+            u"the date of birth will be displayed"
         ),
         required=False,
         default=True,
