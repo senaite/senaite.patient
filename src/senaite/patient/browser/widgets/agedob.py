@@ -60,8 +60,7 @@ class AgeDoBWidget(DateTimeWidget):
                 return None, {}
 
             # Age in ymd format
-            ymd = filter(lambda p: p[0], zip(ymd, 'ymd'))
-            ymd = "".join(map(lambda p: "".join(p), ymd))
+            ymd = patient_api.to_ymd(ymd)
 
             # Calculate the DoB
             dob = patient_api.get_birth_date(ymd)

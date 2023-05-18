@@ -259,12 +259,18 @@ def get_years_months_days(period):
     from the given period.
 
     :param period: period of time
-    :type period: str/relativedelta
+    :type period: str/relativedelta/tuple/list
     :returns: a tuple with the years, months and days
     :rtype: tuple
     """
     if isinstance(period, relativedelta):
         return period.years, period.months, period.days
+
+    if isinstance(period, (tuple, list)):
+        years = api.to_int(period[0], default=0)
+        months = api.to_int(period[1] if len(period) > 1 else 0, default=0)
+        days = api.to_int(period[2] if len(period) > 2 else 0, default=0)
+        return years, months, days
 
     if not isinstance(period, string_types):
         raise TypeError("{} is not supported".format(repr(period)))
