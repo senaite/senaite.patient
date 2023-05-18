@@ -21,10 +21,12 @@
 import transaction
 from bika.lims import api
 from plone import api as ploneapi
+from senaite.core.api import dtime
 from senaite.core.api.catalog import del_column
 from senaite.core.api.catalog import del_index
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.upgrade import upgradestep
+from senaite.core.upgrade.utils import uncatalog_brain
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
 from senaite.patient.api import patient_search
@@ -344,3 +346,64 @@ def remove_stale_patient_id_catalog_entries(tool):
     del_column(SAMPLE_CATALOG, "getPatientID")
 
     logger.info("Remove stale Patient ID catalog entries [DONE]")
+
+
+def migrate_date_of_birth_field(tool):
+    """Resets the date of birth from samples
+    """
+    logger.info("Migrate DateOfBirth field to AgeDateOfBirthField ...")
+
+    age_seleted_attr = "_AgeDoBWidget_age_selected"
+    dob_estimated_attr = "_AgeDoBWidget_dob_estimated"
+
+    uc = api.get_tool("uid_catalog")
+    brains = uc(portal_type="AnalysisRequest")
+    total = len(brains)
+
+    for num, brain in enumerate(brains):
+        if num and num % 100 == 0:
+            logger.info("Migrated {0}/{1} fields".format(num, total))
+
+        if num and num % 1000 == 0:
+            # reduce memory size of the transaction
+            transaction.savepoint()
+
+        try:
+            obj = api.get_object(brain)
+        except AttributeError:
+            uncatalog_brain(brain)
+            continue
+
+        # additional flags were saved as attributes
+        age_selected = getattr(obj, age_seleted_attr, False),
+        dob_estimated = getattr(obj, dob_estimated_attr, False)
+
+        # remove them
+        attrs = [age_seleted_attr, dob_estimated_attr]
+        for attr in attrs:
+            if hasattr(obj, attr):
+                delattr(obj, attr)
+
+        # New field expects a tuple (dob, from_age, estimated)
+        field = obj.getField("DateOfBirth")
+        value = field.get(obj)
+
+        if dtime.is_date(value):
+            value = (dtime.to_dt(value), age_selected, dob_estimated)
+            field.set(obj, value)
+
+        elif not isinstance(value, tuple):
+            value = (None, False, False)
+            field.set(obj, value)
+
+        else:
+            obj._p_deactivate()
+            continue
+
+        # reset date of birth value
+        field.set(obj, value)
+
+        # Flush the object from memory
+        obj._p_deactivate()
+
+    logger.info("Migrate DateOfBirth field to AgeDateOfBirthField [DONE]")

@@ -8,31 +8,33 @@
 
     <metal:view_macro define-macro="view">
       <span metal:define-slot="inside"
-            tal:define="value accessor;
-                        dob_estimated python:widget.get_dob_estimated(context);
-                        current_age python:widget.get_current_age(value);
-                        years python:current_age.get('years') or '';
-                        months python:current_age.get('months') or '';
-                        days python:current_age.get('days') or '';
-                        value python: widget.ulocalized_time(value, context=context, request=request) if value else ''">
+            tal:define="values python:field.getAccessor(here)();
+                        dob python: values[0];
+                        age_selected python: values[1];
+                        dob_estimated python: values[2];
+                        current_age python:field.get_age(here);
+                        years python:current_age.years if current_age else '';
+                        months python:current_age.months if current_age else '';
+                        days python:current_age.days if current_age else '';
+                        value python: widget.ulocalized_time(dob, context=here, request=request) if dob else ''">
 
         <!-- Date of birth -->
         <span tal:condition="python:not dob_estimated">
-          <span tal:replace="value"></span>
+          <span tal:replace="value"/>
         </span>
 
         <!-- Age (estimated) -->
         <span class="" tal:condition="python:dob_estimated">
           <span tal:condition="python:years">
-            <span tal:replace="years"></span>
+            <span tal:replace="years"/>
             <span class="text-secondary" i18n:translate="patient_dob_years">Years</span>
           </span>
           <span tal:condition="python:months">
-            <span tal:replace="months"></span>
+            <span tal:replace="months"/>
             <span class="text-secondary" i18n:translate="patient_dob_months">Months</span>
           </span>
           <span tal:condition="python:days">
-            <span tal:replace="days"></span>
+            <span tal:replace="days"/>
             <span class="text-secondary" i18n:translate="patient_dob_days">Days</span>
           </span>
         </span>
@@ -41,7 +43,13 @@
     </metal:view_macro>
 
     <metal:edit_macro define-macro="edit">
-      <tal:values define="value python:field.getEditAccessor(here)() or None;
+      <tal:values define="values python:field.getEditAccessor(here)();
+                          session_values python:here.session_restore_value(fieldName, values);
+                          cached_values python:request.get(fieldName,session_values);
+                          values python:cached_values or values;
+                          dob python: values[0];
+                          age_selected python: values[1];
+                          dob_estimated python: values[2];
                           subfield_years string:${fieldName}.years:ignore_empty:record;
                           subfield_months string:${fieldName}.months:ignore_empty:record;
                           subfield_days string:${fieldName}.days:ignore_empty:record;
@@ -49,14 +57,13 @@
                           subfield_selector string:${fieldName}.selector:ignore_empty:record;
                           subfield_original_value string:${fieldName}.original:ignore_empty:record;
                           required field/required|nothing;
-                          current_age python:widget.get_current_age(value);
-                          years python:current_age.get('years') or '';
-                          months python:current_age.get('months') or '';
-                          days python:current_age.get('days') or '';
-                          age_selected python:widget.get_age_selected(context);
-                          age_supported python:widget.is_age_supported(context);
-                          dob_estimated python:widget.get_dob_estimated(context);
-                          years_only python:widget.is_years_only(value);
+                          current_age python:field.get_age(here);
+                          years python:current_age.years if current_age else '';
+                          months python:current_age.months if current_age else '';
+                          days python:current_age.days if current_age else '';
+                          age_supported python:widget.is_age_supported();
+                          years_only python:widget.is_years_only();
+                          years_only python:years_only and years and years >= 1;
                           show_months python:not years_only;
                           show_days python:not years_only;">
 
@@ -138,7 +145,8 @@
 
           <!-- DoB input field -->
           <div tal:attributes="id string:${fieldName}_dob_controls;
-                               style python:'display:none' if age_selected else ''">
+                               style python:'display:none' if age_selected else ''"
+               tal:define="value python: widget.get_date(dob) if dob else ''">
             <div class="input-group input-group-sm flex-nowrap d-inline-flex w-auto">
               <input type="date"
                      style="min-width:130px;max-width:130px"
@@ -147,7 +155,7 @@
                          id string:${subfield_dob};
                          name string:${subfield_dob};
                          required python:required and 'required' or None;
-                         value python: widget.get_date(value) if value else '';
+                         value python: value;
                          class python: 'form-control form-control-sm {}'.format(invalid_class);"/>
 
               <div tal:condition="dob_estimated"
@@ -169,7 +177,7 @@
                  'onchange' is not triggered for hidden fields -->
             <input type="text" style="display:none;visibility:hidden;"
                    tal:attributes="id string:${fieldName}-dob-fallback;
-                         name string:${fieldName};
+                         name string:${fieldName}-dob-fallback:record;
                          value string:${value}"/>
           </div>
         </div>

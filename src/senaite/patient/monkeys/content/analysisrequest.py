@@ -19,7 +19,6 @@
 # Some rights reserved, see README and LICENSE.
 
 from senaite.patient import check_installed
-from senaite.patient.api import get_age_ymd
 
 
 @check_installed(False)
@@ -82,12 +81,44 @@ def getDateOfBirth(self):  # noqa camelcase
 
 
 @check_installed(None)
+def setDateOfBirth(self, value):  # noqa camelcase
+    """Sets the date of birth or age to sample's patient
+    """
+    return self.getField("DateOfBirth").set(self, value)
+
+
+@check_installed(None)
 def getAge(self):  # noqa camelcase
     """Returns the patient's age when the sample was collected
     """
-    dob = self.getDateOfBirth()
+    field = self.getField("DateOfBirth")
     sampled = self.getDateSampled()
-    return get_age_ymd(dob, sampled)
+    return field.get_age(self, on_date=sampled)
+
+
+@check_installed(None)
+def getAgeYmd(self):  # noqa camelcase
+    """Returns the patient's age when the sample was collected in ymd format
+    """
+    field = self.getField("DateOfBirth")
+    sampled = self.getDateSampled()
+    return field.get_age_ymd(self, on_date=sampled)
+
+
+@check_installed(None)
+def getDateOfBirthEstimated(self):  # noqa camelcase
+    """Returns whether the date of birth is estimated
+    """
+    field = self.getField("DateOfBirth")
+    return field.get_estimated(self)
+
+
+@check_installed(None)
+def getDateOfBirthFromAge(self):  # noqa camelcase
+    """Returns whether the date of birth was inferred from age
+    """
+    field = self.getField("DateOfBirth")
+    return field.get_from_age(self)
 
 
 @check_installed(None)

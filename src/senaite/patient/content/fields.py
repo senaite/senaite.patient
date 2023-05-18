@@ -22,7 +22,9 @@ import six
 from AccessControl import ClassSecurityInfo
 from archetypes.schemaextender.field import ExtensionField
 from Products.Archetypes.Field import ObjectField
+from senaite.core.api import dtime
 from senaite.patient import api as patient_api
+from senaite.patient.browser.widgets import AgeDoBWidget
 from senaite.patient.browser.widgets import FullnameWidget
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.config import AUTO_ID_MARKER
@@ -118,3 +120,89 @@ class FullnameField(ExtensionField, ObjectField):
         middlename = self.get_middlename(instance)
         lastname = self.get_lastname(instance)
         return " ".join(filter(None, [firstname, middlename, lastname]))
+
+
+class AgeDateOfBirthField(ExtensionField, ObjectField):
+    """ObjectField extender that stores a tuple (dob, from_age, estimated)
+    """
+    _properties = ObjectField._properties.copy()
+    _properties.update({
+        "type": "date_of_birth",
+        "default": (None, False, False),
+        "widget": AgeDoBWidget,
+    })
+    security = ClassSecurityInfo()
+
+    def set(self, instance, value, **kwargs):
+
+        dob, from_age, estimated = None, False, False
+
+        def is_true(val):
+            """Returns whether val evaluates to True
+            """
+            val = str(val).strip().lower()
+            return val in ["y", "yes", "1", "true", "on"]
+
+        if isinstance(value, (list, tuple)):
+            # always assume (dob, from_age, estimated)
+            dob = dtime.to_dt(value[0])
+            from_age = is_true(value[1])
+            estimated = is_true(value[2])
+
+        elif isinstance(value, dict):
+            from_age = is_true(value.get("from_age", False))
+            estimated = is_true(value.get("estimated", False))
+
+            # "dob" always has priority over "age"
+            dob = value.get("dob")
+            dob = dtime.to_dt(dob)
+            if not dob:
+                age = value.get("age")
+                dob = patient_api.get_birth_date(age, default=None)
+                # DoB is inferred from age, so it must be estimated,
+                # regardless of what is coming with the dict
+                from_age = dob is not None
+                estimated = dob is not None
+
+        elif dtime.is_date(value):
+            dob = dtime.to_dt(value)
+            from_age = is_true(kwargs.get("from_age", False))
+            estimated = is_true(kwargs.get("estimated", False))
+
+        elif patient_api.is_ymd(value):
+            dob = patient_api.get_birth_date(value)
+            from_age = estimated = True
+
+        # store the tuple or default
+        val = (dob, from_age, estimated) if dob else self.getDefault(instance)
+        super(AgeDateOfBirthField, self).set(instance, val)
+
+    def get_date_of_birth(self, instance):
+        """Returns whether the date of birth
+        """
+        return self.get(instance)[:][0]
+
+    def get_age_ymd(self, instance, on_date=None):
+        """Returns the age in ymd format at on_date or current date
+        """
+        age = self.get_age(instance, on_date=on_date)
+        return patient_api.to_ymd(age, default=None)
+
+    def get_age(self, instance, on_date=None):
+        """Returns the age as a relative delta at on_date or current data
+        """
+        dob = self.get_date_of_birth(instance)
+        try:
+            return dtime.get_relative_delta(dob, on_date)
+        except ValueError:
+            return None
+
+    def get_from_age(self, instance):
+        """Returns whether the date of birth is calculated from age
+        """
+        return self.get(instance)[:][1]
+
+    def get_estimated(self, instance):
+        """Returns whether the date is estimated
+        """
+        return self.get(instance)[:][2]

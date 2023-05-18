@@ -19,13 +19,16 @@
 # Some rights reserved, see README and LICENSE.
 
 import re
+from bika.lims import deprecated
 from datetime import datetime
 
 from bika.lims import api
 from bika.lims.utils import tmpID
 from dateutil.relativedelta import relativedelta
+from senaite.core.api import dtime
 from senaite.patient.config import PATIENT_CATALOG
 from senaite.patient.permissions import AddPatient
+from six import string_types
 from zope.component import getUtility
 from zope.component.interfaces import IFactory
 from zope.event import notify
@@ -45,6 +48,10 @@ CLIENT_VIEW_ACTION = {
     "link_target": "",
     "condition": "",
 }
+
+YMD_REGEX = r'^((?P<y>(\d+))y){0,1}\s*' \
+            r'((?P<m>(\d+))m){0,1}\s*' \
+            r'((?P<d>(\d+))d){0,1}\s*'
 
 _marker = object()
 
@@ -186,6 +193,7 @@ def update_patient(patient, **values):
     patient.reindexObject()
 
 
+@deprecated("Use senaite.core.api.dtime.to_dt instead")
 def to_datetime(date_value, default=None, tzinfo=None):
     if isinstance(date_value, datetime):
         return date_value
@@ -202,67 +210,142 @@ def to_datetime(date_value, default=None, tzinfo=None):
     return date_value.replace(tzinfo=tzinfo)
 
 
-def to_ymd(delta):
-    """Returns a representation of a relative delta in ymd format
-    """
-    if not isinstance(delta, relativedelta):
-        raise TypeError("delta parameter must be a relative_delta")
+def to_ymd(period, default=_marker):
+    """Returns the given period in ymd format
 
-    ymd = list("ymd")
-    diff = map(str, (delta.years, delta.months, delta.days))
-    age = filter(lambda it: int(it[0]), zip(diff, ymd))
-    return " ".join(map("".join, age))
+    If default is _marker, either a TypeError or ValueError is raised if
+    the type of the period is not valid or cannot be converted to ymd format
+
+    :param period: period to be converted to a ymd format
+    :type period: str/relativedelta
+    :param default: fall-back value to return as default
+    :returns: a string that represents a period in ymd format
+    :rtype: str
+    """
+    try:
+        ymd_values = get_years_months_days(period)
+    except (TypeError, ValueError) as e:
+        if default is _marker:
+            raise e
+        return default
+
+    # Return in ymd format, with zeros omitted
+    ymd_values = map(str, ymd_values)
+    ymd = filter(lambda it: int(it[0]), zip(ymd_values, "ymd"))
+    return " ".join(map("".join, ymd))
 
 
 def is_ymd(ymd):
     """Returns whether the string represents a period in ymd format
+
+    :param ymd: supposedly ymd string to evaluate
+    :type ymd: str
+    :returns: True if a valid period in ymd format
+    :rtype: bool
     """
-    valid = map(lambda p: p in ymd, "ymd")
-    return any(valid)
+    if not isinstance(ymd, string_types):
+        return False
+    try:
+        get_years_months_days(ymd)
+    except (TypeError, ValueError):
+        return False
+    return True
 
 
-def get_birth_date(age_ymd, on_date=None):
-    """Returns the birth date given an age in ymd format and the date when age
-    was recorded or current datetime if None
+def get_years_months_days(period):
+    """Returns a tuple of (years, months, days) given a period.
+
+    Returns (0, 0, 0) if not possible to extract the years, months and days
+    from the given period.
+
+    :param period: period of time
+    :type period: str/relativedelta/tuple/list
+    :returns: a tuple with the years, months and days
+    :rtype: tuple
     """
-    on_date = to_datetime(on_date, default=datetime.now())
+    if isinstance(period, relativedelta):
+        return period.years, period.months, period.days
 
-    def extract_period(val, period):
-        num = re.findall(r'(\d{1,2})'+period, val) or [0]
-        return api.to_int(num[0], default=0)
+    if isinstance(period, (tuple, list)):
+        years = api.to_int(period[0], default=0)
+        months = api.to_int(period[1] if len(period) > 1 else 0, default=0)
+        days = api.to_int(period[2] if len(period) > 2 else 0, default=0)
+        return years, months, days
 
-    # Extract the periods
-    years = extract_period(age_ymd, "y")
-    months = extract_period(age_ymd, "m")
-    days = extract_period(age_ymd, "d")
-    if not any([years, months, days]):
-        raise AttributeError("No valid ymd: {}".format(age_ymd))
+    if not isinstance(period, string_types):
+        raise TypeError("{} is not supported".format(repr(period)))
 
-    dob = on_date - relativedelta(years=years, months=months, days=days)
-    return dob
+    # to lowercase and remove leading and trailing spaces
+    raw_ymd = period.lower().strip()
+
+    # extract the years, months and days
+    matches = re.search(YMD_REGEX, raw_ymd)
+    values = [matches.group(v) for v in "ymd"]
+
+    # if all values are None, assume the ymd format was not valid
+    nones = [value is None for value in values]
+    if all(nones):
+        raise ValueError("Not a valid ymd: {}".format(repr(period)))
+
+    # replace Nones with zeros and calculate everything with a relativedelta
+    values = [api.to_int(value, 0) for value in values]
+    delta = relativedelta(years=values[0], months=values[1], days=values[2])
+    return get_years_months_days(delta)
+
+
+def get_birth_date(period, on_date=None, default=_marker):
+    """Returns the date when something started given a period in ymd format
+    and the date when such period was recorded
+
+    If on_date is None, uses current date time as the date from which the
+    birth date is calculated.
+
+    When ymd is not a valid period and default value is _marker, a TypeError
+    or ValueError is raised. Otherwise, it returns the default value converted
+    to datetime (or None if it cannot be converted)
+
+    :param period: period of time
+    :type period: str/relativedelta
+    :param on_date: date from which the since date has to be calculated
+    :type on_date: string/DateTime/datetime/date
+    :param default: fall-back date-like value to return as default
+    :returns: a tuple with the years, months and days
+    :rtype: tuple
+    """
+    # extract the years, months and days from the period
+    try:
+        years, months, days = get_years_months_days(period)
+    except (TypeError, ValueError) as e:
+        if default is _marker:
+            raise e
+        return dtime.to_dt(default)
+
+    # date when the ymd period was recorded
+    on_date = dtime.to_dt(on_date)
+    if not on_date:
+        on_date = datetime.now()
+
+    # calculate the date when everything started
+    delta = relativedelta(years=years, months=months, days=days)
+    return on_date - delta
 
 
 def get_age_ymd(birth_date, on_date=None):
     """Returns the age at on_date if not None. Otherwise, current age
     """
-    delta = get_relative_delta(birth_date, on_date)
-    return to_ymd(delta)
+    try:
+        delta = dtime.get_relative_delta(birth_date, on_date)
+        return to_ymd(delta)
+    except (ValueError, TypeError):
+        return None
 
 
+@deprecated("Use senaite.core.api.dtime.get_relative_delta instead")
 def get_relative_delta(from_date, to_date=None):
     """Returns the relative delta between two dates. If to_date is None,
     compares the from_date with now
     """
-    from_date = to_datetime(from_date)
-    if not from_date:
-        raise TypeError("Type not supported: from_date")
-
-    to_date = to_date or datetime.now()
-    to_date = to_datetime(to_date)
-    if not to_date:
-        raise TypeError("Type not supported: to_date")
-
-    return relativedelta(to_date, from_date)
+    return dtime.get_relative_delta(from_date, to_date)
 
 
 def tuplify_identifiers(identifiers):

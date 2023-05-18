@@ -2,6 +2,15 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
+  <!-- 1411: Migrate sample's DateOfBirth field to AgeDateOfBirthField -->
+  <genericsetup:upgradeStep
+      title="SENAITE PATIENT 1.4.0: Migrate sample's DateOfBirth field"
+      description="Migrate sample's DateOfBirth field to AgeDateOfBirthField"
+      source="1410"
+      destination="1411"
+      handler=".v01_04_000.migrate_date_of_birth_field"
+      profile="senaite.patient:default"/>
+
   <!-- 1410: Remove stale patient ID entries-->
   <genericsetup:upgradeStep
       title="SENAITE PATIENT 1.4.0: Remove stale patient ID catalog entries"

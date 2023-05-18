@@ -1,5 +1,5 @@
-Patient Workflow
-----------------
+Patient Sample
+--------------
 
 Running this test from the buildout directory:
 
@@ -22,6 +22,7 @@ Needed Imports:
     >>> from plone.app.testing import TEST_USER_ID
     >>> from plone.app.testing import TEST_USER_PASSWORD
     >>> from bika.lims.api.security import get_roles_for_permission
+    >>> from senaite.core.api import dtime
     >>> from senaite.patient.api import tuplify_identifiers
     >>> from senaite.patient.api import to_identifier_type_name
 
@@ -95,10 +96,70 @@ Get the patient's full name:
     >>> sample.getPatientFullName()
     'Clark Kent'
 
-Get the patient's date of birth:
+Get the patient's date of birth full information:
 
-    >>> sample.getDateOfBirth().strftime("%Y-%m-%d")
-    '1980-02-25'
+    >>> sample.getDateOfBirth()
+    (datetime.datetime(1980, 2, 25, 0, 0, tzinfo=<StaticTzInfo 'Etc/GMT'>), False, False)
+
+Get the patient's age when sample was collected as timedelta:
+
+    >>> age = sample.getAge()
+    >>> [age.years, age.months, age.days]
+    [43, 2, 23]
+
+Get the patient's age when the sample was collected in ymd format:
+
+    >>> sample.getAgeYmd()
+    '43y 2m 23d'
+
+We can manually set a birth date though, in str/datetime/date format:
+
+    >>> sample.setDateOfBirth("1980-01-25")
+    >>> sample.getDateOfBirth()
+    (datetime.datetime(1980, 1, 25, 0, 0, tzinfo=<StaticTzInfo 'Etc/GMT'>), False, False)
+
+    >>> sample.setDateOfBirth(DateTime("1980-03-25"))
+    >>> sample.getDateOfBirth()
+    (datetime.datetime(1980, 3, 25, 0, 0, tzinfo=<StaticTzInfo 'Etc/GMT'>), False, False)
+
+    >>> from datetime import datetime
+    >>> sample.setDateOfBirth(datetime(1980, 4, 25))
+    >>> sample.getDateOfBirth()
+    (datetime.datetime(1980, 4, 25, 0, 0), False, False)
+
+    >>> from datetime import date
+    >>> sample.setDateOfBirth(date(1980, 4, 25))
+    >>> sample.getDateOfBirth()
+    (datetime.datetime(1980, 4, 25, 0, 0), False, False)
+
+And system knows the DoB was directly set as a birth date:
+
+    >>> sample.getDateOfBirthFromAge()
+    False
+
+And that is not estimated:
+
+    >>> sample.getDateOfBirthEstimated()
+    False
+
+Or we can simply set the Birth date with age in ymd format. In such case, the
+system recognizes the date of birth was set from age:
+
+    >>> ymd = sample.getAgeYmd()
+    >>> sample.setDateOfBirth(ymd)
+    >>> dob = sample.getDateOfBirth()
+    >>> dtime.to_ansi(dob[0], show_time=False)
+    '19800425'
+
+And system knows the DoB was calculated from Age:
+
+    >>> sample.getDateOfBirthFromAge()
+    True
+
+And also knows it is estimated because of the same reason:
+
+    >>> sample.getDateOfBirthEstimated()
+    True
 
 Get the patient's sex:
 

@@ -51,11 +51,32 @@
 
   <!-- Patient Date of Birth -->
   <monkey:patch
-    description="Patient's date of birth"
+    description="Patient's date of birth or age"
     class="bika.lims.content.analysisrequest.AnalysisRequest"
     original="getDateOfBirth"
     ignoreOriginal="True"
     replacement=".content.analysisrequest.getDateOfBirth" />
+
+  <monkey:patch
+      description="Patient's date of birth or age"
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="setDateOfBirth"
+      ignoreOriginal="True"
+      replacement=".content.analysisrequest.setDateOfBirth" />
+
+  <monkey:patch
+      description="Whether patient's date of birth is estimated"
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="getDateOfBirthEstimated"
+      ignoreOriginal="True"
+      replacement=".content.analysisrequest.getDateOfBirthEstimated" />
+
+  <monkey:patch
+      description="Whether patient's date of birth was inferred from age"
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="getDateOfBirthFromAge"
+      ignoreOriginal="True"
+      replacement=".content.analysisrequest.getDateOfBirthFromAge" />
 
   <!-- Patient Age -->
   <monkey:patch
@@ -64,6 +85,14 @@
     original="getAge"
     ignoreOriginal="True"
     replacement=".content.analysisrequest.getAge" />
+
+  <!-- Patient Age in ymd format -->
+  <monkey:patch
+      description="Patient's age in ymd format"
+      class="bika.lims.content.analysisrequest.AnalysisRequest"
+      original="getAgeYmd"
+      ignoreOriginal="True"
+      replacement=".content.analysisrequest.getAgeYmd" />
 
   <!-- Patient Address -->
   <monkey:patch
