@@ -49,9 +49,9 @@ CLIENT_VIEW_ACTION = {
     "condition": "",
 }
 
-YMD_REGEX = r'^((?P<y>(\d{1,4}))y){0,1}\s*' \
-            r'((?P<m>(\d{1,2}))m){0,1}\s*' \
-            r'((?P<d>(\d{1,2}))d){0,1}\s*'
+YMD_REGEX = r'^((?P<y>(\d+))y){0,1}\s*' \
+            r'((?P<m>(\d+))m){0,1}\s*' \
+            r'((?P<d>(\d+))d){0,1}\s*'
 
 _marker = object()
 
@@ -274,32 +274,25 @@ def get_years_months_days(period):
 
     # extract the years, months and days
     matches = re.search(YMD_REGEX, raw_ymd)
-    values = [matches.group(period) for period in "ymd"]
+    values = [matches.group(v) for v in "ymd"]
 
     # if all values are None, assume the ymd format was not valid
     nones = [value is None for value in values]
     if all(nones):
         raise ValueError("Not a valid ymd: {}".format(repr(period)))
 
-    # replace Nones with zeros
+    # replace Nones with zeros and calculate everything with a relativedelta
     values = [api.to_int(value, 0) for value in values]
-    return values
+    delta = relativedelta(years=values[0], months=values[1], days=values[2])
+    return get_years_months_days(delta)
 
 
-@deprecated("Use get_since_date instead")
-def get_birth_date(ymd, on_date=None, default=_marker):
-    """Returns the birth date given an age in ymd format and the date when age
-    was recorded or current datetime if None
-    """
-    return get_since_date(ymd, on_date=on_date, default=default)
-
-
-def get_since_date(period, on_date=None, default=_marker):
+def get_birth_date(period, on_date=None, default=_marker):
     """Returns the date when something started given a period in ymd format
     and the date when such period was recorded
 
     If on_date is None, uses current date time as the date from which the
-    since date is calculated.
+    birth date is calculated.
 
     When ymd is not a valid period and default value is _marker, a TypeError
     or ValueError is raised. Otherwise, it returns the default value converted
