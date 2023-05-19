@@ -173,6 +173,11 @@ class AgeDateOfBirthField(ExtensionField, ObjectField):
             dob = patient_api.get_birth_date(value)
             from_age = estimated = True
 
+        # if naive TZ, use system default's
+        if dob and dtime.is_timezone_naive(dob):
+            tz = dtime.get_os_timezone()
+            dob = dtime.to_zone(dob, tz)
+
         # store the tuple or default
         val = (dob, from_age, estimated) if dob else self.getDefault(instance)
         super(AgeDateOfBirthField, self).set(instance, val)
