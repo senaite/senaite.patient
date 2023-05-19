@@ -407,3 +407,41 @@ def migrate_date_of_birth_field(tool):
         obj._p_deactivate()
 
     logger.info("Migrate DateOfBirth field to AgeDateOfBirthField [DONE]")
+
+
+def update_naive_tz_dobs(tool):
+    """Resets the date of birth from samples
+    """
+    logger.info("Updating timezone-naive dates of birth ...")
+
+    uc = api.get_tool("uid_catalog")
+    brains = uc(portal_type="AnalysisRequest")
+    total = len(brains)
+
+    for num, brain in enumerate(brains):
+        if num and num % 100 == 0:
+            logger.info("Migrated {0}/{1} fields".format(num, total))
+
+        if num and num % 1000 == 0:
+            # reduce memory size of the transaction
+            transaction.savepoint()
+
+        try:
+            obj = api.get_object(brain)
+        except AttributeError:
+            uncatalog_brain(brain)
+            continue
+
+        # New field expects a tuple (dob, from_age, estimated)
+        field = obj.getField("DateOfBirth")
+        value = field.get(obj)
+        dob = value[0] if value else None
+
+        if dob and dtime.is_timezone_naive(dob):
+            # re-set the value
+            field.set(value)
+
+        # Flush the object from memory
+        obj._p_deactivate()
+
+    logger.info("Updating timezone-naive dates of birth [DONE]")

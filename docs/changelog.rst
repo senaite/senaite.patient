@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #77 Use system's default timezone for TZ-naive birth dates
 - #74 Migrate sample's DateOfBirth field to AgeDateOfBirthField
 - #72 Move Patient ID to identifiers
 - #70 Ensure Require MRN setting is honoured

@@ -38,6 +38,11 @@ Variables:
     >>> sampled = DateTime("2020-12-01")
     >>> birth_date = DateTime("1979-12-07")
 
+Test fixture:
+
+    >>> import os
+    >>> os.environ["TZ"] = "CET"
+
 We need to create some basic objects for the test:
 
     >>> client = api.create(portal.clients, "Client", Name="General Hospital", ClientID="GH", MemberDiscountApplies=False)
