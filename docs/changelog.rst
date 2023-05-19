@@ -5,8 +5,9 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
-- #76 Fix tracbeack on DateOfBirth update while validation fails for others
+- #78 Make to_ymd return a compliant ymd when no elapsed days
 - #77 Use system's default timezone for TZ-naive birth dates
+- #76 Fix tracbeack on DateOfBirth update while validation fails for others
 - #74 Migrate sample's DateOfBirth field to AgeDateOfBirthField
 - #72 Move Patient ID to identifiers
 - #70 Ensure Require MRN setting is honoured
