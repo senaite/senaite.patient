@@ -4,6 +4,15 @@
 
   <!-- 1411: Migrate sample's DateOfBirth field to AgeDateOfBirthField -->
   <genericsetup:upgradeStep
+      title="SENAITE PATIENT 1.4.0: Use System's TZ to store Dates of birth that are TZ-naive"
+      description="Use System's TZ to store Dates of birth that are timezone-naive"
+      source="1411"
+      destination="1412"
+      handler=".v01_04_000.update_naive_tz_dobs"
+      profile="senaite.patient:default"/>
+
+  <!-- 1411: Migrate sample's DateOfBirth field to AgeDateOfBirthField -->
+  <genericsetup:upgradeStep
       title="SENAITE PATIENT 1.4.0: Migrate sample's DateOfBirth field"
       description="Migrate sample's DateOfBirth field to AgeDateOfBirthField"
       source="1410"
