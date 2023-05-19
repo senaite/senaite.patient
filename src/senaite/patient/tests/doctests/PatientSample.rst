@@ -59,6 +59,11 @@ Variables:
     >>> patients = portal.patients
     >>> birthdate = DateTime("1980-02-25")
 
+Test fixture:
+
+    >>> import os
+    >>> os.environ["TZ"] = "CET"
+
 We need to create some basic objects for the test:
 
     >>> setRoles(portal, TEST_USER_ID, ['LabManager',])
@@ -125,12 +130,12 @@ We can manually set a birth date though, in str/datetime/date format:
     >>> from datetime import datetime
     >>> sample.setDateOfBirth(datetime(1980, 4, 25))
     >>> sample.getDateOfBirth()
-    (datetime.datetime(1980, 4, 25, 0, 0), False, False)
+    (datetime.datetime(1980, 4, 25, 0, 0, tzinfo=<DstTzInfo 'CET' CEST+2:00:00 DST>), False, False)
 
     >>> from datetime import date
     >>> sample.setDateOfBirth(date(1980, 4, 25))
     >>> sample.getDateOfBirth()
-    (datetime.datetime(1980, 4, 25, 0, 0), False, False)
+    (datetime.datetime(1980, 4, 25, 0, 0, tzinfo=<DstTzInfo 'CET' CEST+2:00:00 DST>), False, False)
 
 And system knows the DoB was directly set as a birth date:
 

@@ -20,6 +20,12 @@ Variables:
     >>> request = self.request
 
 
+Test fixture:
+
+    >>> import os
+    >>> os.environ["TZ"] = "CET"
+
+
 Convert a period to ymd format
 ..............................
 
