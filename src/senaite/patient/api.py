@@ -232,7 +232,10 @@ def to_ymd(period, default=_marker):
     # Return in ymd format, with zeros omitted
     ymd_values = map(str, ymd_values)
     ymd = filter(lambda it: int(it[0]), zip(ymd_values, "ymd"))
-    return " ".join(map("".join, ymd))
+    ymd = " ".join(map("".join, ymd))
+
+    # return a compliant ymd when no elapsed days
+    return ymd or "0d"
 
 
 def is_ymd(ymd):

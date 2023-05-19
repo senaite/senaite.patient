@@ -33,10 +33,6 @@ We can convert a relativedelta to ymd format:
     >>> api.to_ymd(period)
     '6m 2d'
 
-    >>> period = relativedelta()
-    >>> api.to_ymd(period)
-    ''
-
 Or can transform an already existing ymd to its standard format:
 
     >>> api.to_ymd("1y2m3d")
@@ -65,6 +61,18 @@ Returns a ValueError if the value has the rihgt type, but format is wrong:
     Traceback (most recent call last):
     [...]
     ValueError: Not a valid ymd: 'y123d'
+
+And returns a ymd-compliant result when current date or no period is set:
+
+    >>> period = relativedelta()
+    >>> api.to_ymd(period)
+    '0d'
+
+    >>> api.to_ymd("0y")
+    '0d'
+
+    >>> api.to_ymd("0y0m0d")
+    '0d'
 
 Function is even aware of monthly and yearly shifts:
 
