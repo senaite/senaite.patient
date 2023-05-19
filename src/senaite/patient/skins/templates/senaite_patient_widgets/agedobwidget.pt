@@ -45,8 +45,7 @@
     <metal:edit_macro define-macro="edit">
       <tal:values define="values python:field.getEditAccessor(here)();
                           session_values python:here.session_restore_value(fieldName, values);
-                          cached_values python:request.get(fieldName,session_values);
-                          values python:cached_values or values;
+                          values python:session_values or values;
                           dob python: values[0];
                           age_selected python: values[1];
                           dob_estimated python: values[2];
