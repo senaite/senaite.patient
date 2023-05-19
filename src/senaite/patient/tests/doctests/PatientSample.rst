@@ -110,12 +110,12 @@ Get the patient's age when sample was collected as timedelta:
 
     >>> age = sample.getAge()
     >>> [age.years, age.months, age.days]
-    [43, 2, 23]
+    [43, 2, 24]
 
 Get the patient's age when the sample was collected in ymd format:
 
     >>> sample.getAgeYmd()
-    '43y 2m 23d'
+    '43y 2m 24d'
 
 We can manually set a birth date though, in str/datetime/date format:
 
