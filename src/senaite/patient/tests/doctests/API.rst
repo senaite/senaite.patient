@@ -52,6 +52,11 @@ Returns a TypeError if the value is not of the expected type:
 
 Returns a ValueError if the value has the rihgt type, but format is wrong:
 
+    >>> api.to_ymd("")
+    Traceback (most recent call last):
+    [...]
+    ValueError: Not a valid ymd: ''
+
     >>> api.to_ymd("123")
     Traceback (most recent call last):
     [...]
@@ -102,6 +107,9 @@ Returns true for ymd-like strings:
     True
 
     >>> api.is_ymd("0y0m0d")
+    True
+
+    >>> api.is_ymd("0d")
     True
 
 But returns false if the format or type is not valid:
