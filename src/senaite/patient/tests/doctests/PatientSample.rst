@@ -58,6 +58,7 @@ Variables:
     >>> setup = api.get_setup()
     >>> patients = portal.patients
     >>> birthdate = DateTime("1980-02-25")
+    >>> sampled = DateTime("2023-05-19")
 
 Test fixture:
 
@@ -82,7 +83,15 @@ Patient Sample Integration
 
 Create a new sample:
 
-    >>> sample = new_sample([MC, MS], client, contact, sampletype, MedicalRecordNumber="4711", PatientFullName="Clark Kent", Sex="m", Gender="d", DateOfBirth=birthdate)
+    >>> sample = new_sample(
+    ...     [MC, MS], client, contact, sampletype,
+    ...     date_sampled=sampled,
+    ...     MedicalRecordNumber="4711",
+    ...     PatientFullName="Clark Kent",
+    ...     Sex="m",
+    ...     Gender="d",
+    ...     DateOfBirth=birthdate
+    ... )
     >>> api.get_workflow_status_of(sample)
     'sample_due'
 
@@ -148,9 +157,9 @@ And that is not estimated:
     False
 
 Or we can simply set the Birth date with age in ymd format. In such case, the
-system recognizes the date of birth was set from age:
+system recognizes the date of birth was set from age
 
-    >>> ymd = sample.getAgeYmd()
+    >>> ymd = sample.getField("DateOfBirth").get_age_ymd(sample)
     >>> sample.setDateOfBirth(ymd)
     >>> dob = sample.getDateOfBirth()
     >>> dtime.to_ansi(dob[0], show_time=False)
