@@ -41,7 +41,16 @@ class AgeDoBWidget(DateTimeWidget):
         # We always return a dict suitable for the field
         output = dict.fromkeys(["dob", "from_age", "estimated"], False)
 
-        if dtime.is_date(value):
+        if isinstance(value, (list, tuple)):
+            # assume (dob, from_age, estimated)
+            if not value:
+                return None, {}
+            output["dob"] = dtime.to_dt(value[0])
+            output["from_age"] = value[1]
+            output["estimated"] = value[2]
+            return output, {}
+
+        elif dtime.is_date(value):
             # handle date-like objects directly
             output["dob"] = dtime.to_dt(value)
             return output, {}
