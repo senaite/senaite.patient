@@ -157,7 +157,10 @@ And that is not estimated:
     False
 
 Or we can simply set the Birth date with age in ymd format. In such case, the
-system recognizes the date of birth was set from age
+system recognizes the date of birth was set from age. Note that sample's
+`getAgeYmd` returns the age of the patient when the sample was collected.
+Therefore, we need to extract the age directly from the field to properly
+assign the age of the patient at present time:
 
     >>> ymd = sample.getField("DateOfBirth").get_age_ymd(sample)
     >>> sample.setDateOfBirth(ymd)
