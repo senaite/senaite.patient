@@ -27,7 +27,12 @@
       </tal:values>
     </metal:view_macro>
 
-    <metal:view_macro define-macro="edit">
+    <metal:edit_macro define-macro="edit">
+
+      <tal:values define="required field/required|nothing;
+                          required python: required and 'required' or None;
+                          error_id python: errors.get(fieldName);">
+
       <div class="form form-inline field ArchetypesTemporaryIdentifierWidget TemporaryIdentifier"
           tal:define="values python:field.getEditAccessor(here)() or {};
                       session_values python:here.session_restore_value(fieldName, values);
@@ -43,8 +48,6 @@
           tal:attributes="class css_class;
                           id string:archetypes-fieldname-${fieldName};
                           data-fieldname string:${fieldName}">
-
-        <div class="fieldErrorBox" tal:condition="required"></div>
 
         <!-- Input text field -->
         <div class="form-group mr-2">
@@ -80,7 +83,11 @@
                tal:attributes="value string:${auto_id_marker}"/>
       </div>
 
-    </metal:view_macro>
+      <div class="fieldErrorBox" tal:condition="required"></div>
+      <div class="fieldErrorBox" tal:content="error_id" i18n:translate=""></div>
+
+      </tal:values>
+    </metal:edit_macro>
 
     <metal:search_macro define-macro="search">
       <div metal:use-macro="context/widgets/string/macros/edit"></div>
