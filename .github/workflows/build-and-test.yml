@@ -11,10 +11,6 @@ jobs:
       image: python:2.7.18-buster
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '2.7.18'
-          cache: 'pip'
       - name: cache eggs
         uses: actions/cache@v3
         with:
