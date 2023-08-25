@@ -200,7 +200,7 @@ class IPatientControlPanel(Interface):
         title=_(u"Require Medical Record Number (MRN)"),
         description=_(
             u"Make the MRN field mandatory in the sample registration form "
-            u"and when creating or modifiying patients."
+            u"and when creating or modifying patients."
         ),
         required=False,
         default=True,
