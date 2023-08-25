@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-08-25 13:49+0000\n"
+"POT-Creation-Date: 2023-08-25 13:50+0000\n"
 "PO-Revision-Date: 2022-10-03 11:08+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German (https://app.transifex.com/senaite/teams/130029/de/)\n"
@@ -370,7 +370,7 @@ msgid "MRN"
 msgstr ""
 
 #: senaite/patient/browser/controlpanel.py:201
-msgid "Make the MRN field mandatory in the sample registration form and when creating or modifiying patients."
+msgid "Make the MRN field mandatory in the sample registration form and when creating or modifying patients."
 msgstr ""
 
 #: senaite/patient/config.py:35
@@ -622,7 +622,7 @@ msgstr ""
 msgid "Spanish Basque"
 msgstr ""
 
-#: senaite/patient/skins/templates/senaite_patient_widgets/temporaryidentifierwidget.pt:67
+#: senaite/patient/skins/templates/senaite_patient_widgets/temporaryidentifierwidget.pt:70
 msgid "Temporary"
 msgstr ""
 
@@ -710,6 +710,8 @@ msgstr ""
 msgid "asked but unknown"
 msgstr ""
 
+#. variables are $address, $zip, $city, $country, $subdivision1,
+#. $subdivision2, $type."
 #. Default: "Define the format of the patient address in samples. Possible variables are $address, $zip, $city, $country, $subdivision1, $subdivision2, $type."
 #: senaite/patient/browser/controlpanel.py:288
 msgid "description_controlpanel_patient_address_format"
