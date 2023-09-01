@@ -18,8 +18,8 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-from plone.dexterity.content import Container
 from plone.supermodel import model
+from senaite.core.content.base import Container
 
 from senaite.core.interfaces import IHideActionsMenu
 
