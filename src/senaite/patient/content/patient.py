@@ -24,12 +24,12 @@ from AccessControl import ClassSecurityInfo
 from bika.lims import api
 from bika.lims.api.mail import is_valid_email_address
 from plone.autoform import directives
-from plone.dexterity.content import Container
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
 from Products.CMFCore import permissions
 from senaite.core.api import dtime
 from senaite.core.behaviors import IClientShareable
+from senaite.core.content.base import Container
 from senaite.core.schema import AddressField
 from senaite.core.schema import DatetimeField
 from senaite.core.schema import PhoneField
@@ -50,8 +50,8 @@ from senaite.patient.interfaces import IPatient
 from six import string_types
 from z3c.form.interfaces import NO_VALUE
 from zope import schema
-from zope.interface import Invalid
 from zope.interface import implementer
+from zope.interface import Invalid
 from zope.interface import invariant
 
 from .schema import IAdditionalEmailSchema

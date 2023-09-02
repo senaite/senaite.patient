@@ -2,8 +2,9 @@
 
 import copy
 
-from plone.dexterity.browser import add
 from plone.dexterity.browser import edit
+from senaite.core.browser.dexterity.add import DefaultAddForm
+from senaite.core.browser.dexterity.add import DefaultAddView
 from senaite.patient import messageFactory as _
 from senaite.patient.api import is_patient_required
 
@@ -25,7 +26,7 @@ def fiddle_schema_fields(fields):
         mrn.field = mrn_field
 
 
-class PatientAddForm(add.DefaultAddForm):
+class PatientAddForm(DefaultAddForm):
     """Patient edit view
     """
     portal_type = "Patient"
@@ -38,11 +39,8 @@ class PatientAddForm(add.DefaultAddForm):
         fiddle_schema_fields(self.fields)
 
 
-class PatientAddView(add.DefaultAddView):
+class PatientAddView(DefaultAddView):
     form = PatientAddForm
-
-    def __init__(self, context, request, ti=None):
-        super(PatientAddView, self).__init__(context, request, ti=ti)
 
 
 class PatientEditForm(edit.DefaultEditForm):
