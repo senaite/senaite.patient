@@ -113,9 +113,8 @@ def update_patient(instance):
                     .format(api.get_path(container), mrn))
         values = get_patient_fields(instance)
         try:
-            patient = patient_api.create_temporary_patient()
+            patient = api.create(container, "Patient")
             patient_api.update_patient(patient, **values)
-            patient_api.store_temporary_patient(container, patient)
         except ValueError as exc:
             logger.error("%s" % exc)
             logger.error("Failed to create patient for values: %r" % values)
