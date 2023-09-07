@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #83 Fix Patients are not created on Add sample form submit
 - #82 Fix traceback when adding a patient
 - #79 Fix traceback when creating partitions
 - #78 Make to_ymd return a compliant ymd when no elapsed days
