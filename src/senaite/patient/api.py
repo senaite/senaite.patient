@@ -19,20 +19,15 @@
 # Some rights reserved, see README and LICENSE.
 
 import re
-from bika.lims import deprecated
 from datetime import datetime
 
 from bika.lims import api
-from bika.lims.utils import tmpID
+from bika.lims import deprecated
 from dateutil.relativedelta import relativedelta
 from senaite.core.api import dtime
 from senaite.patient.config import PATIENT_CATALOG
 from senaite.patient.permissions import AddPatient
 from six import string_types
-from zope.component import getUtility
-from zope.component.interfaces import IFactory
-from zope.event import notify
-from zope.lifecycleevent import ObjectCreatedEvent
 
 CLIENT_TYPE = "Client"
 PATIENT_TYPE = "Patient"
@@ -146,35 +141,6 @@ def patient_search(query):
     """
     catalog = get_patient_catalog()
     return catalog(query)
-
-
-def create_temporary_patient():
-    """Create a new temporary patient object
-
-    :returns: temporary patient object
-    """
-    tid = tmpID()
-    portal_type = "Patient"
-    portal_types = api.get_tool("portal_types")
-    fti = portal_types.getTypeInfo(portal_type)
-    factory = getUtility(IFactory, fti.factory)
-    patient = factory(tid)
-    patient._setPortalTypeName(fti.getId())
-    return patient
-
-
-def store_temporary_patient(container, patient):
-    """Store temporary patient to the patients folder
-
-    :param container: The container where the patient should be stored
-    :param patient: A temporary patient object
-    """
-    # Notify `ObjectCreateEvent` to generate a UID first
-    notify(ObjectCreatedEvent(patient))
-    # set the patient in the container
-    container._setObject(patient.id, patient)
-    patient = container.get(patient.getId())
-    return patient
 
 
 def update_patient(patient, **values):
