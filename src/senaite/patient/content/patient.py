@@ -318,6 +318,7 @@ class IPatientSchema(model.Schema):
             # MRN is not a required field
             return
 
+        import pdb;pdb.set_trace()
         if not data.mrn:
             raise Invalid(_("Patient Medical Record is missing or empty"))
 

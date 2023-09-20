@@ -19,18 +19,19 @@
 # Some rights reserved, see README and LICENSE.
 
 import collections
-
 from bika.lims import api
 from bika.lims import senaiteMessageFactory as _
 from bika.lims.interfaces import IClient
 from bika.lims.utils import get_email_link
 from bika.lims.utils import get_link
+from plone.memoize import view
 from senaite.app.listing.view import ListingView
 from senaite.patient import messageFactory as _sp
 from senaite.patient.api import to_identifier_type_name
 from senaite.patient.api import tuplify_identifiers
 from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.permissions import AddPatient
+from zope.component import getMultiAdapter
 
 
 class PatientFolderView(ListingView):
@@ -116,6 +117,15 @@ class PatientFolderView(ListingView):
             },
         ]
 
+    @property
+    @view.memoize
+    def senaite_theme(self):
+        return getMultiAdapter((self.context, self.request),
+                               name="senaite_theme")
+
+    def icon_tag(self, name, **kwargs):
+        return self.senaite_theme.icon_tag(name, **kwargs)
+
     def update(self):
         """Update hook
         """
@@ -130,6 +140,12 @@ class PatientFolderView(ListingView):
         """Ensure UTF8 encoded string
         """
         return api.safe_unicode(s).encode("utf8")
+
+    def translate(self, message):
+        """Returns the translated message
+        """
+        ts = api.get_tool("translation_service")
+        return ts.translate(message)
 
     def get_identifier_tags(self, identifiers, klass="badge badge-light"):
         """Generate a list of identifier HTML tags
@@ -154,12 +170,14 @@ class PatientFolderView(ListingView):
         url = api.get_url(obj)
 
         # MRN
-        mrn = obj.getMRN() or obj.getId()
-        if mrn:
-            mrn = api.safe_unicode(mrn).encode("utf8")
-            item["mrn"] = mrn
-            item["replace"]["mrn"] = get_link(
-                url, value=mrn)
+        mrn = obj.getMRN()
+        if not mrn:
+            item["before"]["mrn"] = self.icon_tag("info", width=16)
+            mrn = _("mrn_not_defined", default="Not defined")
+            mrn = self.translate(mrn)
+
+        item["mrn"] = self.to_utf8(mrn)
+        item["replace"]["mrn"] = get_link(url, value=mrn)
 
         # Patient Identifiers
         identifiers = obj.getIdentifiers()
@@ -171,15 +189,13 @@ class PatientFolderView(ListingView):
         if fullname:
             fullname = api.safe_unicode(fullname).encode("utf8")
             item["fullname"] = fullname
-            item["replace"]["fullname"] = get_link(
-                url, value=fullname)
+            item["replace"]["fullname"] = get_link(url, value=fullname)
 
         # Email
         email = obj.getEmail()
         if email:
             item["email"] = email
-            item["replace"]["email"] = get_email_link(
-                email, value=email)
+            item["replace"]["email"] = get_email_link(email, value=email)
 
         # Email Report
         email_report = obj.getEmailReport()
