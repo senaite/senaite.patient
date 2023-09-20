@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #86 Fix non-unique MRNs are permitted when "Require MRN" setting is enabled
 - #83 Fix Patients are not created on Add sample form submit
 - #82 Fix traceback when adding a patient
 - #79 Fix traceback when creating partitions
