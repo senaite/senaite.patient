@@ -328,14 +328,10 @@ class IPatientSchema(model.Schema):
             return
 
         # search for uniqueness
-        patient = patient_api.get_patient_by_mrn(
-            data.mrn, full_object=False, include_inactive=True)
-        if not patient:
-            return
-
-        raise Invalid(
-            _("invalid_patient_mrn_non_unique",
-              default="Patient Medical Record # must be unique"))
+        if not patient_api.is_mrn_unique(data.mrn):
+            raise Invalid(
+                _("invalid_patient_mrn_non_unique",
+                  default="Patient Medical Record # must be unique"))
 
     @invariant
     def validate_email_report(data):
@@ -440,8 +436,7 @@ class Patient(Container):
             return
 
         # Check if a patient with this same MRN already exists
-        if patient_api.get_patient_by_mrn(value, full_object=False,
-                                          include_inactive=True):
+        if not patient_api.is_mrn_unique(value):
             raise ValueError("Value is not unique: {}".format(value))
 
         mutator = self.mutator("mrn")
