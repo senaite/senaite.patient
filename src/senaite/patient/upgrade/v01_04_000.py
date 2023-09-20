@@ -445,3 +445,81 @@ def update_naive_tz_dobs(tool):
         obj._p_deactivate()
 
     logger.info("Updating timezone-naive dates of birth [DONE]")
+
+
+def fix_mrn_duplicates(tool):
+    """Fix duplicate MRNs
+    """
+    logger.info("Fixing duplicate MRNs ...")
+
+    query = {
+        "portal_type": "Patient",
+        "sort_on": "patient_mrn",
+    }
+    brains = api.search(query, PATIENT_CATALOG)
+    total = len(brains)
+
+    prev_mrn = None
+    duplicates = set()
+    for num, brain in enumerate(brains):
+        if num and num % 100 == 0:
+            logger.info("Fixing duplicate MRNs {0}/{1}".format(num, total))
+
+        if num and num % 1000 == 0:
+            # reduce memory size of the transaction
+            transaction.savepoint()
+
+        mrn = brain.mrn
+        if not mrn:
+            continue
+
+        if prev_mrn != mrn:
+            prev_mrn = mrn
+            continue
+
+        duplicates.add(mrn)
+
+    for mrn in duplicates:
+        fix_mrn_duplicate(mrn)
+
+    logger.info("Fixing duplicate MRNs [DONE]")
+
+
+def fix_mrn_duplicate(mrn):
+    """Fix Patients with same MRN as the one provided. Those that are active
+    have priority to keep the MRN over those that are inactive. MRN is emptied
+    and patient inactivated
+    """
+    logger.info("Fixing duplicates for {}".format(mrn))
+    query = {
+        "patient_mrn": mrn,
+        "is_active": True,
+        "sort_on": "created",
+        "sort_order": "ascending"
+    }
+
+    # We keep the MRN for active Patient that was created first
+    brains = api.search(query, PATIENT_CATALOG)
+    objs = map(api.get_object, brains)
+    found = len(objs) > 1
+    if found:
+        objs = objs[1:]
+
+    for obj in objs:
+        obj.mrn = u''
+        api.do_transition_for(obj, "deactivate")
+
+    # Empty mrn from inactivated patients
+    query["is_active"] = False
+    brains = api.search(query, PATIENT_CATALOG)
+    if not brains:
+        return
+
+    objs = map(api.get_object, brains)
+    if not found:
+        # Keep the MRN from the first one
+        objs = objs[1:]
+
+    for obj in objs:
+        obj.mrn = u''
+        obj.reindexObject()
