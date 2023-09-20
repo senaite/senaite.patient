@@ -19,17 +19,18 @@
 # Some rights reserved, see README and LICENSE.
 
 import collections
-
 from bika.lims import api
 from bika.lims import senaiteMessageFactory as _
 from bika.lims.interfaces import IClient
 from bika.lims.utils import get_email_link
+from bika.lims.utils import get_image
 from bika.lims.utils import get_link
 from senaite.app.listing.view import ListingView
 from senaite.patient import messageFactory as _sp
 from senaite.patient.api import to_identifier_type_name
 from senaite.patient.api import tuplify_identifiers
 from senaite.patient.catalog import PATIENT_CATALOG
+from senaite.patient.i18n import translate as t
 from senaite.patient.permissions import AddPatient
 
 
@@ -154,12 +155,13 @@ class PatientFolderView(ListingView):
         url = api.get_url(obj)
 
         # MRN
-        mrn = obj.getMRN() or obj.getId()
-        if mrn:
-            mrn = api.safe_unicode(mrn).encode("utf8")
-            item["mrn"] = mrn
-            item["replace"]["mrn"] = get_link(
-                url, value=mrn)
+        mrn = obj.getMRN()
+        if not mrn:
+            item["before"]["mrn"] = get_image("info", width=16)
+            mrn = t(_sp("mrn_not_defined", default="Not defined"))
+
+        item["mrn"] = self.to_utf8(mrn)
+        item["replace"]["mrn"] = get_link(url, value=mrn)
 
         # Patient Identifiers
         identifiers = obj.getIdentifiers()
@@ -171,15 +173,13 @@ class PatientFolderView(ListingView):
         if fullname:
             fullname = api.safe_unicode(fullname).encode("utf8")
             item["fullname"] = fullname
-            item["replace"]["fullname"] = get_link(
-                url, value=fullname)
+            item["replace"]["fullname"] = get_link(url, value=fullname)
 
         # Email
         email = obj.getEmail()
         if email:
             item["email"] = email
-            item["replace"]["email"] = get_email_link(
-                email, value=email)
+            item["replace"]["email"] = get_email_link(email, value=email)
 
         # Email Report
         email_report = obj.getEmailReport()
