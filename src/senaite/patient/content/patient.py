@@ -314,18 +314,28 @@ class IPatientSchema(model.Schema):
                 # nothing changed
                 return
 
-        if not patient_api.is_patient_required():
-            # MRN is not a required field
+        empty = not data.mrn
+        required = patient_api.is_patient_required()
+
+        if empty and required:
+            # empty and required. It cannot be
+            raise Invalid(
+                _("invalid_patient_mrn_is_empty",
+                  default="Patient Medical Record is missing or empty"))
+
+        elif empty:
+            # empty and non required
             return
 
-        if not data.mrn:
-            raise Invalid(_("Patient Medical Record is missing or empty"))
-
+        # search for uniqueness
         patient = patient_api.get_patient_by_mrn(
             data.mrn, full_object=False, include_inactive=True)
+        if not patient:
+            return
 
-        if patient:
-            raise Invalid(_("Patient Medical Record # must be unique"))
+        raise Invalid(
+            _("invalid_patient_mrn_non_unique",
+              default="Patient Medical Record # must be unique"))
 
     @invariant
     def validate_email_report(data):
