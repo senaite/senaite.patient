@@ -5,7 +5,8 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
-- #84 Display "Not defined" in listing for patients without MRN se
+- #84 Display "Not defined" in listing for patients without MRN set
+- #85 Display MRN instead of fullname in temporary identifier widget
 - #83 Fix Patients are not created on Add sample form submit
 - #82 Fix traceback when adding a patient
 - #79 Fix traceback when creating partitions
