@@ -78,7 +78,7 @@ MedicalRecordNumberField = TemporaryIdentifierField(
             "sort_on": "title",
             "sort_order": "ascending",
         },
-        search_index="patient_searchable_text",
+        search_index="patient_searchable_mrn",
         value_key="mrn",
         display_template="${mrn}",
         search_wildcard=True,
