@@ -20,11 +20,13 @@
 
 import transaction
 from bika.lims import api
+from bika.lims.workflow import isTransitionAllowed
 from plone import api as ploneapi
 from senaite.core.api import dtime
 from senaite.core.api.catalog import del_column
 from senaite.core.api.catalog import del_index
 from senaite.core.catalog import SAMPLE_CATALOG
+from senaite.core.p3compat import cmp
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import uncatalog_brain
 from senaite.core.upgrade.utils import UpgradeUtils
@@ -452,36 +454,21 @@ def fix_mrn_duplicates(tool):
     """
     logger.info("Fixing duplicate MRNs ...")
 
-    query = {
-        "portal_type": "Patient",
-        "sort_on": "patient_mrn",
-    }
-    brains = api.search(query, PATIENT_CATALOG)
-    total = len(brains)
-
-    prev_mrn = None
+    # Get the MRNs assigned to more than one Patient
+    seen = {}
     duplicates = set()
+    pt = api.get_tool(PATIENT_CATALOG)
+    brains = pt(portal_type="Patient")
     for num, brain in enumerate(brains):
-        if num and num % 100 == 0:
-            logger.info("Fixing duplicate MRNs {0}/{1}".format(num, total))
-
-        if num and num % 1000 == 0:
-            # reduce memory size of the transaction
-            transaction.savepoint()
-
         mrn = brain.mrn
         if not mrn:
             continue
+        if seen.get(mrn):
+            duplicates.add(mrn)
+        seen[mrn] = True
 
-        if prev_mrn != mrn:
-            prev_mrn = mrn
-            continue
-
-        duplicates.add(mrn)
-
-    for mrn in duplicates:
-        fix_mrn_duplicate(mrn)
-
+    # Fix duplicates
+    map(fix_mrn_duplicate, duplicates)
     logger.info("Fixing duplicate MRNs [DONE]")
 
 
@@ -491,35 +478,36 @@ def fix_mrn_duplicate(mrn):
     and patient inactivated
     """
     logger.info("Fixing duplicates for {}".format(mrn))
-    query = {
-        "patient_mrn": mrn,
-        "is_active": True,
-        "sort_on": "created",
-        "sort_order": "ascending"
-    }
 
-    # We keep the MRN for active Patient that was created first
+    def sort_func(a, b):
+        status_a = api.get_review_status(a)
+        status_b = api.get_review_status(b)
+        if status_a != status_b:
+            # active before active
+            return -1 if status_a == "active" else 1
+
+        # same status, proritize by creation date
+        created_a = api.get_creation_date(a)
+        created_b = api.get_creation_date(b)
+        return cmp(created_a, created_b)
+
+    # do the search
+    query = {"portal_catalog": "Patient", "patient_mrn": mrn}
     brains = api.search(query, PATIENT_CATALOG)
-    objs = map(api.get_object, brains)
-    found = len(objs) > 1
-    if found:
-        objs = objs[1:]
-
-    for obj in objs:
-        obj.mrn = u''
-        api.do_transition_for(obj, "deactivate")
-
-    # Empty mrn from inactivated patients
-    query["is_active"] = False
-    brains = api.search(query, PATIENT_CATALOG)
-    if not brains:
+    if len(brains) < 2:
+        logger.warn("No duplicates found for {}".format(mrn))
         return
 
-    objs = map(api.get_object, brains)
-    if not found:
-        # Keep the MRN from the first one
-        objs = objs[1:]
+    # sort by status and creation date
+    patients = map(api.get_object, brains)
+    patients = sorted(patients, cmp=sort_func)
 
-    for obj in objs:
-        obj.mrn = u''
-        obj.reindexObject()
+    # clear mrn from objects, except from first one
+    for patient in patients:
+        # reset the mrn
+        patient.mrn = u''
+        # force transition
+        action_id = "deactivate"
+        if isTransitionAllowed(patient, action_id):
+            api.do_transition_for(patient, "deactivate")
+        patient.reindexObject()
