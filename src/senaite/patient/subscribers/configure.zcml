@@ -22,13 +22,6 @@
       handler=".analysisrequest.on_object_created"
       />
 
-  <!-- Before transition event -->
-  <subscriber
-      for="senaite.patient.content.patient.IPatient
-           Products.DCWorkflow.interfaces.IBeforeTransitionEvent"
-      handler=".patient.on_before_transition"
-      />
-
   <subscriber
       for="senaite.patient.browser.controlpanel.IPatientControlPanel
            zope.lifecycleevent.interfaces.IObjectModifiedEvent"

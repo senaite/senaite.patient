@@ -9,6 +9,10 @@ Running this test from the buildout directory:
 
 Needed Imports:
 
+    >>> from bika.lims.api import create
+    >>> from bika.lims.api import do_transition_for
+    >>> from bika.lims.api import edit
+    >>> from bika.lims.api import get_review_status
     >>> from datetime import date
     >>> from dateutil.relativedelta import relativedelta
     >>> from senaite.core.api import dtime
@@ -222,3 +226,40 @@ If we don't provide an `on_date`, system uses current date:
     >>> ymd = api.get_age_ymd(dob)
     >>> ymd == api.get_age_ymd(dob, on_date=date.today())
     True
+
+Check MRN uniqueness
+....................
+
+Patient's API provides an easy function to check if a given MRN exists:
+
+    >>> api.is_mrn_unique("123456")
+    True
+
+Create a patient with this very same mrn:
+
+    >>> container = portal.patients
+    >>> values = dict(mrn="123456", firstname="John", lastname="Doe", sex="m")
+    >>> patient = create(container, "Patient", **values)
+    >>> api.is_mrn_unique("123456")
+    False
+
+And becomes unique after the mrn of the patient is updated:
+
+    >>> edit(patient, mrn="12345")
+    >>> patient.reindexObject()
+    >>> api.is_mrn_unique("123456")
+    True
+    >>> api.is_mrn_unique("12345")
+    False
+
+The status of the patient does not have any effect to uniqueness:
+
+    >>> get_review_status(patient)
+    'active'
+    >>> patient = do_transition_for(patient, "deactivate")
+    >>> get_review_status(patient)
+    'inactive'
+    >>> api.is_mrn_unique("123456")
+    True
+    >>> api.is_mrn_unique("12345")
+    False

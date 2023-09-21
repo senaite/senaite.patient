@@ -31,7 +31,7 @@ from senaite.patient.config import AUTO_ID_MARKER
 from senaite.patient.config import PATIENT_CATALOG
 
 
-class TemporaryIdentifierField(ObjectField, ExtensionField):
+class TemporaryIdentifierField(ExtensionField, ObjectField):
     """ObjectField extender that stores a dictionary with two keys:
 
         {
@@ -64,7 +64,7 @@ class TemporaryIdentifierField(ObjectField, ExtensionField):
         return patient_api.get_patient_by_mrn(mrn, include_inactive=True)
 
 
-class FullnameField(ObjectField, ExtensionField):
+class FullnameField(ExtensionField, ObjectField):
     """ObjectField extender that stores a dictionary with two keys ('firstname'
     and 'lastname') that represent the fullname of a person
     """

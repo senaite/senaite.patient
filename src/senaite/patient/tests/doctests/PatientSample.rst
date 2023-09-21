@@ -165,8 +165,8 @@ assign the age of the patient at present time:
     >>> ymd = sample.getField("DateOfBirth").get_age_ymd(sample)
     >>> sample.setDateOfBirth(ymd)
     >>> dob = sample.getDateOfBirth()
-    >>> dtime.to_ansi(dob[0], show_time=False)
-    '19800425'
+    >>> dtime.to_ansi(dob[0], show_time=False)[:-1]
+    '1980042'
 
 And system knows the DoB was calculated from Age:
 

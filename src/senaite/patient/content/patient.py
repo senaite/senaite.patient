@@ -314,18 +314,22 @@ class IPatientSchema(model.Schema):
                 # nothing changed
                 return
 
-        if not patient_api.is_patient_required():
-            # MRN is not a required field
+        empty = not data.mrn
+        required = patient_api.is_patient_required()
+
+        if empty and required:
+            raise Invalid(
+                _("invalid_patient_mrn_is_required",
+                  default="Patient Medical Record Number is required"))
+
+        elif empty:
             return
 
-        if not data.mrn:
-            raise Invalid(_("Patient Medical Record is missing or empty"))
-
-        patient = patient_api.get_patient_by_mrn(
-            data.mrn, full_object=False, include_inactive=True)
-
-        if patient:
-            raise Invalid(_("Patient Medical Record # must be unique"))
+        # search for uniqueness
+        if not patient_api.is_mrn_unique(data.mrn):
+            raise Invalid(
+                _("invalid_patient_mrn_must_be_unique",
+                  default="Patient Medical Record Number must be unique"))
 
     @invariant
     def validate_email_report(data):
@@ -430,9 +434,8 @@ class Patient(Container):
             return
 
         # Check if a patient with this same MRN already exists
-        if patient_api.get_patient_by_mrn(value, full_object=False,
-                                          include_inactive=True):
-            raise ValueError("Value is not unique: {}".format(value))
+        if not patient_api.is_mrn_unique(value):
+            raise ValueError("Patient Medical Record Number must be unique")
 
         mutator = self.mutator("mrn")
         return mutator(self, api.safe_unicode(value))

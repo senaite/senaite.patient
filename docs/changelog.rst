@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #86 Fix non-unique MRNs are permitted when "Require MRN" setting is enabled
 - #84 Display "Not defined" in listing for patients without MRN set
 - #85 Display MRN instead of fullname in temporary identifier widget
 - #83 Fix Patients are not created on Add sample form submit

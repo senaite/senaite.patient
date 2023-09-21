@@ -407,3 +407,18 @@ def is_patient_creation_allowed(container):
               otherwise False
     """
     return api.security.check_permission(AddPatient, container)
+
+
+def is_mrn_unique(mrn):
+    """Checks whether the mrn provided is unique. This is, no patients with
+    this mrn exist, regardless of their status
+
+    :param mrn: The MRN to check its uniqueness
+    :returns: True if no patient with this mrn exist
+    """
+    query = {
+        "portal_type": "Patient",
+        "patient_mrn": api.safe_unicode(mrn).encode("utf8"),
+    }
+    brains = api.search(query, PATIENT_CATALOG)
+    return len(brains) == 0
