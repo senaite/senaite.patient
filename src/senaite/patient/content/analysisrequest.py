@@ -80,7 +80,6 @@ MedicalRecordNumberField = TemporaryIdentifierField(
         },
         search_index="patient_searchable_mrn",
         value_key="mrn",
-        display_template="${mrn}",
         search_wildcard=True,
         multi_valued=False,
         allow_user_value=True,
