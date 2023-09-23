@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #88 Display all samples by default in Patient context
 - #86 Fix non-unique MRNs are permitted when "Require MRN" setting is enabled
 - #84 Display "Not defined" in listing for patients without MRN set
 - #85 Display MRN instead of fullname in temporary identifier widget
