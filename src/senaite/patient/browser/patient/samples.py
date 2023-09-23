@@ -11,8 +11,15 @@ class SamplesView(BaseView):
     def __init__(self, context, request):
         super(SamplesView, self).__init__(context, request)
 
+        # display "All" samples by default
+        self.default_review_state = "all"
+
         fullname = self.context.getFullname()
-        self.title = _("Samples of {}").format(api.safe_unicode(fullname))
+        self.title = _(
+            "title_patient_samples_listing",
+            "Samples of ${patient_fullname}",
+            mapping={"patient_fullname": api.safe_unicode(fullname)}
+        )
 
         mrn = self.context.getMRN()
         if mrn:
