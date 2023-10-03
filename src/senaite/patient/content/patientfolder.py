@@ -18,11 +18,10 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+from bika.lims.interfaces import IDoNotSupportSnapshots
 from plone.supermodel import model
 from senaite.core.content.base import Container
-
 from senaite.core.interfaces import IHideActionsMenu
-
 from zope.interface import implementer
 
 
@@ -32,7 +31,7 @@ class IPatientFolder(model.Schema):
     pass
 
 
-@implementer(IPatientFolder, IHideActionsMenu)
+@implementer(IPatientFolder, IDoNotSupportSnapshots, IHideActionsMenu)
 class PatientFolder(Container):
     """Patient Folder
     """

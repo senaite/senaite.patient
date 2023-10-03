@@ -20,7 +20,11 @@
 
 import transaction
 from bika.lims import api
+from bika.lims.api import snapshot
+from bika.lims.interfaces import IAuditable
+from bika.lims.interfaces import IDoNotSupportSnapshots
 from bika.lims.workflow import isTransitionAllowed
+from persistent.list import PersistentList
 from plone import api as ploneapi
 from senaite.core.api import dtime
 from senaite.core.api.catalog import del_column
@@ -35,6 +39,9 @@ from senaite.patient.api import patient_search
 from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import PRODUCT_NAME
 from senaite.patient.setuphandlers import setup_catalogs
+from zope.annotation.interfaces import IAnnotations
+from zope.interface import alsoProvides
+from zope.interface import noLongerProvides
 
 version = "1.4.0"
 profile = "profile-{0}:default".format(PRODUCT_NAME)
@@ -511,3 +518,26 @@ def fix_mrn_duplicate(mrn):
         if isTransitionAllowed(patient, action_id):
             api.do_transition_for(patient, "deactivate")
         patient.reindexObject()
+
+
+def remove_patientfolder_snapshots(tool):
+    """Removes the auditlog snapshots of Patient Folder and removes the
+    IAuditable marker interface
+    """
+    logger.info("Removing snapshots from Patient Folder ...")
+    portal = tool.aq_inner.aq_parent
+    patients = portal.patients
+
+    # do not take more snapshots
+    alsoProvides(patients, IDoNotSupportSnapshots)
+
+    # do not display audit log
+    noLongerProvides(patients, IAuditable)
+
+    # remove all snapshots except the first one (created)
+    annotation = IAnnotations(patients)
+    storage = annotation.get(snapshot.SNAPSHOT_STORAGE)
+    if annotation and len(storage) > 0:
+        annotation[snapshot.SNAPSHOT_STORAGE] = PersistentList([storage[0]])
+
+    logger.info("Removing snapshots from Patient Folder [DONE]")
