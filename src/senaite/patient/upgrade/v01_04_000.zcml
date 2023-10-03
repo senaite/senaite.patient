@@ -2,7 +2,16 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
-  <!-- 1413: Dix duplicate MRNs -->
+  <!-- 1414: Fix Auditlog for Patient folder  -->
+  <genericsetup:upgradeStep
+      title="SENAITE PATIENT 1.4.0: Remove snapshots from Patient folder"
+      description="Remove snapshots and auditlog from Patient folder"
+      source="1413"
+      destination="1414"
+      handler=".v01_04_000.remove_patientfolder_snapshots"
+      profile="senaite.patient:default"/>
+
+  <!-- 1413: Fix duplicate MRNs -->
   <genericsetup:upgradeStep
       title="SENAITE PATIENT 1.4.0: Fix MRN duplicates"
       description="Fix MRN duplicates"
