@@ -295,7 +295,7 @@ class IPatientSchema(model.Schema):
 
     directives.widget("birthdate",
                       DatetimeWidget,
-                      datepicker_nofuture=True,
+                      max="current",
                       show_time=False)
     birthdate = DatetimeField(
         title=_(u"label_patient_birthdate", default=u"Birthdate"),
