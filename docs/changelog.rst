@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #90 Compatibility with core#2399
 - #89 Fix addition of snapshots in PatientFolder on Patient creation
 - #88 Display all samples by default in Patient context
 - #86 Fix non-unique MRNs are permitted when "Require MRN" setting is enabled
