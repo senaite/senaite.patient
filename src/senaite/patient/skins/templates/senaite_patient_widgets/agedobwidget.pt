@@ -150,7 +150,7 @@
               <input type="date"
                      style="min-width:130px;max-width:130px"
                      tal:define="invalid_class python: 'is-invalid' if dob_estimated else ''"
-                     tal:attributes="python:widget.attrs();
+                     tal:attributes="python:widget.attrs(here);
                          id string:${subfield_dob};
                          name string:${subfield_dob};
                          required python:required and 'required' or None;
