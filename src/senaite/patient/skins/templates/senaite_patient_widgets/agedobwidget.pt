@@ -149,13 +149,15 @@
             <div class="input-group input-group-sm flex-nowrap d-inline-flex w-auto">
               <input type="date"
                      style="min-width:130px;max-width:130px"
-                     tal:define="invalid_class python: 'is-invalid' if dob_estimated else ''"
-                     tal:attributes="python:widget.attrs(here);
+                     tal:define="invalid_class python: 'is-invalid' if dob_estimated else '';
+                                 widget_attrs python: widget.attrs(here, field);"
+                     tal:attributes="
                          id string:${subfield_dob};
                          name string:${subfield_dob};
                          required python:required and 'required' or None;
                          value python: value;
-                         class python: 'form-control form-control-sm {}'.format(invalid_class);"/>
+                         class python: 'form-control form-control-sm {}'.format(invalid_class);
+                         python:widget_attrs"/>
 
               <div tal:condition="dob_estimated"
                    class="form-control form-control-sm text-danger border-danger">
