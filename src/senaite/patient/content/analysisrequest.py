@@ -150,7 +150,7 @@ dob_field = AgeDateOfBirthField(
         render_own_label=True,
         default_age=True,
         show_time=False,
-        datepicker_nofuture=True,
+        max="current",
         visible={
             "add": "edit",
         }
