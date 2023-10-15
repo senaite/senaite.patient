@@ -9,6 +9,10 @@
     factory=".guards.SampleGuardAdapter"
     name="senaite.patient.adapter.guard.sample" />
 
+  <!-- Group Key Provider to allow only 1 Patient per Report
+       https://github.com/senaite/senaite.impress/pull/145 -->
+  <adapter factory=".impress.GroupKeyProvider" />
+
   <!-- Visibility of Gender field -->
   <adapter
       factory=".widgetvisibility.GenderFieldVisibility"
