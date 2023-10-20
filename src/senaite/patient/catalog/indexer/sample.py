@@ -19,7 +19,11 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims.interfaces import IAnalysisRequest
+from bika.lims.interfaces import IListingSearchableTextProvider
 from plone.indexer import indexer
+from senaite.core.interfaces import ISampleCatalog
+from zope.component import adapter
+from zope.interface import implementer
 
 
 @indexer(IAnalysisRequest)
@@ -34,3 +38,22 @@ def medical_record_number(instance):
     """Returns the Medical Record Number value assigned to the sample
     """
     return [instance.getMedicalRecordNumberValue() or None]
+
+
+@adapter(IAnalysisRequest, ISampleCatalog)
+@implementer(IListingSearchableTextProvider)
+class ListingSearchableTextProvider(object):
+    """Adapter that extends existing listing_searchable_text index with
+    additional tokens related with patient
+    """
+
+    def __init__(self, context, catalog):
+        self.context = context
+        self.catalog = catalog
+
+    def __call__(self):
+        tokens = [
+            self.context.getMedicalRecordNumberValue(),
+            self.context.getPatientFullName(),
+        ]
+        return filter(None, tokens)
