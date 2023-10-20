@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #92 Allow searches by patient in samples listing
 - #91 Allow only 1 Patient per Report
 - #90 Compatibility with core#2399
 - #89 Fix addition of snapshots in PatientFolder on Patient creation
