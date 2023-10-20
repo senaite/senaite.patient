@@ -2,6 +2,18 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
+  <!-- 1415: Allow searches by patient in samples -->
+  <genericsetup:upgradeStep
+      title="SENAITE PATIENT 1.4.0: Allow patient searches in samples"
+      description="
+        This upgrade step adds the mrn and patient full name as tokens for the
+        existing `listing_searchable_text` index from samples catalog and does
+        the reindex of the index"
+      source="1414"
+      destination="1415"
+      handler=".v01_04_000.allow_searches_by_patient_in_samples"
+      profile="senaite.patient:default"/>
+
   <!-- 1414: Fix Auditlog for Patient folder  -->
   <genericsetup:upgradeStep
       title="SENAITE PATIENT 1.4.0: Remove snapshots from Patient folder"

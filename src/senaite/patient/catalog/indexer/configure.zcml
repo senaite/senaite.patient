@@ -1,0 +1,30 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="senaite.patient">
+
+  <!-- Sample (aka AnalysisRequest) Index Adapters -->
+  <adapter name="is_temporary_mrn" factory=".sample.is_temporary_mrn"/>
+  <adapter name="medical_record_number" factory=".sample.medical_record_number"/>
+
+  <!-- Additional tokens for listing_searchable_text -->
+  <adapter
+      for="bika.lims.interfaces.IAnalysisRequest
+           senaite.core.interfaces.ISampleCatalog"
+      provides="bika.lims.interfaces.IListingSearchableTextProvider"
+      factory=".sample.ListingSearchableTextProvider"/>
+
+  <!-- Patient Indexes -->
+  <adapter name="patient_mrn" factory=".patient.patient_mrn" />
+  <adapter name="patient_identifier_keys" factory=".patient.patient_identifier_keys" />
+  <adapter name="patient_identifier_values" factory=".patient.patient_identifier_values" />
+  <adapter name="patient_race_keys" factory=".patient.patient_race_keys" />
+  <adapter name="patient_ethnicity_keys" factory=".patient.patient_ethnicity_keys" />
+  <adapter name="patient_marital_status" factory=".patient.patient_marital_status" />
+  <adapter name="patient_email" factory=".patient.patient_email" />
+  <adapter name="patient_email_report" factory=".patient.patient_email_report" />
+  <adapter name="patient_birthdate" factory=".patient.patient_birthdate" />
+  <adapter name="patient_fullname" factory=".patient.patient_fullname" />
+  <adapter name="patient_searchable_text" factory=".patient.patient_searchable_text" />
+  <adapter name="patient_searchable_mrn" factory=".patient.patient_searchable_mrn" />
+
+</configure>

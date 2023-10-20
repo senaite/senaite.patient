@@ -15,26 +15,11 @@
 # this program; if not, write to the Free Software Foundation, Inc., 51
 # Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-# Copyright 2020-2022 by it's authors.
+# Copyright 2020-2023 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-from bika.lims.interfaces import IAnalysisRequest
 from plone.indexer import indexer
 from senaite.patient.interfaces import IPatient
-
-
-@indexer(IAnalysisRequest)
-def is_temporary_mrn(instance):
-    """Returns whether the Medical Record Number is temporary
-    """
-    return instance.isMedicalRecordTemporary()
-
-
-@indexer(IAnalysisRequest)
-def medical_record_number(instance):
-    """Returns the Medical Record Number value assigned to the sample
-    """
-    return [instance.getMedicalRecordNumberValue() or None]
 
 
 @indexer(IPatient)
