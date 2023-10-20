@@ -42,6 +42,7 @@ from senaite.patient.setuphandlers import setup_catalogs
 from zope.annotation.interfaces import IAnnotations
 from zope.interface import alsoProvides
 from zope.interface import noLongerProvides
+from Products.ZCatalog.ProgressHandler import ZLogHandler
 
 version = "1.4.0"
 profile = "profile-{0}:default".format(PRODUCT_NAME)
@@ -541,3 +542,13 @@ def remove_patientfolder_snapshots(tool):
         annotation[snapshot.SNAPSHOT_STORAGE] = PersistentList([storage[0]])
 
     logger.info("Removing snapshots from Patient Folder [DONE]")
+
+
+def allow_searches_by_patient_in_samples(tool):
+    """Reindex the `listing_searchable_text` index from AnalysisRequest type
+    so tokens with the patient name and mrn are added for searches
+    """
+    logger.info("Allowing searches by patient in samples ...")
+    cat = api.get_tool(SAMPLE_CATALOG)
+    cat.reindexIndex(["listing_searchable_text"], None, ZLogHandler())
+    logger.info("Allowing searches by patient in samples [DONE]")
