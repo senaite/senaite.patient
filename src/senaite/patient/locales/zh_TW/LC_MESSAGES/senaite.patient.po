@@ -1,18 +1,20 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2023-10-22 12:27+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"PO-Revision-Date: 2022-10-03 11:08+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/senaite/teams/130029/zh_TW/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "Language-Code: en\n"
 "Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
+"Language: zh_TW\n"
 
 #: senaite/patient/adapters/listing.py:132
 msgid "<no value>"
@@ -696,11 +698,15 @@ msgstr ""
 msgid "asked but unknown"
 msgstr ""
 
+#. variables are $address, $zip, $city, $country, $subdivision1,
+#. $subdivision2, $type."
 #. Default: "Define the format of the patient address in samples. Possible variables are $address, $zip, $city, $country, $subdivision1, $subdivision2, $type."
 #: senaite/patient/browser/controlpanel.py:288
 msgid "description_controlpanel_patient_address_format"
 msgstr ""
 
+#. the age of the patient is greater than one year. In such case, only years
+#. will be displayed"
 #. Default: "If selected, months and days won't be displayed in sample view if the age of the patient is greater than one year. In such case, only years will be displayed"
 #: senaite/patient/browser/controlpanel.py:274
 msgid "description_controlpanel_patient_ageyears"
@@ -751,6 +757,7 @@ msgstr ""
 msgid "description_patient_additional_phone_numbers_phone"
 msgstr ""
 
+#. have more than one"
 #. Default: "General ethnicity category reported by the patient - subject may have more than one"
 #: senaite/patient/content/patient.py:207
 msgid "description_patient_ethnicities"
@@ -776,6 +783,7 @@ msgstr ""
 msgid "description_patient_primary_phone"
 msgstr ""
 
+#. more than one"
 #. Default: "General race category reported by the patient - subject may have more than one"
 #: senaite/patient/content/patient.py:189
 msgid "description_patient_races"

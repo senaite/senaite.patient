@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2023-08-25 13:50+0000\n"
+"POT-Creation-Date: 2023-10-22 12:27+0000\n"
 "PO-Revision-Date: 2022-10-03 11:08+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German (https://app.transifex.com/senaite/teams/130029/de/)\n"
@@ -24,13 +24,13 @@ msgstr ""
 msgid "Activate"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:103
+#: senaite/patient/browser/patientfolder.py:104
 #: senaite/patient/profiles/default/workflows/senaite_patient_folder_workflow/definition.xml
 #: senaite/patient/profiles/default/workflows/senaite_patient_workflow/definition.xml
 msgid "Active"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:59
+#: senaite/patient/browser/patientfolder.py:60
 msgid "Add"
 msgstr ""
 
@@ -54,7 +54,7 @@ msgstr ""
 msgid "Age introduction"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:113
+#: senaite/patient/browser/patientfolder.py:114
 msgid "All"
 msgstr ""
 
@@ -98,7 +98,7 @@ msgstr ""
 msgid "Belearic Islander"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:93
+#: senaite/patient/browser/patientfolder.py:94
 msgid "Birthdate"
 msgstr ""
 
@@ -226,19 +226,19 @@ msgstr ""
 msgid "Ecuadorian"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:86
+#: senaite/patient/browser/patientfolder.py:87
 msgid "Email"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:83
+#: senaite/patient/browser/patientfolder.py:84
 msgid "Email Report"
 msgstr ""
 
-#: senaite/patient/content/patient.py:372
+#: senaite/patient/content/patient.py:376
 msgid "Email address %s is invalid"
 msgstr ""
 
-#: senaite/patient/skins/templates/senaite_patient_widgets/agedobwidget.pt:162
+#: senaite/patient/skins/templates/senaite_patient_widgets/agedobwidget.pt:164
 msgid "Estimated"
 msgstr ""
 
@@ -254,11 +254,11 @@ msgstr ""
 msgid "Firstname"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:96
+#: senaite/patient/browser/patientfolder.py:97
 msgid "Folder"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:80
+#: senaite/patient/browser/patientfolder.py:81
 msgid "Fullname"
 msgstr ""
 
@@ -266,7 +266,7 @@ msgstr ""
 msgid "Gallego"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:91
+#: senaite/patient/browser/patientfolder.py:92
 msgid "Gender"
 msgstr ""
 
@@ -291,7 +291,7 @@ msgid "Honduran"
 msgstr ""
 
 #: senaite/patient/browser/controlpanel.py:160
-#: senaite/patient/browser/patientfolder.py:78
+#: senaite/patient/browser/patientfolder.py:79
 msgid "Identifiers"
 msgstr ""
 
@@ -319,7 +319,7 @@ msgstr ""
 msgid "If selected, users will be able to verify samples that have a Patient assigned with a temporary Medical Record Number (MRN)."
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:108
+#: senaite/patient/browser/patientfolder.py:109
 #: senaite/patient/profiles/default/workflows/senaite_patient_workflow/definition.xml
 msgid "Inactive"
 msgstr ""
@@ -389,7 +389,7 @@ msgstr ""
 msgid "Married"
 msgstr ""
 
-#: senaite/patient/browser/patientfolder.py:75
+#: senaite/patient/browser/patientfolder.py:76
 #: senaite/patient/content/analysisrequest.py:66
 msgid "Medical Record #"
 msgstr ""
@@ -479,16 +479,8 @@ msgstr ""
 msgid "Patient MRN of sample is not equal to %s"
 msgstr ""
 
-#: senaite/patient/content/patient.py:328
-msgid "Patient Medical Record # must be unique"
-msgstr ""
-
 #: senaite/patient/content/patient.py:109
 msgid "Patient Medical Record Number"
-msgstr ""
-
-#: senaite/patient/content/patient.py:322
-msgid "Patient Medical Record is missing or empty"
 msgstr ""
 
 #: senaite/patient/browser/controlpanel.py:494
@@ -501,7 +493,7 @@ msgstr ""
 msgid "Patient birthdate"
 msgstr ""
 
-#: senaite/patient/content/patient.py:359
+#: senaite/patient/content/patient.py:363
 msgid "Patient email is invalid"
 msgstr ""
 
@@ -557,7 +549,7 @@ msgstr ""
 msgid "Place of residence"
 msgstr ""
 
-#: senaite/patient/content/patient.py:350
+#: senaite/patient/content/patient.py:354
 msgid "Please set a valid email address first"
 msgstr ""
 
@@ -585,11 +577,7 @@ msgstr ""
 msgid "Salvadoran"
 msgstr ""
 
-#: senaite/patient/browser/patient/samples.py:15
-msgid "Samples of {}"
-msgstr ""
-
-#: senaite/patient/browser/patientfolder.py:89
+#: senaite/patient/browser/patientfolder.py:90
 #: senaite/patient/content/analysisrequest.py:168
 msgid "Sex"
 msgstr ""
@@ -801,6 +789,16 @@ msgstr ""
 msgid "description_patient_races"
 msgstr ""
 
+#. Default: "Patient Medical Record Number is required"
+#: senaite/patient/content/patient.py:322
+msgid "invalid_patient_mrn_is_required"
+msgstr ""
+
+#. Default: "Patient Medical Record Number must be unique"
+#: senaite/patient/content/patient.py:331
+msgid "invalid_patient_mrn_must_be_unique"
+msgstr ""
+
 #. Default: "Address Format"
 #: senaite/patient/browser/controlpanel.py:285
 msgid "label_controlpanel_patient_address_format"
@@ -957,7 +955,7 @@ msgid "label_primary_patient_email"
 msgstr ""
 
 #. Default: "Personal"
-#: senaite/patient/browser/patient/views.py:32
+#: senaite/patient/browser/patient/views.py:33
 msgid "label_schema_personal"
 msgstr ""
 
@@ -997,6 +995,11 @@ msgstr ""
 
 #: senaite/patient/skins/templates/senaite_patient_widgets/fullnamewidget.pt:103
 msgid "placeholder"
+msgstr ""
+
+#. Default: "Samples of ${patient_fullname}"
+#: senaite/patient/browser/patient/samples.py:18
+msgid "title_patient_samples_listing"
 msgstr ""
 
 #: senaite/patient/config.py:81
