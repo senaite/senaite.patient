@@ -22,6 +22,7 @@ from bika.lims.interfaces import IAnalysisRequest
 from bika.lims.interfaces import IListingSearchableTextProvider
 from plone.indexer import indexer
 from senaite.core.interfaces import ISampleCatalog
+from senaite.patient.interfaces import ISenaitePatientLayer
 from zope.component import adapter
 from zope.interface import implementer
 
@@ -40,15 +41,15 @@ def medical_record_number(instance):
     return [instance.getMedicalRecordNumberValue() or None]
 
 
-@adapter(IAnalysisRequest, ISampleCatalog)
+@adapter(IAnalysisRequest, ISenaitePatientLayer, ISampleCatalog)
 @implementer(IListingSearchableTextProvider)
 class ListingSearchableTextProvider(object):
     """Adapter that extends existing listing_searchable_text index with
     additional tokens related with patient
     """
-
-    def __init__(self, context, catalog):
+    def __init__(self, context, request, catalog):
         self.context = context
+        self.request = request
         self.catalog = catalog
 
     def __call__(self):

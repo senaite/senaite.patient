@@ -7,11 +7,7 @@
   <adapter name="medical_record_number" factory=".sample.medical_record_number"/>
 
   <!-- Additional tokens for listing_searchable_text -->
-  <adapter
-      for="bika.lims.interfaces.IAnalysisRequest
-           senaite.core.interfaces.ISampleCatalog"
-      provides="bika.lims.interfaces.IListingSearchableTextProvider"
-      factory=".sample.ListingSearchableTextProvider"/>
+  <adapter factory=".sample.ListingSearchableTextProvider"/>
 
   <!-- Patient Indexes -->
   <adapter name="patient_mrn" factory=".patient.patient_mrn" />
