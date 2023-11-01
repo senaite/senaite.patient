@@ -56,8 +56,6 @@ class PatientDynamicResultsRange(DynamicResultsRange):
         if not specs:
             return {}
 
-        import pdb;pdb.set_trace()
-
         # Generate a match data object, which match both the column names and
         # the field names of the Analysis.
         match_data = self.get_match_data()
