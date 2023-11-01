@@ -20,6 +20,16 @@
       for="*"
       name="senaite.patient.adapter.widgetvisibility.gender" />
 
+  <!-- Dynamic Results Range Adapter
+       Looked up in `abstractroutineanalysis.getResultsRange` -->
+  <adapter
+      for="senaite.patient.interfaces.IRoutineAnalysis"
+      factory=".dynamicresultsrange.PatientDynamicResultsRange"
+      provides="bika.lims.interfaces.IDynamicResultsRange"/>
+  <class class="bika.lims.content.analysis.Analysis">
+    <implements interface="senaite.patient.interfaces.IRoutineAnalysis" />
+  </class>
+
   <!-- Samples listing with additional filters and columns -->
   <subscriber
     for="bika.lims.browser.analysisrequest.AnalysisRequestsView
