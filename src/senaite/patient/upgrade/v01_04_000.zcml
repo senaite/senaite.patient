@@ -2,6 +2,20 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
+  <!-- 1416: Allow searches by patient in samples -->
+  <genericsetup:upgradeStep
+      title="Remove lead and trailing whitespaces from MRN"
+      description="
+        This upgrade step walks through all samples and removes trailing and
+        leading whitespaces from Medical Record Number fields. This is
+        necessary because when creating a Patient object, the MRN is
+        automatically stripped in setMRN function, although is left without
+        changes in AnalysisRequest."
+      source="1415"
+      destination="1416"
+      handler=".v01_04_000.remove_whitespaces_mrn"
+      profile="senaite.patient:default"/>
+
   <!-- 1415: Allow searches by patient in samples -->
   <genericsetup:upgradeStep
       title="SENAITE PATIENT 1.4.0: Allow patient searches in samples"
