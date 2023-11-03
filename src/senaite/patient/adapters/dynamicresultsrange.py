@@ -74,6 +74,7 @@ class PatientDynamicResultsRange(DynamicResultsRange):
 
             for k, v in match_data.items():
                 # break if the values do not match
+                if k == "Sex"
                 if v != spec[k]:
                     skip = True
                     break
@@ -85,7 +86,8 @@ class PatientDynamicResultsRange(DynamicResultsRange):
             # Age/DoB comparison
             min_age = spec.get("MinAge")
             if min_age and is_ymd(min_age):
-                if dob and dob > get_birth_date(min_age, on_date=sampled):
+                min_dob = get_birth_date(min_age, on_date=sampled)
+                if dob and dob > min_dob:
                     # patient is younger
                     continue
             elif min_age:
@@ -93,7 +95,8 @@ class PatientDynamicResultsRange(DynamicResultsRange):
 
             max_age = spec.get("MaxAge")
             if max_age and is_ymd(max_age):
-                if dob and dob < get_birth_date(max_age, on_date=sampled):
+                max_dob = get_birth_date(max_age, on_date=sampled)
+                if dob and dob < max_dob:
                     # patient is older
                     continue
             elif max_age:
