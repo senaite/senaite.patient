@@ -60,6 +60,8 @@ def on_object_edited(instance, event):
     """Event handler when a sample was edited
     """
     update_patient(instance)
+    # update results ranges so dynamic specs are recalculated
+    update_results_ranges(instance)
 
 
 def add_cc_email(sample, email):
@@ -151,3 +153,14 @@ def get_patient_fields(instance):
         "middlename": api.safe_unicode(middlename),
         "lastname": api.safe_unicode(lastname),
     }
+
+
+def update_results_ranges(sample):
+    """Re-assigns the values of the results ranges for analyses, so dynamic
+    specifications are re-calculated when patient values such as sex and date
+    of birth are updated
+    """
+    # reset the result ranges so dynamic specs are grabbed again
+    for analysis in sample.getAnalyses(full_objects=True):
+        rr = analysis.getResultsRange()
+        analysis.setResultsRange(rr)
