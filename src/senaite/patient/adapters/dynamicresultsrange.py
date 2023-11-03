@@ -3,10 +3,10 @@
 from bika.lims import api
 from bika.lims.adapters.dynamicresultsrange import DynamicResultsRange
 from bika.lims.interfaces import IDynamicResultsRange
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from senaite.patient import logger
+from senaite.core.api import dtime
 from senaite.patient.api import get_birth_date
-from senaite.patient.api import is_ymd
 from senaite.patient.api import to_ymd
 from zope.interface import implementer
 
@@ -73,6 +73,10 @@ class PatientDynamicResultsRange(DynamicResultsRange):
             skip = False
 
             for k, v in match_data.items():
+                # Assume a match if Age without value
+                if k == "Age" and not spec.get(k):
+                    continue
+
                 # break if the values do not match
                 if v != spec[k]:
                     skip = True
@@ -83,23 +87,20 @@ class PatientDynamicResultsRange(DynamicResultsRange):
                 continue
 
             # Age/DoB comparison
-            min_age = spec.get("MinAge")
-            if min_age and is_ymd(min_age):
-                min_dob = get_birth_date(min_age, on_date=sampled)
-                if dob and dob >= min_dob:
-                    # patient is younger
-                    continue
-            elif min_age:
-                logger.warn("Not ymd format: {}".format(min_age))
-
-            max_age = spec.get("MaxAge")
-            if max_age and is_ymd(max_age):
-                max_dob = get_birth_date(max_age, on_date=sampled)
-                if dob and dob < max_dob:
+            if dob:
+                # convert to ansi to avoid TZ issues
+                dob = dtime.to_ansi(dob)
+                max_age = spec.get("MaxAge")
+                min_dob = get_birth_date(max_age, sampled, datetime.min)
+                if dob <= dtime.to_ansi(min_dob):
                     # patient is older
                     continue
-            elif max_age:
-                logger.warn("Not ymd format: {}".format(max_age))
+
+                min_age = spec.get("MinAge")
+                max_dob = get_birth_date(min_age, sampled, datetime.max)
+                if dob > dtime.to_ansi(max_dob):
+                    # patient is younger
+                    continue
 
             # at this point we have a match, update the results range dict
             for key in self.range_keys:
