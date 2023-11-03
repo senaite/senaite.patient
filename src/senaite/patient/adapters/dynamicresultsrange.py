@@ -86,7 +86,7 @@ class PatientDynamicResultsRange(DynamicResultsRange):
             min_age = spec.get("MinAge")
             if min_age and is_ymd(min_age):
                 min_dob = get_birth_date(min_age, on_date=sampled)
-                if dob and dob > min_dob:
+                if dob and dob >= min_dob:
                     # patient is younger
                     continue
             elif min_age:
