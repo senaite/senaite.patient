@@ -74,7 +74,6 @@ class PatientDynamicResultsRange(DynamicResultsRange):
 
             for k, v in match_data.items():
                 # break if the values do not match
-                if k == "Sex"
                 if v != spec[k]:
                     skip = True
                     break
