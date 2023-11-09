@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #96 Use dtime.to_DT instead of api.to_date
 - #93 Layered listing searchable text adapter
 - #92 Allow searches by patient in samples listing
 - #91 Allow only 1 Patient per Report
