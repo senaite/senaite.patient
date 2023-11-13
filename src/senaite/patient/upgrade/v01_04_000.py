@@ -552,3 +552,56 @@ def allow_searches_by_patient_in_samples(tool):
     cat = api.get_tool(SAMPLE_CATALOG)
     cat.reindexIndex(["listing_searchable_text"], None, ZLogHandler())
     logger.info("Allowing searches by patient in samples [DONE]")
+
+
+def remove_whitespaces_mrn(tool):
+    """Resets the date of birth from samples
+    """
+    logger.info("Removing lead and trailing whitespaces from MRN ...")
+
+    uc = api.get_tool("uid_catalog")
+    brains = uc(portal_type="AnalysisRequest")
+    total = len(brains)
+
+    for num, brain in enumerate(brains):
+        if num and num % 100 == 0:
+            logger.info("Migrated {0}/{1} fields".format(num, total))
+
+        if num and num % 1000 == 0:
+            # reduce memory size of the transaction
+            transaction.savepoint()
+
+        try:
+            obj = api.get_object(brain)
+        except AttributeError:
+            uncatalog_brain(brain)
+            continue
+
+        if not obj:
+            continue
+
+        mrn = obj.getField("MedicalRecordNumber").get(obj)
+        if not mrn:
+            # Flush the object from memory
+            obj._p_deactivate()
+            continue
+
+        value = mrn.get("value")
+        if not value:
+            # Flush the object from memory
+            obj._p_deactivate()
+            continue
+
+        stripped = value.strip()
+        if stripped == value:
+            obj._p_deactivate()
+            continue
+
+        # Reset the value
+        mrn["value"] = stripped
+        obj.getField("MedicalRecordNumber").set(obj, mrn)
+        # reindex so indexes and columns are updated in accordance
+        obj.reindexObject()
+        obj._p_deactivate()
+
+    logger.info("Removing lead and trailing whitespaces from MRN [DONE]")
