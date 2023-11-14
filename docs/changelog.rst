@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #98 Allow to flag patients as deceased
 - #97 Fix birth date is not displayed in patients listing
 - #93 Layered listing searchable text adapter
 - #92 Allow searches by patient in samples listing
