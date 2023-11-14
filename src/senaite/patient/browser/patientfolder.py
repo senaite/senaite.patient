@@ -111,6 +111,11 @@ class PatientFolderView(ListingView):
                 "contentFilter": {'is_active': False},
                 "columns": self.columns.keys(),
             }, {
+                "id": "deceased",
+                "title": _("Deceased"),
+                "contentFilter": {'patient_deceased': True},
+                "columns": self.columns.keys(),
+            }, {
                 "id": "all",
                 "title": _("All"),
                 "contentFilter": {},
@@ -170,11 +175,16 @@ class PatientFolderView(ListingView):
             self.get_identifier_tags(identifiers))
 
         # Fullname
-        fullname = obj.getFullname()
-        if fullname:
-            fullname = api.safe_unicode(fullname).encode("utf8")
-            item["fullname"] = fullname
-            item["replace"]["fullname"] = get_link(url, value=fullname)
+        fullname_nd = t(_sp("fullname_not_defined", default="Not defined"))
+        fullname = obj.getFullname() or fullname_nd
+        fullname = api.safe_unicode(fullname).encode("utf8")
+
+        # Death dagger
+        if obj.getDeceased():
+            fullname = "{} <sup>&dagger;</sup>".format(fullname)
+
+        item["fullname"] = fullname
+        item["replace"]["fullname"] = get_link(url, value=fullname)
 
         # Email
         email = obj.getEmail()
