@@ -101,6 +101,13 @@ def patient_birthdate(instance):
 
 
 @indexer(IPatient)
+def patient_deceased(instance):
+    """Index deceased
+    """
+    return instance.getDeceased()
+
+
+@indexer(IPatient)
 def patient_searchable_text(instance):
     """Index for searchable text queries
     """
