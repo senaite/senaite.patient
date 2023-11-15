@@ -18,22 +18,11 @@
 # Copyright 2020-2022 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-from bika.lims import api
+from senaite.core.i18n import translate as core_translate
 
 
 def translate(msgid, **kwargs):
     """Translate any zope i18n msgid returned from MessageFactory
     """
-    msgid = api.safe_unicode(msgid)
-
-    # XX: If the msgid is from type `Message`, Zope's i18n translate tool gives
-    #     priority `Message.domain` over the domain passed through kwargs
     domain = kwargs.pop("domain", "senaite.patient")
-    params = {
-        "domain": getattr(msgid, "domain", domain),
-        "context": api.get_request(),
-    }
-    params.update(kwargs)
-
-    ts = api.get_tool("translation_service")
-    return ts.translate(msgid, **params)
+    return core_translate(msgid, domain=domain, **kwargs)
