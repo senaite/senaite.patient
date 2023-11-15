@@ -20,14 +20,13 @@
 
 import collections
 from bika.lims import api
-from bika.lims import senaiteMessageFactory as _
 from bika.lims.interfaces import IClient
 from bika.lims.utils import get_email_link
 from bika.lims.utils import get_image
 from bika.lims.utils import get_link
 from senaite.app.listing.view import ListingView
 from senaite.core.api import dtime
-from senaite.patient import messageFactory as _sp
+from senaite.patient import messageFactory as _
 from senaite.patient.api import to_identifier_type_name
 from senaite.patient.api import tuplify_identifiers
 from senaite.patient.catalog import PATIENT_CATALOG
@@ -67,7 +66,7 @@ class PatientFolderView(ListingView):
         self.icon = "{}/{}".format(
             self.portal_url, "senaite_theme/icon/patientfolder")
 
-        self.title = _sp("Patients")
+        self.title = _("Patients")
         self.description = self.context.Description()
         self.show_select_column = True
         self.pagesize = 25
@@ -164,7 +163,7 @@ class PatientFolderView(ListingView):
         mrn = obj.getMRN()
         if not mrn:
             item["before"]["mrn"] = get_image("info", width=16)
-            mrn = t(_sp("mrn_not_defined", default="Not defined"))
+            mrn = t(_("mrn_not_defined", default="Not defined"))
 
         item["mrn"] = self.to_utf8(mrn)
         item["replace"]["mrn"] = get_link(url, value=mrn)
@@ -175,15 +174,18 @@ class PatientFolderView(ListingView):
             self.get_identifier_tags(identifiers))
 
         # Fullname
-        fullname_nd = t(_sp("fullname_not_defined", default="Not defined"))
+        fullname_nd = t(_("fullname_not_defined", default="Not defined"))
         fullname = obj.getFullname() or fullname_nd
         fullname = api.safe_unicode(fullname).encode("utf8")
+        item["fullname"] = fullname
 
         # Death dagger
         if obj.getDeceased():
-            fullname = "{} <sup>&dagger;</sup>".format(fullname)
-
-        item["fullname"] = fullname
+            fullname = t(_(
+                "patient_fullname_deceased_html",
+                default="${fullname} <sup>&dagger;</sup>",
+                mapping={"fullname": fullname}
+            ))
         item["replace"]["fullname"] = get_link(url, value=fullname)
 
         # Email
