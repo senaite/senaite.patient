@@ -6,6 +6,8 @@ Changelog
 ------------------
 
 - #96 Use dtime.to_DT instead of api.to_date
+- #99 Do not include default races and ethnicities in locales
+- #97 Fix birth date is not displayed in patients listing
 - #93 Layered listing searchable text adapter
 - #92 Allow searches by patient in samples listing
 - #91 Allow only 1 Patient per Report
