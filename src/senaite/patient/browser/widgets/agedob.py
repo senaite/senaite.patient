@@ -61,6 +61,10 @@ class AgeDoBWidget(DateTimeWidget):
             output["from_age"] = True
             return output, {}
 
+        elif not isinstance(value, dict):
+            # value type is not supported
+            return None, {}
+
         if value.get("selector") == "age":
             # Age entered
             ymd = map(lambda p: value.get(p), ["years", "months", "days"])
