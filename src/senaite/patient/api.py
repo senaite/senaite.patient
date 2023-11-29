@@ -165,7 +165,7 @@ def to_datetime(date_value, default=None, tzinfo=None):
         return date_value
 
     # Get the DateTime
-    date_value = api.to_date(date_value, default=None)
+    date_value = dtime.to_DT(date_value)
     if not date_value:
         if default is None:
             return None
