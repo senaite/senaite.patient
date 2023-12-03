@@ -46,6 +46,7 @@ from senaite.patient import messageFactory as _
 from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
 from senaite.patient.config import SEXES
+from senaite.patient.i18n import translate
 from senaite.patient.interfaces import IPatient
 from six import string_types
 from z3c.form.interfaces import NO_VALUE
@@ -646,7 +647,7 @@ class Patient(Container):
         sexes = dict(SEXES)
         value = self.getSex()
         value = sexes.get(value)
-        return value.encode("utf-8")
+        return translate(value)
 
     @security.protected(permissions.ModifyPortalContent)
     def setSex(self, value):
@@ -672,7 +673,7 @@ class Patient(Container):
         genders = dict(GENDERS)
         value = self.getGender()
         value = genders.get(value)
-        return value.encode("utf-8")
+        return translate(value)
 
     @security.protected(permissions.ModifyPortalContent)
     def setGender(self, value):
