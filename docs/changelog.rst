@@ -5,6 +5,7 @@ Changelog
 1.4.0 (unreleased)
 ------------------
 
+- #101 Fix sex and gender are not translated properly in patients listing
 - #100 Fix AttributeError when DateOfBirth field is hidden in add sample
 - #96 Use dtime.to_DT instead of api.to_date
 - #99 Do not include default races and ethnicities in locales
