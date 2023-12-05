@@ -61,7 +61,10 @@ class AgeDoBWidget(DateTimeWidget):
             output["from_age"] = True
             return output, {}
 
-        elif not isinstance(value, dict):
+        try:
+            # We might get a ZPublisher.HTTPRequest.record
+            value = dict(value)
+        except ValueError:
             # value type is not supported
             return None, {}
 
