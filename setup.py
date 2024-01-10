@@ -36,7 +36,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "senaite.lims>=2.3.0",
+        "senaite.lims>=2.5.0",
     ],
     extras_require={
         "test": [
