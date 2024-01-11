@@ -310,7 +310,7 @@ class IPatientSchema(model.Schema):
             default=u"Deceased"),
         description=_(
             u"description_patient_deceased",
-            default=u"Select if the patient died"),
+            default=u"Select this option if the patient is deceased"),
         required=False,
         default=False,
     )
