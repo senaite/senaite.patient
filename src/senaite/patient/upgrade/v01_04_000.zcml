@@ -155,4 +155,11 @@
       handler="senaite.patient.upgrade.v01_04_000.upgrade_marital_status"
       profile="senaite.patient:default"/>
 
+  <genericsetup:upgradeStep
+      title="Upgrade to SENAITE PATIENT 1.4.0"
+      source="1300"
+      destination="1400"
+      handler="senaite.patient.upgrade.v01_04_000.upgrade"
+      profile="senaite.patient:default"/>
+
 </configure>

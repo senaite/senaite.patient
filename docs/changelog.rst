@@ -1,8 +1,11 @@
 Changelog
 =========
 
+1.5.0 (unreleased)
+------------------
 
-1.4.0 (unreleased)
+
+1.4.0 (2023-01-10)
 ------------------
 
 - #101 Fix sex and gender are not translated properly in patients listing

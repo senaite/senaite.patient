@@ -1,0 +1,12 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
+
+  <genericsetup:upgradeStep
+      title="Upgrade to SENAITE.PATIENT 1.5.0"
+      source="1416"
+      destination="1500"
+      handler=".v01_05_000.upgrade"
+      profile="senaite.patient:default"/>
+
+</configure>
