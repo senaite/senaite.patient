@@ -1,11 +1,17 @@
 Changelog
 =========
 
-
-1.4.0 (unreleased)
+1.5.0 (unreleased)
 ------------------
 
 - #98 Allow to flag patients as deceased
+
+
+1.4.0 (2023-01-10)
+------------------
+
+- #101 Fix sex and gender are not translated properly in patients listing
+- #100 Fix AttributeError when DateOfBirth field is hidden in add sample
 - #96 Use dtime.to_DT instead of api.to_date
 - #99 Do not include default races and ethnicities in locales
 - #97 Fix birth date is not displayed in patients listing

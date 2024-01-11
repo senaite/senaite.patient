@@ -3,14 +3,10 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="senaite.patient">
 
-  <genericsetup:upgradeStep
-      title="Upgrade to SENAITE PATIENT 1.4.0"
-      source="1300"
-      destination="1400"
-      handler="senaite.patient.upgrade.v01_04_000.upgrade"
-      profile="senaite.patient:default"/>
+  <!-- 1.5.0 -->
+  <include file="v01_05_000.zcml" />
 
-  <!-- Include all upgrade steps for 1.4.0 -->
+  <!-- 1.4.0 -->
   <include file="v01_04_000.zcml" />
 
   <genericsetup:upgradeStep

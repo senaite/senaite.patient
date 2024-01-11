@@ -15,7 +15,7 @@
 # this program; if not, write to the Free Software Foundation, Inc., 51
 # Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-# Copyright 2020-2022 by it's authors.
+# Copyright 2020-2024 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
 from string import Template
@@ -46,6 +46,7 @@ from senaite.patient import messageFactory as _
 from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
 from senaite.patient.config import SEXES
+from senaite.patient.i18n import translate
 from senaite.patient.interfaces import IPatient
 from six import string_types
 from z3c.form.interfaces import NO_VALUE
@@ -657,7 +658,7 @@ class Patient(Container):
         sexes = dict(SEXES)
         value = self.getSex()
         value = sexes.get(value)
-        return value.encode("utf-8")
+        return translate(value)
 
     @security.protected(permissions.ModifyPortalContent)
     def setSex(self, value):
@@ -683,7 +684,7 @@ class Patient(Container):
         genders = dict(GENDERS)
         value = self.getGender()
         value = genders.get(value)
-        return value.encode("utf-8")
+        return translate(value)
 
     @security.protected(permissions.ModifyPortalContent)
     def setGender(self, value):
