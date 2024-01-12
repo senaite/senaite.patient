@@ -304,6 +304,17 @@ class IPatientSchema(model.Schema):
         required=False,
     )
 
+    deceased = schema.Bool(
+        title=_(
+            u"label_patient_deceased",
+            default=u"Deceased"),
+        description=_(
+            u"description_patient_deceased",
+            default=u"Select this option if the patient is deceased"),
+        required=False,
+        default=False,
+    )
+
     @invariant
     def validate_mrn(data):
         """Checks if the patient MRN # is unique
@@ -732,3 +743,17 @@ class Patient(Container):
             output = Template(address_format).safe_substitute(record)
             output = filter(None, output.split(", "))
             return ", ".join(output)
+
+    @security.protected(permissions.View)
+    def getDeceased(self):
+        """Returns whether the patient is deceased
+        """
+        accessor = self.accessor("deceased")
+        return accessor(self)
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setDeceased(self, value):
+        """Set if the patient deceased
+        """
+        mutator = self.mutator("deceased")
+        return mutator(self, value)

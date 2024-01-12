@@ -4,6 +4,8 @@ Changelog
 1.5.0 (unreleased)
 ------------------
 
+- #98 Allow to flag patients as deceased
+
 
 1.4.0 (2023-01-10)
 ------------------

@@ -22,5 +22,6 @@
   <adapter name="patient_fullname" factory=".patient.patient_fullname" />
   <adapter name="patient_searchable_text" factory=".patient.patient_searchable_text" />
   <adapter name="patient_searchable_mrn" factory=".patient.patient_searchable_mrn" />
+  <adapter name="patient_deceased" factory=".patient.patient_deceased" />
 
 </configure>

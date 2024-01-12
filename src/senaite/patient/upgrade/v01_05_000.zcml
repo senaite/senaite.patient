@@ -2,6 +2,18 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
+  <!-- 1501: Allow to flag patients as deceased -->
+  <genericsetup:upgradeStep
+      title="Allow to flag patients as deceased"
+      description="
+        This upgrade step adds the field Deceased for patient content type, as
+        well as a new index 'patient_deceased' to allows to filter deceased
+        patients in patients listing."
+      source="1500"
+      destination="1501"
+      handler=".v01_05_000.upgrade_catalog_indexes"
+      profile="senaite.patient:default"/>
+
   <genericsetup:upgradeStep
       title="Upgrade to SENAITE.PATIENT 1.5.0"
       source="1416"
