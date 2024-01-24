@@ -711,7 +711,8 @@ class Patient(Container):
     def getLocalizedBirthdate(self):
         """Returns the birthday with the field accessor
         """
-        return dtime.to_localized_time(self.getBirthdate())
+        birthdate = dtime.to_DT(self.getBirthdate())
+        return dtime.to_localized_time(birthdate)
 
     @security.protected(permissions.ModifyPortalContent)
     def setBirthdate(self, value):
