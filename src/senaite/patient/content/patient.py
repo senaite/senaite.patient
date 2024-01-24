@@ -708,7 +708,7 @@ class Patient(Container):
         return value
 
     @security.protected(permissions.View)
-    def getBirthdateText(self):
+    def getLocalizedBirthdate(self):
         """Returns the birthday with the field accessor
         """
         return dtime.to_localized_time(self.getBirthdate())

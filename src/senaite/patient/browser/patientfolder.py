@@ -204,7 +204,7 @@ class PatientFolderView(ListingView):
         item["gender"] = obj.getGenderText()
 
         # Birthdate
-        item["birthdate"] = obj.getBirthdateText()
+        item["birthdate"] = obj.getLocalizedBirthdate()
 
         # Folder
         parent = api.get_parent(obj)
