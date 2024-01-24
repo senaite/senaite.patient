@@ -84,6 +84,7 @@ Needed imports:
     >>> from plone.app.testing import TEST_USER_ID
     >>> from plone.app.testing import setRoles
     >>> from plone.namedfile.file import NamedBlobFile
+    >>> from senaite.patient.api import get_birth_date
     >>> import csv
 
 Functional Helpers:
@@ -101,6 +102,7 @@ Functional Helpers:
     ...     return rr["min"], rr["max"]
 
     >>> def reset_specification(sample):
+    ...     # TODO Reset specification when sample is updated
     ...     specification = sample.getSpecification()
     ...     sample.setSpecification(None)
     ...     sample.setSpecification(specification)
@@ -169,6 +171,7 @@ Result valid range
 Create a new sample:
 
     >>> sample = new_sample([Ht], specification=specification)
+    >>> sampled = sample.getDateSampled()
     >>> ht = sample["Ht"]
 
 Since there is no patient assigned, the system returns the generic range:
@@ -178,10 +181,57 @@ Since there is no patient assigned, the system returns the generic range:
 
 Make the sample belong to a newborn:
 
-    >>> sample.setDateOfBirth(DateTime())
+    >>> dob = get_birth_date("0d", on_date=sampled)
+    >>> sample.setDateOfBirth(dob)
+    >>> reset_specification(sample)
+    >>> get_range(ht)
+    ('45', '67')
 
-    >>> # TODO Reset the specification when sample is updated
+Make the sample belong to a baby (0 to 12 months old):
+
+    >>> dob = get_birth_date("5m", on_date=sampled)
+    >>> sample.setDateOfBirth(dob)
+    >>> reset_specification(sample)
+    >>> get_range(ht)
+    ('29', '41')
+
+Make the sample belong to a toddler (1 to 3 years old). Note min age is
+inclusive, while max age is exclusive:
+
+    >>> dob = get_birth_date("2y", on_date=sampled)
+    >>> sample.setDateOfBirth(dob)
+    >>> reset_specification(sample)
+    >>> get_range(ht)
+    ('34', '40')
+
+Make the sample belong to a toddler (12 to 18 years old):
+
+    >>> dob = get_birth_date("13y", on_date=sampled)
+    >>> sample.setDateOfBirth(dob)
     >>> reset_specification(sample)
 
-    >>> get_range(sample["Ht"])
-    ('45', '67')
+Returns the generic range because sex is not specified:
+
+    >>> get_range(ht)
+    ('35', '60')
+
+But returns the valid range if sex is defined:
+
+    >>> sample.setSex("m")
+    >>> reset_specification(sample)
+    >>> get_range(ht)
+    ('36', '51')
+
+    >>> sample.setSex("f")
+    >>> reset_specification(sample)
+    >>> get_range(ht)
+    ('33', '51')
+
+Make the sample belong to an adult (> 18 years old):
+
+    >>> dob = get_birth_date("18y", on_date=sampled)
+    >>> sample.setDateOfBirth(dob)
+    >>> sample.setSex("m")
+    >>> reset_specification(sample)
+    >>> get_range(ht)
+    ('39', '54')
