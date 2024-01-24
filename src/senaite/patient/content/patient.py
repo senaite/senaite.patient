@@ -707,6 +707,12 @@ class Patient(Container):
             value = value.date()
         return value
 
+    @security.protected(permissions.View)
+    def getBirthdateText(self):
+        """Returns the birthday with the field accessor
+        """
+        return dtime.to_localized_time(self.getBirthdate())
+
     @security.protected(permissions.ModifyPortalContent)
     def setBirthdate(self, value):
         """Set birthdate by the field accessor
