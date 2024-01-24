@@ -61,12 +61,12 @@ class PatientDynamicResultsRange(DynamicResultsRange):
         # get the shoulder birth dates when the specimen was collected
         sampled = self.analysisrequest.getDateSampled()
         min_dob = get_birth_date(max_age, sampled, default=datetime.min)
-        if dob < dtime.to_ansi(min_dob):
+        if dob <= dtime.to_ansi(min_dob):
             # patient is older
             return False
 
         max_dob = get_birth_date(min_age, sampled, default=datetime.max)
-        if dob >= dtime.to_ansi(max_dob):
+        if dob > dtime.to_ansi(max_dob):
             # patient is younger
             return False
 
