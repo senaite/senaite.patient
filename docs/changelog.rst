@@ -10,6 +10,7 @@ Changelog
 1.4.0 (2023-01-10)
 ------------------
 
+- #104 Add method getBirthdateText for patient content
 - #101 Fix sex and gender are not translated properly in patients listing
 - #100 Fix AttributeError when DateOfBirth field is hidden in add sample
 - #96 Use dtime.to_DT instead of api.to_date
