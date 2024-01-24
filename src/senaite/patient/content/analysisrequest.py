@@ -87,24 +87,29 @@ MedicalRecordNumberField = TemporaryIdentifierField(
         columns=[
             {
                 "name": "mrn",
-                "width": "25",
+                "width": "20",
                 "align": "left",
                 "label": _(u"MRN"),
             }, {
                 "name": "firstname",
-                "width": "25",
+                "width": "20",
                 "align": "left",
                 "label": _(u"Firstname"),
             }, {
                 "name": "middlename",
-                "width": "25",
+                "width": "20",
                 "align": "left",
                 "label": _(u"Middlename"),
             }, {
                 "name": "lastname",
-                "width": "25",
+                "width": "20",
                 "align": "left",
                 "label": _(u"Lastname"),
+            }, {
+                "name": "getLocalizedBirthdate",
+                "width": "20",
+                "align": "left",
+                "label": _(u"Birthdate"),
             },
         ],
         limit=3,
