@@ -161,6 +161,7 @@ def update_results_ranges(sample):
     of birth are updated
     """
     # reset the result ranges so dynamic specs are grabbed again
-    for analysis in sample.getAnalyses(full_objects=True):
-        rr = analysis.getResultsRange()
-        analysis.setResultsRange(rr)
+    spec = sample.getSpecification()
+    if spec:
+        ranges = spec.getResultsRange()
+        sample.setResultsRange(ranges, recursive=False)
