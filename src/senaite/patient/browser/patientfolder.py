@@ -25,7 +25,6 @@ from bika.lims.utils import get_email_link
 from bika.lims.utils import get_image
 from bika.lims.utils import get_link
 from senaite.app.listing.view import ListingView
-from senaite.core.api import dtime
 from senaite.patient import messageFactory as _
 from senaite.patient.api import to_identifier_type_name
 from senaite.patient.api import tuplify_identifiers
@@ -205,10 +204,7 @@ class PatientFolderView(ListingView):
         item["gender"] = obj.getGenderText()
 
         # Birthdate
-        birthdate = obj.getBirthdate()
-        # birthdate is a datetime.date object
-        birthdate = dtime.to_DT(birthdate)
-        item["birthdate"] = dtime.to_localized_time(birthdate)
+        item["birthdate"] = obj.getLocalizedBirthdate()
 
         # Folder
         parent = api.get_parent(obj)
