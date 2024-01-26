@@ -274,6 +274,13 @@ cause the age is within `[5y, 10y)`:
     >>> get_range(ht)
     ('42', '66')
 
+Same with 5y, cause `MinAge` is inclusive:
+
+    >>> dob = get_birth_date("5y", on_date=sampled)
+    >>> edit(sample, DateOfBirth=dob)
+    >>> get_range(ht)
+    ('42', '66')
+
 If we change to male, we have same results as before, except when age is within
 `[5y, 10y)` or within `[5y, 40y)`, cause we have an specific entry for male:
 
@@ -283,6 +290,11 @@ If we change to male, we have same results as before, except when age is within
     ('45', '67')
 
     >>> dob = get_birth_date("10y", on_date=sampled)
+    >>> edit(sample, DateOfBirth=dob)
+    >>> get_range(ht)
+    ('39', '63')
+
+    >>> dob = get_birth_date("5y", on_date=sampled)
     >>> edit(sample, DateOfBirth=dob)
     >>> get_range(ht)
     ('39', '63')
@@ -299,7 +311,7 @@ And if the age is 40y or above 40y, fallback to `[45, 67]`:
     >>> get_range(ht)
     ('48', '70')
 
-    >>> dob = get_birth_date("50y1d", on_date=sampled)
+    >>> dob = get_birth_date("40y1d", on_date=sampled)
     >>> edit(sample, DateOfBirth=dob)
     >>> get_range(ht)
     ('48', '70')
