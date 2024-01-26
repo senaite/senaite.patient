@@ -233,6 +233,15 @@ Prioritized ranges
 System searches matches from more specific to less specific. Assign a
 DynamicAnalysisSpec with same data as the second example given above:
 
+------- --- ------ ------ --- ---
+Keyword Sex MinAge MaxAge min max
+------- --- ------ ------ --- ---
+Ht                        48  70
+Ht                 10y    45  67
+Ht          5y     10y    42  66
+Ht      m   5y     40y    39  63
+------- --- ------ ------ --- ---
+
     >>> data = """Keyword,Sex,MinAge,MaxAge,min,max
     ... Ht,,,,48,70
     ... Ht,,,10y,45,67
