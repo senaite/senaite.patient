@@ -25,6 +25,7 @@ from bika.lims.interfaces import IDynamicResultsRange
 from senaite.core.api import dtime
 from senaite.patient.api import get_birth_date
 from zope.interface import implementer
+from plone.memoize.instance import memoize
 
 
 @implementer(IDynamicResultsRange)
@@ -37,6 +38,17 @@ class PatientDynamicResultsRange(DynamicResultsRange):
     - Sex: 'f' (female), 'm' (male)
     """
 
+    @property
+    @memoize
+    def ansi_dob(self):
+        """Returns the date of birth of the patient from the current sample
+        in ansi format for easy comparison and to avoid TZ issues
+        """
+        dob_field = self.analysisrequest.getField("DateOfBirth")
+        dob = dob_field.get_date_of_birth(self.analysisrequest)
+        # convert to ansi to avoid TZ issues
+        return dtime.to_ansi(dob)
+
     def match(self, dynamic_range):
         # Check first for fields that do not require additional logic first
         is_match = super(PatientDynamicResultsRange, self).match(dynamic_range)
@@ -48,11 +60,7 @@ class PatientDynamicResultsRange(DynamicResultsRange):
         max_age = dynamic_range.get("MaxAge")
 
         # patient's date of birth
-        dob_field = self.analysisrequest.getField("DateOfBirth")
-        dob = dob_field.get_date_of_birth(self.analysisrequest)
-        # convert to ansi to avoid TZ issues
-        dob = dtime.to_ansi(dob)
-        if not dob:
+        if not self.ansi_dob:
             if any([min_age, max_age]):
                 # MinAge and/or MaxAge specified, no match
                 return False
@@ -61,12 +69,12 @@ class PatientDynamicResultsRange(DynamicResultsRange):
         # get the shoulder birth dates when the specimen was collected
         sampled = self.analysisrequest.getDateSampled()
         min_dob = get_birth_date(max_age, sampled, default=datetime.min)
-        if dob <= dtime.to_ansi(min_dob):
+        if self.ansi_dob <= dtime.to_ansi(min_dob):
             # patient is older
             return False
 
         max_dob = get_birth_date(min_age, sampled, default=datetime.max)
-        if dob > dtime.to_ansi(max_dob):
+        if self.ansi_dob > dtime.to_ansi(max_dob):
             # patient is younger
             return False
 
