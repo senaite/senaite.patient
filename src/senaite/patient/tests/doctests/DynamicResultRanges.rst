@@ -42,21 +42,21 @@ following list of ranges:
 ------- --- ------ ------ --- ---
 Keyword Sex MinAge MaxAge min max
 ------- --- ------ ------ --- ---
-Ht                        45  67
+Ht                        48  70
 Ht                 10y    45  67
 Ht          5y     10y    42  66
-Ht      m   5y     10y    39  63
+Ht      m   5y     40y    39  63
 ------- --- ------ ------ --- ---
 
 The valid ranges for an `Ht` test for a specimen of a 6 years-old male patient
 will be `[39;63]`. If no sex has been specificed for the patient or the sex is
-femail, the valid range will then be `[42;66]`.
+female, the valid range will then be `[42;66]`.
 
 Therefore:
 
-- If the value for column `Sex` is empty (or any of the forms `mf`, `fm`), the
-  range will apply for any individual, regardless of sex. Unless another match
-  is found that is more specific than the current one.
+- If the value for column `Sex` is empty, the range will apply for any
+  individual, regardless of sex. Unless another match is found that is more
+  specific than the current one.
 
 - If the value for column `MinAge` is empty (or any of the forms `0d`, `0m`,
   `0y` - or combination of them -), the minimum age won't be considered, but
@@ -226,3 +226,75 @@ Make the sample belong to an adult (> 18 years old):
     >>> edit(sample, DateOfBirth=dob, Sex="m")
     >>> get_range(ht)
     ('39', '54')
+
+Prioritized ranges
+..................
+
+System searches matches from more specific to less specific. Assign a
+DynamicAnalysisSpec with same data as the second example given above:
+
+    >>> data = """Keyword,Sex,MinAge,MaxAge,min,max
+    ... Ht,,,,48,70
+    ... Ht,,,10y,45,67
+    ... Ht,,5y,10y,42,66
+    ... Ht,m,5y,40y,39,63"""
+    >>> original_data = ds.specs_file
+    >>> ds.specs_file = to_excel(data)
+
+Make the sample to be from a female of 2 days, makes the system to return the
+range `[45, 67]`, cause is younger than 10y:
+
+    >>> dob = get_birth_date("2d", on_date=sampled)
+    >>> edit(sample, DateOfBirth=dob, Sex="f")
+    >>> get_range(ht)
+    ('45', '67')
+
+If we make the age to be 10y, the system returns the range `[48, 70]`, cause
+the `MaxAge` is exclusive and there is no specific range for female:
+
+    >>> dob = get_birth_date("10y", on_date=sampled)
+    >>> edit(sample, DateOfBirth=dob)
+    >>> get_range(ht)
+    ('48', '70')
+
+However, if we make the age to be 7y, the system returns the range `[42, 66]`,
+cause the age is within `[5y, 10y)`:
+
+    >>> dob = get_birth_date("7y", on_date=sampled)
+    >>> edit(sample, DateOfBirth=dob)
+    >>> get_range(ht)
+    ('42', '66')
+
+If we change to male, we have same results as before, except when age is within
+`[5y, 10y)` or within `[5y, 40y)`, cause we have an specific entry for male:
+
+    >>> dob = get_birth_date("2d", on_date=sampled)
+    >>> edit(sample, DateOfBirth=dob, Sex="m")
+    >>> get_range(ht)
+    ('45', '67')
+
+    >>> dob = get_birth_date("10y", on_date=sampled)
+    >>> edit(sample, DateOfBirth=dob)
+    >>> get_range(ht)
+    ('39', '63')
+
+    >>> dob = get_birth_date("7y", on_date=sampled)
+    >>> edit(sample, DateOfBirth=dob)
+    >>> get_range(ht)
+    ('39', '63')
+
+And if the age is 40y or above 40y, fallback to `[45, 67]`:
+
+    >>> dob = get_birth_date("40y", on_date=sampled)
+    >>> edit(sample, DateOfBirth=dob)
+    >>> get_range(ht)
+    ('48', '70')
+
+    >>> dob = get_birth_date("50y1d", on_date=sampled)
+    >>> edit(sample, DateOfBirth=dob)
+    >>> get_range(ht)
+    ('48', '70')
+
+Restore to the initial ranges:
+
+    >>> ds.specs_file = original_data
