@@ -39,3 +39,9 @@ class IPatientCatalog(ISenaiteCatalogObject):
 class IPatient(interface.Interface):
     """Marker interface for Patients
     """
+
+
+class IRoutineAnalysis(interface.Interface):
+    """Marker interface for routine analyses, that is required for the
+    patient's dynamic result range adapter to work properly
+    """

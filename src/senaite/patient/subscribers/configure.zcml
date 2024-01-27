@@ -11,7 +11,7 @@
   <!-- Sample modified -->
   <subscriber
       for="bika.lims.interfaces.IAnalysisRequest
-           Products.Archetypes.interfaces.IObjectEditedEvent"
+           zope.lifecycleevent.interfaces.IObjectModifiedEvent"
       handler=".analysisrequest.on_object_edited"
       />
 
