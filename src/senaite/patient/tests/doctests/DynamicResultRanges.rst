@@ -304,7 +304,7 @@ If we change to male, we have same results as before, except when age is within
     >>> get_range(ht)
     ('39', '63')
 
-And if the age is 40y or above 40y, fallback to `[45, 67]`:
+And if the age is 40y or above 40y, fallback to `[48, 70]`:
 
     >>> dob = get_birth_date("40y", on_date=sampled)
     >>> edit(sample, DateOfBirth=dob)
