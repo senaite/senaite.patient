@@ -34,8 +34,8 @@ Variables:
 
     >>> portal = self.portal
     >>> request = self.request
-    >>> setup = api.get_bika_setup()
-    >>> bika_setup = api.get_senaite_setup()
+    >>> setup = api.get_senaite_setup()
+    >>> bika_setup = api.get_bika_setup()
     >>> sampled = DateTime("2020-12-01")
     >>> birth_date = DateTime("1979-12-07")
 
