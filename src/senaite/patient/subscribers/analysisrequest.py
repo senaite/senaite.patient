@@ -23,7 +23,6 @@ from senaite.core.behaviors import IClientShareableBehavior
 from senaite.patient import api as patient_api
 from senaite.patient import check_installed
 from senaite.patient import logger
-from senaite.patient import messageFactory as _
 
 
 @check_installed(None)
