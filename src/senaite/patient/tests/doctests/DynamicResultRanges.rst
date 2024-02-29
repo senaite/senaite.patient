@@ -134,7 +134,7 @@ Create some baseline objects for the test:
 
     >>> client = api.create(portal.clients, "Client", Name="Happy Pills", ClientID="HP")
     >>> contact = api.create(client, "Contact", Firstname="Rita", Lastname="Mohale")
-    >>> sampletype = api.create(setup.sampletypes, "SampleType", title="EDTA", Prefix="EDTA")
+    >>> sampletype = api.create(bika_setup.bika_sampletypes, "SampleType", title="EDTA", Prefix="EDTA")
     >>> labcontact = api.create(bika_setup.bika_labcontacts, "LabContact", Firstname="Lab", Lastname="Manager")
     >>> department = api.create(setup.departments, "Department", title="Biochemistry", Manager=labcontact)
     >>> category = api.create(bika_setup.bika_analysiscategories, "AnalysisCategory", title="Biochemistry", Department=department)

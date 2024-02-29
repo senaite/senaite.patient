@@ -71,7 +71,7 @@ We need to create some basic objects for the test:
     >>> setRoles(portal, TEST_USER_ID, ['LabManager',])
     >>> client = api.create(portal.clients, "Client", Name="General Hospital", ClientID="GH", MemberDiscountApplies=False)
     >>> contact = api.create(client, "Contact", Firstname="Rita", Lastname="Mohale")
-    >>> sampletype = api.create(setup.sampletypes, "SampleType", title="Blood", Prefix="B")
+    >>> sampletype = api.create(bika_setup.bika_sampletypes, "SampleType", title="Blood", Prefix="B")
     >>> labcontact = api.create(bika_setup.bika_labcontacts, "LabContact", Firstname="Lab", Lastname="Manager")
     >>> department = api.create(setup.departments, "Department", title="Clinical Lab", Manager=labcontact)
     >>> category = api.create(bika_setup.bika_analysiscategories, "AnalysisCategory", title="Blood", Department=department)
