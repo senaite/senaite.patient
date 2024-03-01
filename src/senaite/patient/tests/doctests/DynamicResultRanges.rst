@@ -123,7 +123,8 @@ Variables:
 
     >>> portal = self.portal
     >>> request = self.request
-    >>> setup = api.get_setup()
+    >>> setup = api.get_senaite_setup()
+    >>> bika_setup = api.get_bika_setup()
 
 Assign default roles for the user to test with:
 
@@ -133,16 +134,16 @@ Create some baseline objects for the test:
 
     >>> client = api.create(portal.clients, "Client", Name="Happy Pills", ClientID="HP")
     >>> contact = api.create(client, "Contact", Firstname="Rita", Lastname="Mohale")
-    >>> sampletype = api.create(setup.bika_sampletypes, "SampleType", title="EDTA", Prefix="EDTA")
-    >>> labcontact = api.create(setup.bika_labcontacts, "LabContact", Firstname="Lab", Lastname="Manager")
-    >>> department = api.create(setup.bika_departments, "Department", title="Biochemistry", Manager=labcontact)
-    >>> category = api.create(setup.bika_analysiscategories, "AnalysisCategory", title="Biochemistry", Department=department)
-    >>> Ht = api.create(setup.bika_analysisservices, "AnalysisService", title="Hematocrit", Keyword="Ht", Category=category)
+    >>> sampletype = api.create(bika_setup.bika_sampletypes, "SampleType", title="EDTA", Prefix="EDTA")
+    >>> labcontact = api.create(bika_setup.bika_labcontacts, "LabContact", Firstname="Lab", Lastname="Manager")
+    >>> department = api.create(setup.departments, "Department", title="Biochemistry", Manager=labcontact)
+    >>> category = api.create(bika_setup.bika_analysiscategories, "AnalysisCategory", title="Biochemistry", Department=department)
+    >>> Ht = api.create(bika_setup.bika_analysisservices, "AnalysisService", title="Hematocrit", Keyword="Ht", Category=category)
 
 Create a default specification for the Sample type `EDTA`:
 
     >>> default_range = {"keyword": "Ht", "min": "35", "max": "60", "warn_min": "34", "warn_max": "61"}
-    >>> specification = api.create(setup.bika_analysisspecs, "AnalysisSpec", title="Blood ranges", SampleType=sampletype, ResultsRange=[default_range,])
+    >>> specification = api.create(bika_setup.bika_analysisspecs, "AnalysisSpec", title="Blood ranges", SampleType=sampletype, ResultsRange=[default_range,])
 
 Assign a DynamicAnalysisSpec with same data as the example given above:
 
@@ -160,7 +161,7 @@ Assign a DynamicAnalysisSpec with same data as the example given above:
     ... Ht,f,12y,18y,33,51
     ... Ht,m,18y,,39,54
     ... Ht,f,18y,,36,48"""
-    >>> ds = api.create(setup.dynamic_analysisspecs, "DynamicAnalysisSpec")
+    >>> ds = api.create(bika_setup.dynamic_analysisspecs, "DynamicAnalysisSpec")
     >>> ds.specs_file = to_excel(data)
     >>> specification.setDynamicAnalysisSpec(ds)
 

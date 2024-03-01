@@ -4,8 +4,9 @@ Changelog
 1.5.0 (unreleased)
 ------------------
 
-- #95 Support for dynamic analysis specs with MinAge, MaxAge and Sex columns
-- #98 Allow to flag patients as deceased
+- #106 Skip patient creation if the user has no permissions
+- #95  Support for dynamic analysis specs with MinAge, MaxAge and Sex columns
+- #98  Allow to flag patients as deceased
 
 
 1.4.0 (2023-01-10)

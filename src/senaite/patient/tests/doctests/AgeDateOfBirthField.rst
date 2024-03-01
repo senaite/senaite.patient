@@ -34,7 +34,8 @@ Variables:
 
     >>> portal = self.portal
     >>> request = self.request
-    >>> setup = api.get_setup()
+    >>> setup = api.get_senaite_setup()
+    >>> bika_setup = api.get_bika_setup()
     >>> sampled = DateTime("2020-12-01")
     >>> birth_date = DateTime("1979-12-07")
 
@@ -47,11 +48,11 @@ We need to create some basic objects for the test:
 
     >>> client = api.create(portal.clients, "Client", Name="General Hospital", ClientID="GH", MemberDiscountApplies=False)
     >>> contact = api.create(client, "Contact", Firstname="Rita", Lastname="Mohale")
-    >>> sampletype = api.create(setup.bika_sampletypes, "SampleType", title="Blood", Prefix="B")
-    >>> labcontact = api.create(setup.bika_labcontacts, "LabContact", Firstname="Lab", Lastname="Manager")
-    >>> department = api.create(setup.bika_departments, "Department", title="Clinical Lab", Manager=labcontact)
-    >>> category = api.create(setup.bika_analysiscategories, "AnalysisCategory", title="Blood", Department=department)
-    >>> malaria = api.create(setup.bika_analysisservices, "AnalysisService", title="Malaria Count", Keyword="MC", Price="10", Category=category.UID(), Accredited=True)
+    >>> sampletype = api.create(bika_setup.bika_sampletypes, "SampleType", title="Blood", Prefix="B")
+    >>> labcontact = api.create(bika_setup.bika_labcontacts, "LabContact", Firstname="Lab", Lastname="Manager")
+    >>> department = api.create(setup.departments, "Department", title="Clinical Lab", Manager=labcontact)
+    >>> category = api.create(bika_setup.bika_analysiscategories, "AnalysisCategory", title="Blood", Department=department)
+    >>> malaria = api.create(bika_setup.bika_analysisservices, "AnalysisService", title="Malaria Count", Keyword="MC", Price="10", Category=category.UID(), Accredited=True)
     >>> sample = new_sample([malaria], client, contact, sampletype, sampled, DateOfBirth=birth_date)
 
 Get the field:

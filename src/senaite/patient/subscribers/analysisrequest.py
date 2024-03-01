@@ -23,7 +23,6 @@ from senaite.core.behaviors import IClientShareableBehavior
 from senaite.patient import api as patient_api
 from senaite.patient import check_installed
 from senaite.patient import logger
-from senaite.patient import messageFactory as _
 
 
 @check_installed(None)
@@ -94,21 +93,9 @@ def update_patient(instance):
         else:
             # create the patient in the global patients folder
             container = patient_api.get_patient_folder()
+
         # check if the user is allowed to add a new patient
         if not patient_api.is_patient_creation_allowed(container):
-            logger.warn("User '{}' is not allowed to create patients in '{}'"
-                        " -> setting MRN to temporary".format(
-                            api.user.get_user_id(), api.get_path(container)))
-            # make the MRN temporary
-            # XXX: Refactor logic from Widget -> Field/DataManager
-            mrn_field = instance.getField("MedicalRecordNumber")
-            mrn = dict(mrn_field.get(instance))
-            mrn["temporary"] = True
-            mrn_field.set(instance, mrn)
-            message = _("You are not allowed to add a patient in {} folder. "
-                        "Medical Record Number set to Temporary."
-                        .format(api.get_title(container)))
-            instance.plone_utils.addPortalMessage(message, "error")
             return None
 
         logger.info("Creating new Patient in '{}' with MRN: '{}'"
