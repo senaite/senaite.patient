@@ -14,6 +14,8 @@ Needed Imports:
     >>> from bika.lims.utils.analysisrequest import create_analysisrequest
     >>> from DateTime import DateTime
     >>> from datetime import datetime
+    >>> from plone.app.testing import setRoles
+    >>> from plone.app.testing import TEST_USER_ID
     >>> from senaite.core.api import dtime
     >>> from senaite.patient.api import to_ymd
 
@@ -39,6 +41,10 @@ Variables:
     >>> sampled = DateTime("2020-12-01")
     >>> birth_date = DateTime("1979-12-07")
 
+Assign default roles for the user to test with:
+
+    >>> setRoles(portal, TEST_USER_ID, ['LabManager',])
+
 Test fixture:
 
     >>> import os
@@ -51,7 +57,7 @@ We need to create some basic objects for the test:
     >>> sampletype = api.create(bika_setup.bika_sampletypes, "SampleType", title="Blood", Prefix="B")
     >>> labcontact = api.create(bika_setup.bika_labcontacts, "LabContact", Firstname="Lab", Lastname="Manager")
     >>> department = api.create(setup.departments, "Department", title="Clinical Lab", Manager=labcontact)
-    >>> category = api.create(bika_setup.bika_analysiscategories, "AnalysisCategory", title="Blood", Department=department)
+    >>> category = api.create(setup.analysiscategories, "AnalysisCategory", title="Blood", Department=department)
     >>> malaria = api.create(bika_setup.bika_analysisservices, "AnalysisService", title="Malaria Count", Keyword="MC", Price="10", Category=category.UID(), Accredited=True)
     >>> sample = new_sample([malaria], client, contact, sampletype, sampled, DateOfBirth=birth_date)
 

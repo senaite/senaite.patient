@@ -1,12 +1,25 @@
 Patients for SENAITE
 ====================
 
+.. image:: https://img.shields.io/pypi/v/senaite.patient.svg?style=flat-square
+    :target: https://pypi.python.org/pypi/senaite.patient
+
+.. image:: https://img.shields.io/github/actions/workflow/status/senaite/senaite.patient/build-and-test.yml?branch=2.x
+   :target: https://github.com/senaite/senaite.patient/actions/workflows/build-and-test.yml?query=branch:2.x
+
+.. image:: https://img.shields.io/github/issues-pr/senaite/senaite.patient.svg?style=flat-square
+    :target: https://github.com/senaite/senaite.patient/pulls
+
+.. image:: https://img.shields.io/github/issues/senaite/senaite.patient.svg?style=flat-square
+    :target: https://github.com/senaite/senaite.patient/issues
+
+.. image:: https://img.shields.io/badge/Made%20for%20SENAITE-%E2%AC%A1-lightgrey.svg
+   :target: https://www.senaite.com
+
 About
 -----
 
 SENAITE.PATIENT adds Patient handling to `SENAITE LIMS`_.
-
-NOTE: This Add-on requires `senaite.lims >= 2.2.0`
 
 
 License
