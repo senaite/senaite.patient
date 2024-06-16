@@ -4,6 +4,7 @@ Changelog
 1.5.0 (unreleased)
 ------------------
 
+- #107 Compatibility with core#2567 (AnalysisCategory to DX)
 - #106 Skip patient creation if the user has no permissions
 - #95  Support for dynamic analysis specs with MinAge, MaxAge and Sex columns
 - #98  Allow to flag patients as deceased
