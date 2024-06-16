@@ -61,15 +61,18 @@ Variables:
     >>> bika_setup = api.get_bika_setup()
     >>> patients = portal.patients
 
-We need to create some basic objects for the test:
+Assign default roles for the user to test with:
 
     >>> setRoles(portal, TEST_USER_ID, ['LabManager',])
+
+We need to create some basic objects for the test:
+
     >>> client = api.create(portal.clients, "Client", Name="General Hospital", ClientID="GH", MemberDiscountApplies=False)
     >>> contact = api.create(client, "Contact", Firstname="Rita", Lastname="Mohale")
     >>> sampletype = api.create(bika_setup.bika_sampletypes, "SampleType", title="Blood", Prefix="B")
     >>> labcontact = api.create(bika_setup.bika_labcontacts, "LabContact", Firstname="Lab", Lastname="Manager")
     >>> department = api.create(setup.departments, "Department", title="Clinical Lab", Manager=labcontact)
-    >>> category = api.create(bika_setup.bika_analysiscategories, "AnalysisCategory", title="Blood", Department=department)
+    >>> category = api.create(setup.analysiscategories, "AnalysisCategory", title="Blood", Department=department)
     >>> MC = api.create(bika_setup.bika_analysisservices, "AnalysisService", title="Malaria Count", Keyword="MC", Price="10", Category=category.UID(), Accredited=True)
     >>> MS = api.create(bika_setup.bika_analysisservices, "AnalysisService", title="Malaria Species", Keyword="MS", Price="10", Category=category.UID(), Accredited=True)
 

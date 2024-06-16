@@ -15,6 +15,8 @@ Needed Imports:
     >>> from bika.lims.api import get_review_status
     >>> from datetime import date
     >>> from dateutil.relativedelta import relativedelta
+    >>> from plone.app.testing import setRoles
+    >>> from plone.app.testing import TEST_USER_ID
     >>> from senaite.core.api import dtime
     >>> from senaite.patient import api
 
@@ -23,6 +25,9 @@ Variables:
     >>> portal = self.portal
     >>> request = self.request
 
+Assign default roles for the user to test with:
+
+    >>> setRoles(portal, TEST_USER_ID, ['LabManager',])
 
 Test fixture:
 

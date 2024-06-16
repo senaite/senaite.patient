@@ -12,6 +12,8 @@ Test Setup
 Needed Imports:
 
     >>> from bika.lims import api
+    >>> from plone.app.testing import setRoles
+    >>> from plone.app.testing import TEST_USER_ID
 
 Variables:
 
@@ -19,6 +21,10 @@ Variables:
     >>> request = self.request
     >>> setup = api.get_setup()
     >>> patients = portal.patients
+
+Assign default roles for the user to test with:
+
+    >>> setRoles(portal, TEST_USER_ID, ['LabManager',])
 
 
 Patients
