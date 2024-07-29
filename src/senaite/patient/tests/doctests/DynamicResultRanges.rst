@@ -161,7 +161,7 @@ Assign a DynamicAnalysisSpec with same data as the example given above:
     ... Ht,f,12y,18y,33,51
     ... Ht,m,18y,,39,54
     ... Ht,f,18y,,36,48"""
-    >>> ds = api.create(bika_setup.dynamic_analysisspecs, "DynamicAnalysisSpec")
+    >>> ds = api.create(setup.dynamicanalysisspecs, "DynamicAnalysisSpec")
     >>> ds.specs_file = to_excel(data)
     >>> specification.setDynamicAnalysisSpec(ds)
 
