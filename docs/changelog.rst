@@ -4,6 +4,7 @@ Changelog
 1.5.0 (unreleased)
 ------------------
 
+- #110 Compatibility with core#2584 (SampleType to DX)
 - #108 Fix Traceback when creating partitions when no patient assigned
 - #109 Compatibility with core#2563 (Move DynamicAnalysisSpecs to Setup folder)
 - #107 Compatibility with core#2567 (AnalysisCategory to DX)
