@@ -59,3 +59,13 @@ def upgrade_catalog_indexes(tool):
     # setup patient catalog to add new indexes
     setup_catalogs(portal)
     logger.info("Upgrade catalog indexes [DONE]")
+
+
+def import_registry(tool):
+    """Imports the registry tool
+    """
+    logger.info("Reimport registry tool ...")
+    portal = tool.aq_inner.aq_parent
+    setup = portal.portal_setup
+    setup.runImportStepFromProfile(profile, "plone.app.registry")
+    logger.info("Reimport registry tool [DONE]")
