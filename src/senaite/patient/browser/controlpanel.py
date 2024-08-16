@@ -260,7 +260,7 @@ class IPatientControlPanel(Interface):
         title=_(u"Future dates of birth"),
         description=_(
             u"If selected, the system will allow the introduction of future "
-            u"dates for birth."
+            u"dates of birth."
         ),
         required=False,
         default=False,
