@@ -211,3 +211,10 @@ class AgeDateOfBirthField(ExtensionField, ObjectField):
         """Returns whether the date is estimated
         """
         return self.get(instance)[:][2]
+
+    def get_max(self, instance):
+        """Returns the max date allowed for date of birth
+        """
+        if patient_api.is_future_birthdate_allowed():
+            return dtime.datetime.max
+        return dtime.datetime.now()

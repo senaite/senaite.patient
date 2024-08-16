@@ -23,6 +23,7 @@ from string import Template
 from AccessControl import ClassSecurityInfo
 from bika.lims import api
 from bika.lims.api.mail import is_valid_email_address
+from datetime import datetime
 from plone.autoform import directives
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
@@ -62,6 +63,14 @@ from .schema import IIdentifiersSchema
 from .schema import IRaceSchema
 
 POSSIBLE_ADDRESSES = [OTHER_ADDRESS, PHYSICAL_ADDRESS, POSTAL_ADDRESS]
+
+
+def get_max_birthdate(context=None):
+    """Returns the max date for date of birth
+    """
+    if patient_api.is_future_birthdate_allowed():
+        return dtime.datetime.max
+    return dtime.datetime.now()
 
 
 class IPatientSchema(model.Schema):
@@ -296,13 +305,15 @@ class IPatientSchema(model.Schema):
 
     directives.widget("birthdate",
                       DatetimeWidget,
-                      max="current",
                       show_time=False)
     birthdate = DatetimeField(
         title=_(u"label_patient_birthdate", default=u"Birthdate"),
         description=_(u"Patient birthdate"),
         required=False,
     )
+    # XXX core's DateTimeWidget relies on field's get_max function if not 'max'
+    #     property is explicitly set to the widget
+    birthdate.get_max = get_max_birthdate
 
     deceased = schema.Bool(
         title=_(
@@ -386,6 +397,27 @@ class IPatientSchema(model.Schema):
             email = record.get("email")
             if email and not is_valid_email_address(email):
                 raise Invalid(_("Email address %s is invalid" % email))
+
+    @invariant
+    def validate_birthdate(data):
+        """Checks if birthdate is in the past
+        """
+        if not data.birthdate:
+            return
+
+        # check if field is in current fieldset to avoid multiple raising
+        if 'birthdate' not in data._Data_data___:
+            return
+
+        if patient_api.is_future_birthdate_allowed():
+            return
+
+        # comparison must be tz-aware
+        tz = dtime.get_os_timezone()
+        dob = dtime.to_zone(data.birthdate, tz)
+        now = dtime.to_zone(datetime.now(), tz)
+        if now < dob:
+            raise Invalid(_("Date of birth cannot be a future date"))
 
 
 @implementer(IPatient, IPatientSchema, IClientShareable)

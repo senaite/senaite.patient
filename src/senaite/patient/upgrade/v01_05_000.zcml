@@ -2,6 +2,17 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
+  <!-- 1502: Allow/Disallow future dates of birth -->
+  <genericsetup:upgradeStep
+      title="Add setting to allow/disallow future dates of birth"
+      description="
+        This upgrade step adds a configuration setting to allow or disallow
+        the introduction of future dates of birth. Non-allowed by default."
+      source="1501"
+      destination="1502"
+      handler=".v01_05_000.import_registry"
+      profile="senaite.patient:default"/>
+
   <!-- 1501: Allow to flag patients as deceased -->
   <genericsetup:upgradeStep
       title="Allow to flag patients as deceased"

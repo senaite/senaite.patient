@@ -148,6 +148,7 @@ class IPatientControlPanel(Interface):
         description=_(""),
         fields=[
             "patient_entry_mode",
+            "future_birthdate",
             "age_supported",
             "age_years",
             "gender_visible",
@@ -253,6 +254,16 @@ class IPatientControlPanel(Interface):
         ),
         required=False,
         default=True,
+    )
+
+    future_birthdate = schema.Bool(
+        title=_(u"Future dates of birth"),
+        description=_(
+            u"If selected, the system will allow the introduction of future "
+            u"dates of birth."
+        ),
+        required=False,
+        default=False,
     )
 
     age_supported = schema.Bool(
