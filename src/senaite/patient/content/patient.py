@@ -65,7 +65,7 @@ from .schema import IRaceSchema
 POSSIBLE_ADDRESSES = [OTHER_ADDRESS, PHYSICAL_ADDRESS, POSTAL_ADDRESS]
 
 
-def get_max_dob(context=None):
+def get_max_birthdate(context=None):
     """Returns the max date for date of birth
     """
     if patient_api.is_future_birthdate_allowed():
@@ -313,7 +313,7 @@ class IPatientSchema(model.Schema):
     )
     # XXX core's DateTimeWidget relies on field's get_max function if not 'max'
     #     property is explicitly set to the widget
-    birthdate.get_max = get_max_dob
+    birthdate.get_max = get_max_birthdate
 
     deceased = schema.Bool(
         title=_(
