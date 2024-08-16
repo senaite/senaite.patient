@@ -65,6 +65,14 @@ from .schema import IRaceSchema
 POSSIBLE_ADDRESSES = [OTHER_ADDRESS, PHYSICAL_ADDRESS, POSTAL_ADDRESS]
 
 
+def get_max_dob(context=None):
+    """Returns the max date for date of birth
+    """
+    if patient_api.is_future_birthdate_allowed():
+        return dtime.datetime.max
+    return dtime.datetime.now()
+
+
 class IPatientSchema(model.Schema):
     """Patient Content
     """
@@ -297,13 +305,15 @@ class IPatientSchema(model.Schema):
 
     directives.widget("birthdate",
                       DatetimeWidget,
-                      max="current",
                       show_time=False)
     birthdate = DatetimeField(
         title=_(u"label_patient_birthdate", default=u"Birthdate"),
         description=_(u"Patient birthdate"),
         required=False,
     )
+    # XXX core's DateTimeWidget relies on field's get_max function if not 'max'
+    #     property is explicitly set to the widget
+    birthdate.get_max = get_max_dob
 
     deceased = schema.Bool(
         title=_(
@@ -397,6 +407,9 @@ class IPatientSchema(model.Schema):
 
         # check if field is in current fieldset to avoid multiple raising
         if 'birthdate' not in data._Data_data___:
+            return
+
+        if patient_api.is_future_birthdate_allowed():
             return
 
         # comparison must be tz-aware

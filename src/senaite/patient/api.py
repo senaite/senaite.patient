@@ -87,6 +87,13 @@ def is_gender_visible():
     return api.get_registry_record(key, default=True)
 
 
+def is_future_birthdate_allowed():
+    """Returns whether the introduction of a birth date in future is allowed
+    """
+    key = "senaite.patient.future_birthdate"
+    return api.get_registry_record(key, default=False)
+
+
 def is_age_supported():
     """Returns whether the introduction of age is supported
     """
