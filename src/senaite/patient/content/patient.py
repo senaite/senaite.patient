@@ -23,6 +23,7 @@ from string import Template
 from AccessControl import ClassSecurityInfo
 from bika.lims import api
 from bika.lims.api.mail import is_valid_email_address
+from datetime import datetime
 from plone.autoform import directives
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
@@ -386,6 +387,24 @@ class IPatientSchema(model.Schema):
             email = record.get("email")
             if email and not is_valid_email_address(email):
                 raise Invalid(_("Email address %s is invalid" % email))
+
+    @invariant
+    def validate_birthdate(data):
+        """Checks if birthdate is in the past
+        """
+        if not data.birthdate:
+            return
+
+        # check if field is in current fieldset to avoid multiple raising
+        if 'birthdate' not in data._Data_data___:
+            return
+
+        # comparison must be tz-aware
+        tz = dtime.get_os_timezone()
+        dob = dtime.to_zone(data.birthdate, tz)
+        now = dtime.to_zone(datetime.now(), tz)
+        if now < dob:
+            raise Invalid(_("Date of birth cannot be a future date"))
 
 
 @implementer(IPatient, IPatientSchema, IClientShareable)
