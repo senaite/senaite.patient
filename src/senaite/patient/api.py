@@ -300,6 +300,9 @@ def get_birth_date(period, on_date=None, default=_marker):
     on_date = dtime.to_dt(on_date)
     if not on_date:
         on_date = datetime.now()
+        # apply system's current time zone
+        tz = dtime.get_os_timezone()
+        on_date = dtime.to_zone(on_date, tz)
 
     # calculate the date when everything started
     delta = relativedelta(years=years, months=months, days=days)
