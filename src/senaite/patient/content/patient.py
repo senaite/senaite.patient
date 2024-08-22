@@ -315,6 +315,20 @@ class IPatientSchema(model.Schema):
     #     property is explicitly set to the widget
     birthdate.get_max = get_max_birthdate
 
+    estimated_birthdate = schema.Bool(
+        title=_(
+            u"label_patient_estimated_birthdate",
+            default=u"Birthdate is estimated"
+        ),
+        description=_(
+            u"description_patient_estimated_birthdate",
+            default=u"Select this option if the patient's date of birth is "
+                    u"estimated"
+        ),
+        default=False,
+        required=False,
+    )
+
     deceased = schema.Bool(
         title=_(
             u"label_patient_deceased",
@@ -795,4 +809,18 @@ class Patient(Container):
         """Set if the patient deceased
         """
         mutator = self.mutator("deceased")
+        return mutator(self, value)
+
+    @security.protected(permissions.View)
+    def getEstimatedBirthdate(self):
+        """Returns whether the patient's date of birth is estimated
+        """
+        accessor = self.accessor("estimated_birthdate")
+        return accessor(self)
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setEstimatedBirthdate(self, value):
+        """Set if the patient's date of birth is estimated
+        """
+        mutator = self.mutator("estimated_birthdate")
         return mutator(self, value)
