@@ -117,7 +117,9 @@ def get_patient_fields(instance):
     mrn = instance.getMedicalRecordNumberValue()
     sex = instance.getField("Sex").get(instance)
     gender = instance.getField("Gender").get(instance)
-    birthdate = instance.getField("DateOfBirth").get(instance)
+    dob_field = instance.getField("DateOfBirth")
+    birthdate = dob_field.get_date_of_birth(instance)
+    estimated = dob_field.get_estimated(instance)
     address = instance.getField("PatientAddress").get(instance)
     field = instance.getField("PatientFullName")
     firstname = field.get_firstname(instance)
@@ -134,7 +136,8 @@ def get_patient_fields(instance):
         "mrn": mrn,
         "sex": sex,
         "gender": gender,
-        "birthdate": birthdate[0],
+        "birthdate": birthdate,
+        "estimated_birthdate": estimated,
         "address": address,
         "firstname": api.safe_unicode(firstname),
         "middlename": api.safe_unicode(middlename),
