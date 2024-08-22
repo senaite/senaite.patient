@@ -60,9 +60,10 @@ class PatientSampleAddView(BaseView):
             address = self.context.getFormattedAddress()
             return api.to_utf8(address)
         elif name == "DateOfBirth":
-            birthdate = self.context.getBirthdate()
-            if birthdate:
-                return birthdate.strftime("%Y-%m-%d")
+            from_age = False
+            birthdate = self.context.getBirthdate(as_date=False)
+            estimated = self.context.getEstimatedBirthdate()
+            return [birthdate, from_age, estimated]
         elif name == "Sex":
             return self.context.getSex()
         elif name == "Gender":
