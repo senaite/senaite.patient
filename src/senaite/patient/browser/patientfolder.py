@@ -205,6 +205,9 @@ class PatientFolderView(ListingView):
 
         # Birthdate
         item["birthdate"] = obj.getLocalizedBirthdate()
+        if obj.getEstimatedBirthdate():
+            item["after"]["birthdate"] = get_image(
+                "warning.png", title=t(_("The birthdate is estimated")))
 
         # Folder
         parent = api.get_parent(obj)
