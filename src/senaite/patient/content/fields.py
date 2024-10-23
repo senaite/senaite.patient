@@ -30,6 +30,7 @@ from senaite.patient.browser.widgets import FullnameWidget
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.config import AUTO_ID_MARKER
 from senaite.patient.config import PATIENT_CATALOG
+from senaite.patient.interfaces import IAgeDateOfBirthField
 from zope.interface import implementer
 
 
