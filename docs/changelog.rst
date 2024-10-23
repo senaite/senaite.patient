@@ -4,6 +4,7 @@ Changelog
 1.5.0 (unreleased)
 ------------------
 
+- #114 Fix jsonapi returns None for sample's DateOfBirth field
 - #113 Added estimated birthdate field to Patient content type
 - #112 Use default TZ when calculating birthdate if `on_date` param is not set
 - #111 Allow/Disallow the introduction of future dates of birth
