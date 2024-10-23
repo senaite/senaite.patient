@@ -1,0 +1,8 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <!-- Adapter for senaite.patient's AT AgeDateOfBirthField -->
+  <adapter
+      for="senaite.patient.interfaces.IAgeDateOfBirthField"
+      factory=".fieldmanagers.AgeDateOfBirthFieldManager"/>
+
+</configure>

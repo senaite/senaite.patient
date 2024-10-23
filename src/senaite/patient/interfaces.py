@@ -45,3 +45,10 @@ class IRoutineAnalysis(interface.Interface):
     """Marker interface for routine analyses, that is required for the
     patient's dynamic result range adapter to work properly
     """
+
+
+class IAgeDateOfBirthField(interface.Interface):
+    """Marker interface for AT-custom AgeDateOfBirthField. This interface is
+    necessary for AgeDateOfBirthFieldManager, required by senaite.jsonapi to
+    properly retrieve and jsonify the value
+    """
