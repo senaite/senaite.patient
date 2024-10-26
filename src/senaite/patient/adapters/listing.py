@@ -105,8 +105,8 @@ class SamplesListingAdapter(object):
             after_icons += self.icon_tag("id-card-red", **kwargs)
             item["after"].update({"getId": after_icons})
 
-        sample_patient_mrn = obj.getMedicalRecordNumberValue
-        sample_patient_fullname = obj.getPatientFullName
+        sample_patient_mrn = api.to_utf8(obj.getMedicalRecordNumberValue)
+        sample_patient_fullname = api.to_utf8(obj.getPatientFullName)
 
         item["MRN"] = sample_patient_mrn
         item["Patient"] = sample_patient_fullname
