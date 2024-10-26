@@ -19,6 +19,7 @@
 # Some rights reserved, see README and LICENSE.
 
 import six
+
 from AccessControl import ClassSecurityInfo
 from archetypes.schemaextender.field import ExtensionField
 from Products.Archetypes.Field import ObjectField
@@ -29,6 +30,8 @@ from senaite.patient.browser.widgets import FullnameWidget
 from senaite.patient.browser.widgets import TemporaryIdentifierWidget
 from senaite.patient.config import AUTO_ID_MARKER
 from senaite.patient.config import PATIENT_CATALOG
+from senaite.patient.interfaces import IAgeDateOfBirthField
+from zope.interface import implementer
 
 
 class TemporaryIdentifierField(ExtensionField, ObjectField):
@@ -122,6 +125,7 @@ class FullnameField(ExtensionField, ObjectField):
         return " ".join(filter(None, [firstname, middlename, lastname]))
 
 
+@implementer(IAgeDateOfBirthField)
 class AgeDateOfBirthField(ExtensionField, ObjectField):
     """ObjectField extender that stores a tuple (dob, from_age, estimated)
     """
