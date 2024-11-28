@@ -442,24 +442,6 @@ class Patient(Container):
 
     security = ClassSecurityInfo()
 
-    @security.private
-    def accessor(self, fieldname):
-        """Return the field accessor for the fieldname
-        """
-        schema = api.get_schema(self)
-        if fieldname not in schema:
-            return None
-        return schema[fieldname].get
-
-    @security.private
-    def mutator(self, fieldname):
-        """Return the field mutator for the fieldname
-        """
-        schema = api.get_schema(self)
-        if fieldname not in schema:
-            return None
-        return schema[fieldname].set
-
     @security.protected(permissions.View)
     def Title(self):
         return self.getFullname()
