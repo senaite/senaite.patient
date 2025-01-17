@@ -57,6 +57,16 @@ find $LOCALES -name "*.mo" -delete
 # Pull Transifex
 tx_pull
 
+# Remove lines from po files starting with '#.' (Default key)
+# Files pulled from transifex always come with a wrapped value for "Default".
+# However, i18ndude does not wrap the value for "Default" (even using --wrap
+# parameter), which originates stale lines after merge.
+for po_file in $(find $LOCALES -name "*.po")
+do
+    grep -v "#\. " $po_file > $po_file.tmp
+    mv $po_file.tmp $po_file
+done
+
 # Generate the Domain
 DOMAIN=senaite.patient
 echo "Processing Domain $DOMAIN"
