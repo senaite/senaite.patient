@@ -20,8 +20,6 @@
 
 from bika.lims import api
 from bika.lims.api import delete
-from bika.lims.api import uncatalog_object
-from plone.browserlayer.utils import unregister_layer
 from plone.registry.interfaces import IRegistry
 from Products.DCWorkflow.Guard import Guard
 from senaite.core.catalog import SAMPLE_CATALOG
