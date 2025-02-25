@@ -3,8 +3,7 @@
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:cmf="http://namespaces.zope.org/cmf"
     xmlns:i18n="http://namespaces.zope.org/i18n"
-    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    xmlns:zcml="http://namespaces.zope.org/zcml">
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <five:registerPackage package="." initialize=".initialize"/>
 
@@ -61,7 +60,7 @@
       name="senaite.patient.vocabularies.name_entry_modes" />
 
   <!-- Package includes -->
-  <include package=".adapters" zcml:condition="installed senaite.patient"/>
+  <include package=".adapters" />
   <include package=".browser" />
   <include package=".catalog" />
   <include package=".content" />
