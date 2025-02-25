@@ -43,6 +43,7 @@ from senaite.core.z3cform.widgets.datagrid import DataGridWidgetFactory
 from senaite.core.z3cform.widgets.datetimewidget import DatetimeWidget
 from senaite.core.z3cform.widgets.phone import PhoneWidgetFactory
 from senaite.patient import api as patient_api
+from senaite.patient import is_installed
 from senaite.patient import messageFactory as _
 from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
@@ -438,7 +439,15 @@ class IPatientSchema(model.Schema):
 class Patient(Container):
     """Results Interpretation Template content
     """
-    _catalogs = [PATIENT_CATALOG]
+
+    # XXX prevents a APIError: No tool named 'senaite_catalog_patient' found
+    #     when uninstalling senaite.patient product.
+    #     To remove when `catalog_mappings` is used instead
+    #     See https://github.com/senaite/senaite.core/pull/2662
+    if is_installed():
+        _catalogs = [PATIENT_CATALOG]
+    else:
+        _catalogs = []
 
     security = ClassSecurityInfo()
 

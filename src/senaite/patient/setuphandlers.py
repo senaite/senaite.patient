@@ -19,15 +19,19 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims import api
+from bika.lims.api import delete
+from bika.lims.api import uncatalog_object
+from plone.browserlayer.utils import unregister_layer
 from plone.registry.interfaces import IRegistry
 from Products.DCWorkflow.Guard import Guard
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.setuphandlers import setup_core_catalogs
 from senaite.core.setuphandlers import setup_other_catalogs
 from senaite.core.workflow import SAMPLE_WORKFLOW
-from senaite.patient import PRODUCT_NAME
 from senaite.patient import logger
 from senaite.patient import permissions
+from senaite.patient import PRODUCT_NAME
+from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.catalog.patient_catalog import PatientCatalog
 from zope.component import getUtility
 
@@ -215,10 +219,60 @@ def post_uninstall(portal_setup):
     """
     logger.info("{} uninstall handler [BEGIN]".format(PRODUCT_NAME.upper()))
 
-    # https://docs.plone.org/develop/addons/components/genericsetup.html#custom-installer-code-setuphandlers-py
     profile_id = "profile-{}:uninstall".format(PRODUCT_NAME)
     context = portal_setup._getImportContext(profile_id)  # noqa
     portal = context.getSite()  # noqa
+
+    # Delete patient-specific indexes
+    for index_info in INDEXES:
+        cat_id = index_info[0]
+        idx_name = index_info[1]
+        cat = api.get_tool(cat_id)
+        if idx_name in cat.indexes():
+            logger.info("Removing index from %s: %s" % (cat.id, idx_name))
+            cat.delIndex(idx_name)
+
+    # Delete patient-specific columns
+    for cat_id, column in COLUMNS:
+        cat = api.get_tool(cat_id)
+        if column not in cat.schema():
+            logger.info("Removing column from %s: %s" % (cat.id, column))
+            cat.delColumn(column)
+
+    # Delete patient-specific catalogs
+    logger.info("Removing catalog: %s" % PATIENT_CATALOG)
+    portal = api.get_portal()
+    portal.manage_delObjects([PATIENT_CATALOG])
+
+    # Delete patients folder and objects
+    logger.info("Removing folder: %s" % api.get_path(portal.patients))
+    delete(portal.patients, check_permissions=False)
+
+    # Delete patient objects left elsewhere (e.g in client folders)
+    uc = api.get_tool("uid_catalog")
+    brains = list(uc(portal_type="Patient"))
+    for brain in brains:
+        try:
+            obj = brain.getObject()
+        except AttributeError:
+            # Object does no longer exist, un-catalog the brain
+            path = api.get_path(brain)
+            # For DXs, uids of uid_catalog are absolute paths to portal root
+            # see plone.app.referencablebehavior.uidcatalog
+            logger.info("Removing stale brain: %s" % path)
+            uc.uncatalog_object(path)
+            continue
+
+        # Delete the patient object
+        path = api.get_path(obj)
+        logger.info("Removing patient: %s" % path)
+        delete(obj, check_permissions=False)
+
+    # Remove ID Formatting
+    ids = ["Patient", "MedicalRecordNumber"]
+    records = portal.bika_setup.getIDFormatting()
+    records = filter(lambda rec: rec.get("portal_type") not in ids, records)
+    portal.bika_setup.setIDFormatting(records)
 
     logger.info("{} uninstall handler [DONE]".format(PRODUCT_NAME.upper()))
 
