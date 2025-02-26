@@ -10,7 +10,7 @@
         registry instead of relying on a `_catalog` attribute in DX object"
       source="1502"
       destination="1503"
-      handler=".v01_05_000.setup_senaite_registry"
+      handler=".v01_05_000.update_catalog_mappings"
       profile="senaite.patient:default"/>
 
   <!-- 1502: Allow/Disallow future dates of birth -->

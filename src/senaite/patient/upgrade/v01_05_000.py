@@ -24,7 +24,6 @@ from senaite.patient import logger
 from senaite.patient.config import PRODUCT_NAME
 from senaite.patient.setuphandlers import setup_catalog_mappings
 from senaite.patient.setuphandlers import setup_catalogs
-from senaite.patient.setuphandlers import setup_senaite_registry
 
 version = "1.5.0"
 profile = "profile-{0}:default".format(PRODUCT_NAME)
