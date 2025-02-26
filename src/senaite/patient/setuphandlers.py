@@ -22,12 +22,14 @@ from bika.lims import api
 from plone.registry.interfaces import IRegistry
 from Products.DCWorkflow.Guard import Guard
 from senaite.core.catalog import SAMPLE_CATALOG
+from senaite.core.catalog import set_catalogs
 from senaite.core.setuphandlers import setup_core_catalogs
 from senaite.core.setuphandlers import setup_other_catalogs
 from senaite.core.workflow import SAMPLE_WORKFLOW
-from senaite.patient import PRODUCT_NAME
 from senaite.patient import logger
 from senaite.patient import permissions
+from senaite.patient import PRODUCT_NAME
+from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.catalog.patient_catalog import PatientCatalog
 from zope.component import getUtility
 
@@ -166,7 +168,10 @@ def setup_handler(context):
     logger.info("{} setup handler [BEGIN]".format(PRODUCT_NAME.upper()))
     portal = context.getSite()
 
-    # Setup patient content type
+    # Setup catalog mappings
+    setup_catalog_mappings(portal)
+
+    # Setup patients root folder
     add_patient_folder(portal)
 
     # Configure visible navigation items
@@ -388,3 +393,14 @@ def update_workflow_transition(workflow, transition_id, settings):
     guard_props = settings.get("guard", guard_props)
     guard.changeFromProperties(guard_props)
     transition.guard = guard
+
+
+def setup_catalog_mappings(portal):
+    """Setup the catalog mappings for portal types in senaite registry
+    """
+    logger.info("Setup catalog mappings ...")
+
+    # setup catalog mappings for Patient DX
+    set_catalogs("Patient", [PATIENT_CATALOG])
+
+    logger.info("Setup catalog mappings [DONE]")
