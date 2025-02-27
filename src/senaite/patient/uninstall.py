@@ -59,7 +59,7 @@ def post_uninstall(portal_setup):
 def purge_objects(portal):
     """Deletes objects that are specific of this product
     """
-    logger.info("Deleting objects ...")
+    logger.info("Purge objects ...")
 
     # Delete patients folder and objects inside
     patients = portal.get("patients")
@@ -87,13 +87,13 @@ def purge_objects(portal):
         logger.info("Removing patient: %s" % path)
         delete(obj, check_permissions=False)
 
-    logger.info("Deleting objects [DONE]")
+    logger.info("Purge objects [DONE]")
 
 
 def purge_catalogs(portal):
     """Uninstall catalogs, indexes and columns that are product-specific
     """
-    logger.info("Uninstalling catalogs ...")
+    logger.info("Purge catalogs ...")
 
     # Delete product-specific indexes
     for index_info in INDEXES:
@@ -123,23 +123,32 @@ def purge_catalogs(portal):
         logger.info("Flushing catalog mappings for %s" % portal_type)
         set_catalogs(portal_type, tuple())
 
-    logger.info("Uninstalling catalogs [DONE]")
+    logger.info("Purge catalogs [DONE]")
 
 
 def purge_id_formatting(portal):
     """Purges ID formatting records that are specific of this product
     """
+    logger.info("Purge ID formatting ...")
+
     ids = ["Patient", "MedicalRecordNumber"]
     records = portal.bika_setup.getIDFormatting()
     records = filter(lambda rec: rec.get("portal_type") not in ids, records)
     portal.bika_setup.setIDFormatting(records)
 
+    logger.info("Purge ID formatting [DONE]")
+
 
 def purge_navigation_types(portal):
     """Purges product-specific types from the navigation menu
     """
+    logger.info("Purge navigation types ...")
+
     key = "plone.displayed_types"
     registry = getUtility(IRegistry)
     to_display = registry.get(key, ())
     to_display = filter(lambda ty: ty not in TYPES_TO_REMOVE, to_display)
     registry[key] = tuple(to_display)
+
+    logger.info("Purge navigation types [DONE]")
+
