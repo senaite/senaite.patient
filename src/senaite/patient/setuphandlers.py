@@ -43,6 +43,11 @@ CATALOGS = (
     PatientCatalog,
 )
 
+# Tuples of (portal_type, [catalog_id,])
+CATALOG_MAPPINGS = (
+    ("Patient", [PATIENT_CATALOG]),
+)
+
 # Tuples of (catalog, index_name, index_attribute, index_type)
 INDEXES = [
     (SAMPLE_CATALOG, "is_temporary_mrn", "", "BooleanIndex"),
@@ -168,6 +173,9 @@ def setup_handler(context):
     logger.info("{} setup handler [BEGIN]".format(PRODUCT_NAME.upper()))
     portal = context.getSite()
 
+    # Setup catalogs
+    setup_catalogs(portal)
+
     # Setup catalog mappings
     setup_catalog_mappings(portal)
 
@@ -176,9 +184,6 @@ def setup_handler(context):
 
     # Configure visible navigation items
     setup_navigation_types(portal)
-
-    # Setup catalogs
-    setup_catalogs(portal)
 
     # Apply ID format to content types
     setup_id_formatting(portal)
@@ -399,8 +404,6 @@ def setup_catalog_mappings(portal):
     """Setup the catalog mappings for portal types in senaite registry
     """
     logger.info("Setup catalog mappings ...")
-
-    # setup catalog mappings for Patient DX
-    set_catalogs("Patient", [PATIENT_CATALOG])
-
+    for portal_type, catalogs in CATALOG_MAPPINGS:
+        set_catalogs(portal_type, catalogs)
     logger.info("Setup catalog mappings [DONE]")
