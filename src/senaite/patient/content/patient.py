@@ -438,6 +438,9 @@ class IPatientSchema(model.Schema):
 class Patient(Container):
     """Results Interpretation Template content
     """
+
+    # XXX Remove after 1.5.0
+    #     See https://github.com/senaite/senaite.patient/pull/119
     _catalogs = [PATIENT_CATALOG]
 
     security = ClassSecurityInfo()
