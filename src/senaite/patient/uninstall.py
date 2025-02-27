@@ -151,4 +151,3 @@ def purge_navigation_types(portal):
     registry[key] = tuple(to_display)
 
     logger.info("Purge navigation types [DONE]")
-
