@@ -2,6 +2,17 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
+  <!-- 1503: Use senaite registry for catalog mappings  -->
+  <genericsetup:upgradeStep
+      title="Use senaite registry for catalog mappings"
+      description="
+        This upgrade step adds the catalog mappings for patient in senaite
+        registry instead of relying on a `_catalog` attribute in DX object"
+      source="1502"
+      destination="1503"
+      handler=".v01_05_000.update_catalog_mappings"
+      profile="senaite.patient:default"/>
+
   <!-- 1502: Allow/Disallow future dates of birth -->
   <genericsetup:upgradeStep
       title="Add setting to allow/disallow future dates of birth"

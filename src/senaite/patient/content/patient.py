@@ -18,12 +18,12 @@
 # Copyright 2020-2024 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+from datetime import datetime
 from string import Template
 
 from AccessControl import ClassSecurityInfo
 from bika.lims import api
 from bika.lims.api.mail import is_valid_email_address
-from datetime import datetime
 from plone.autoform import directives
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
@@ -43,9 +43,7 @@ from senaite.core.z3cform.widgets.datagrid import DataGridWidgetFactory
 from senaite.core.z3cform.widgets.datetimewidget import DatetimeWidget
 from senaite.core.z3cform.widgets.phone import PhoneWidgetFactory
 from senaite.patient import api as patient_api
-from senaite.patient import is_installed
 from senaite.patient import messageFactory as _
-from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
 from senaite.patient.config import SEXES
 from senaite.patient.i18n import translate
@@ -439,16 +437,6 @@ class IPatientSchema(model.Schema):
 class Patient(Container):
     """Results Interpretation Template content
     """
-
-    # XXX prevents a APIError: No tool named 'senaite_catalog_patient' found
-    #     when uninstalling senaite.patient product.
-    #     To remove when `catalog_mappings` is used instead
-    #     See https://github.com/senaite/senaite.core/pull/2662
-    if is_installed():
-        _catalogs = [PATIENT_CATALOG]
-    else:
-        _catalogs = []
-
     security = ClassSecurityInfo()
 
     @security.protected(permissions.View)

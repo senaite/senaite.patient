@@ -19,10 +19,10 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims import api
-from bika.lims.api import delete
 from plone.registry.interfaces import IRegistry
 from Products.DCWorkflow.Guard import Guard
 from senaite.core.catalog import SAMPLE_CATALOG
+from senaite.core.catalog import set_catalogs
 from senaite.core.setuphandlers import setup_core_catalogs
 from senaite.core.setuphandlers import setup_other_catalogs
 from senaite.core.workflow import SAMPLE_WORKFLOW
@@ -35,12 +35,13 @@ from zope.component import getUtility
 
 PROFILE_ID = "profile-{}:default".format(PRODUCT_NAME)
 
-# Maximum threshold in seconds before a transaction.commit takes place
-# Default: 300 (5 minutes)
-MAX_SEC_THRESHOLD = 300
-
 CATALOGS = (
     PatientCatalog,
+)
+
+# Tuples of (portal_type, [catalog_id,])
+CATALOG_MAPPINGS = (
+    ("Patient", [PATIENT_CATALOG]),
 )
 
 # Tuples of (catalog, index_name, index_attribute, index_type)
@@ -168,14 +169,17 @@ def setup_handler(context):
     logger.info("{} setup handler [BEGIN]".format(PRODUCT_NAME.upper()))
     portal = context.getSite()
 
-    # Setup patient content type
+    # Setup catalogs
+    setup_catalogs(portal)
+
+    # Setup catalog mappings
+    setup_catalog_mappings(portal)
+
+    # Setup patients root folder
     add_patient_folder(portal)
 
     # Configure visible navigation items
     setup_navigation_types(portal)
-
-    # Setup catalogs
-    setup_catalogs(portal)
 
     # Apply ID format to content types
     setup_id_formatting(portal)
@@ -208,71 +212,6 @@ def post_install(portal_setup):
     portal = context.getSite()  # noqa
 
     logger.info("{} install handler [DONE]".format(PRODUCT_NAME.upper()))
-
-
-def post_uninstall(portal_setup):
-    """Runs after the last import step of the *uninstall* profile
-    This handler is registered as a *post_handler* in the generic setup profile
-    :param portal_setup: SetupTool
-    """
-    logger.info("{} uninstall handler [BEGIN]".format(PRODUCT_NAME.upper()))
-
-    profile_id = "profile-{}:uninstall".format(PRODUCT_NAME)
-    context = portal_setup._getImportContext(profile_id)  # noqa
-    portal = context.getSite()  # noqa
-
-    # Delete patient-specific indexes
-    for index_info in INDEXES:
-        cat_id = index_info[0]
-        idx_name = index_info[1]
-        cat = api.get_tool(cat_id)
-        if idx_name in cat.indexes():
-            logger.info("Removing index from %s: %s" % (cat.id, idx_name))
-            cat.delIndex(idx_name)
-
-    # Delete patient-specific columns
-    for cat_id, column in COLUMNS:
-        cat = api.get_tool(cat_id)
-        if column not in cat.schema():
-            logger.info("Removing column from %s: %s" % (cat.id, column))
-            cat.delColumn(column)
-
-    # Delete patient-specific catalogs
-    logger.info("Removing catalog: %s" % PATIENT_CATALOG)
-    portal = api.get_portal()
-    portal.manage_delObjects([PATIENT_CATALOG])
-
-    # Delete patients folder and objects
-    logger.info("Removing folder: %s" % api.get_path(portal.patients))
-    delete(portal.patients, check_permissions=False)
-
-    # Delete patient objects left elsewhere (e.g in client folders)
-    uc = api.get_tool("uid_catalog")
-    brains = list(uc(portal_type="Patient"))
-    for brain in brains:
-        try:
-            obj = brain.getObject()
-        except AttributeError:
-            # Object does no longer exist, un-catalog the brain
-            path = api.get_path(brain)
-            # For DXs, uids of uid_catalog are absolute paths to portal root
-            # see plone.app.referencablebehavior.uidcatalog
-            logger.info("Removing stale brain: %s" % path)
-            uc.uncatalog_object(path)
-            continue
-
-        # Delete the patient object
-        path = api.get_path(obj)
-        logger.info("Removing patient: %s" % path)
-        delete(obj, check_permissions=False)
-
-    # Remove ID Formatting
-    ids = ["Patient", "MedicalRecordNumber"]
-    records = portal.bika_setup.getIDFormatting()
-    records = filter(lambda rec: rec.get("portal_type") not in ids, records)
-    portal.bika_setup.setIDFormatting(records)
-
-    logger.info("{} uninstall handler [DONE]".format(PRODUCT_NAME.upper()))
 
 
 def setup_catalogs(portal):
@@ -440,3 +379,12 @@ def update_workflow_transition(workflow, transition_id, settings):
     guard_props = settings.get("guard", guard_props)
     guard.changeFromProperties(guard_props)
     transition.guard = guard
+
+
+def setup_catalog_mappings(portal):
+    """Setup the catalog mappings for portal types in senaite registry
+    """
+    logger.info("Setup catalog mappings ...")
+    for portal_type, catalogs in CATALOG_MAPPINGS:
+        set_catalogs(portal_type, catalogs)
+    logger.info("Setup catalog mappings [DONE]")

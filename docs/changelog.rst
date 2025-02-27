@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - #118 Remove patient-specific settings, catalogs and objects on uninstall
+- #119 Rely on `catalog_mappings` to get the catalogs for Patient portal type
 - #117 Make accessor and mutator from Patient to rely on base class
 - #116 Fix APIError: Expected string type in samples listing
 - #115 Fix non-latin names and MRNs comparison in a listing view
