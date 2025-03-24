@@ -21,11 +21,10 @@
 from datetime import datetime
 
 from bika.lims import api
-from bika.lims import deprecated
-from dateutil.relativedelta import relativedelta
 from senaite.core.api import dtime
 from senaite.patient.config import PATIENT_CATALOG
 from senaite.patient.permissions import AddPatient
+from zope.deprecation import deprecate
 
 CLIENT_TYPE = "Client"
 PATIENT_TYPE = "Patient"
@@ -161,7 +160,7 @@ def update_patient(patient, **values):
     patient.reindexObject()
 
 
-@deprecated("Use senaite.core.api.dtime.to_dt instead")
+@deprecate("Use senaite.core.api.dtime.to_dt instead")
 def to_datetime(date_value, default=None, tzinfo=None):
     if isinstance(date_value, datetime):
         return date_value
@@ -178,7 +177,7 @@ def to_datetime(date_value, default=None, tzinfo=None):
     return date_value.replace(tzinfo=tzinfo)
 
 
-@deprecated("Use senaite.core.api.dtime.to_ymd instead")
+@deprecate("Use senaite.core.api.dtime.to_ymd instead")
 def to_ymd(period, default=_marker):
     """Returns the given period in ymd format
 
@@ -196,7 +195,7 @@ def to_ymd(period, default=_marker):
     return dtime.to_ymd(period, default=default)
 
 
-@deprecated("Use senaite.core.api.dtime.is_ymd instead")
+@deprecate("Use senaite.core.api.dtime.is_ymd instead")
 def is_ymd(ymd):
     """Returns whether the string represents a period in ymd format
 
@@ -208,7 +207,7 @@ def is_ymd(ymd):
     return dtime.is_ymd(ymd)
 
 
-@deprecated("Use senaite.core.api.dtime.to_relative_delta instead")
+@deprecate("Use senaite.core.api.dtime.to_relative_delta instead")
 def get_years_months_days(period):
     """Returns a tuple of (years, months, days) given a period.
 
@@ -224,7 +223,7 @@ def get_years_months_days(period):
     return delta.years, delta.months, delta.days
 
 
-@deprecated("Use senaite.core.api.dtime.get_since_date instead")
+@deprecate("Use senaite.core.api.dtime.get_since_date instead")
 def get_birth_date(period, on_date=None, default=_marker):
     """Returns the date when something started given a period in ymd format
     and the date when such period was recorded
@@ -249,14 +248,14 @@ def get_birth_date(period, on_date=None, default=_marker):
     return dtime.get_since_date(period, dt=on_date, default=default)
 
 
-@deprecated("Use senaite.core.api.dtime.get_ymd instead")
+@deprecate("Use senaite.core.api.dtime.get_ymd instead")
 def get_age_ymd(birth_date, on_date=None):
     """Returns the age at on_date if not None. Otherwise, current age
     """
     return dtime.get_ymd(birth_date, dt2=on_date)
 
 
-@deprecated("Use senaite.core.api.dtime.get_relativedelta instead")
+@deprecate("Use senaite.core.api.dtime.get_relativedelta instead")
 def get_relative_delta(from_date, to_date=None):
     """Returns the relative delta between two dates. If to_date is None,
     compares the from_date with now
