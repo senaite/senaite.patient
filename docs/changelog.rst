@@ -4,6 +4,7 @@ Changelog
 1.5.0 (unreleased)
 ------------------
 
+- #123 Hyperlink patient on sample listing
 - #119 Rely on `catalog_mappings` to get the catalogs for Patient portal type
 - #117 Make accessor and mutator from Patient to rely on base class
 - #116 Fix APIError: Expected string type in samples listing
