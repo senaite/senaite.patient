@@ -141,6 +141,11 @@ class SamplesListingAdapter(object):
             val = api.safe_unicode(patient_fullname) or _("<no value>")
             icon_args = {"width": 16, "title": api.to_utf8(msg % val)}
             item["after"]["Patient"] = self.icon_tag("info", **icon_args)
+        else:
+            patient_view_url = "{}/@@view".format(patient_url)
+            patient_view_url = get_link(
+                    patient_view_url, sample_patient_fullname)
+            item["Patient"] = patient_view_url
 
     @viewcache
     def get_patient_by_mrn(self, mrn):
