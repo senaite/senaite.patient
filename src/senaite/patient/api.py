@@ -18,16 +18,13 @@
 # Copyright 2020-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-import re
 from datetime import datetime
 
 from bika.lims import api
-from bika.lims import deprecated
-from dateutil.relativedelta import relativedelta
 from senaite.core.api import dtime
 from senaite.patient.config import PATIENT_CATALOG
 from senaite.patient.permissions import AddPatient
-from six import string_types
+from zope.deprecation import deprecate
 
 CLIENT_TYPE = "Client"
 PATIENT_TYPE = "Patient"
@@ -43,10 +40,6 @@ CLIENT_VIEW_ACTION = {
     "link_target": "",
     "condition": "",
 }
-
-YMD_REGEX = r'^((?P<y>(\d+))y){0,1}\s*' \
-            r'((?P<m>(\d+))m){0,1}\s*' \
-            r'((?P<d>(\d+))d){0,1}\s*'
 
 _marker = object()
 
@@ -167,7 +160,7 @@ def update_patient(patient, **values):
     patient.reindexObject()
 
 
-@deprecated("Use senaite.core.api.dtime.to_dt instead")
+@deprecate("Use senaite.core.api.dtime.to_dt instead")
 def to_datetime(date_value, default=None, tzinfo=None):
     if isinstance(date_value, datetime):
         return date_value
@@ -184,6 +177,7 @@ def to_datetime(date_value, default=None, tzinfo=None):
     return date_value.replace(tzinfo=tzinfo)
 
 
+@deprecate("Use senaite.core.api.dtime.to_ymd instead")
 def to_ymd(period, default=_marker):
     """Returns the given period in ymd format
 
@@ -196,22 +190,12 @@ def to_ymd(period, default=_marker):
     :returns: a string that represents a period in ymd format
     :rtype: str
     """
-    try:
-        ymd_values = get_years_months_days(period)
-    except (TypeError, ValueError) as e:
-        if default is _marker:
-            raise e
-        return default
-
-    # Return in ymd format, with zeros omitted
-    ymd_values = map(str, ymd_values)
-    ymd = filter(lambda it: int(it[0]), zip(ymd_values, "ymd"))
-    ymd = " ".join(map("".join, ymd))
-
-    # return a compliant ymd when no elapsed days
-    return ymd or "0d"
+    if default is _marker:
+        return dtime.to_ymd(period)
+    return dtime.to_ymd(period, default=default)
 
 
+@deprecate("Use senaite.core.api.dtime.is_ymd instead")
 def is_ymd(ymd):
     """Returns whether the string represents a period in ymd format
 
@@ -220,15 +204,10 @@ def is_ymd(ymd):
     :returns: True if a valid period in ymd format
     :rtype: bool
     """
-    if not isinstance(ymd, string_types):
-        return False
-    try:
-        get_years_months_days(ymd)
-    except (TypeError, ValueError):
-        return False
-    return True
+    return dtime.is_ymd(ymd)
 
 
+@deprecate("Use senaite.core.api.dtime.to_relative_delta instead")
 def get_years_months_days(period):
     """Returns a tuple of (years, months, days) given a period.
 
@@ -240,36 +219,11 @@ def get_years_months_days(period):
     :returns: a tuple with the years, months and days
     :rtype: tuple
     """
-    if isinstance(period, relativedelta):
-        return period.years, period.months, period.days
-
-    if isinstance(period, (tuple, list)):
-        years = api.to_int(period[0], default=0)
-        months = api.to_int(period[1] if len(period) > 1 else 0, default=0)
-        days = api.to_int(period[2] if len(period) > 2 else 0, default=0)
-        return years, months, days
-
-    if not isinstance(period, string_types):
-        raise TypeError("{} is not supported".format(repr(period)))
-
-    # to lowercase and remove leading and trailing spaces
-    raw_ymd = period.lower().strip()
-
-    # extract the years, months and days
-    matches = re.search(YMD_REGEX, raw_ymd)
-    values = [matches.group(v) for v in "ymd"]
-
-    # if all values are None, assume the ymd format was not valid
-    nones = [value is None for value in values]
-    if all(nones):
-        raise ValueError("Not a valid ymd: {}".format(repr(period)))
-
-    # replace Nones with zeros and calculate everything with a relativedelta
-    values = [api.to_int(value, 0) for value in values]
-    delta = relativedelta(years=values[0], months=values[1], days=values[2])
-    return get_years_months_days(delta)
+    delta = dtime.to_relativedelta(period)
+    return delta.years, delta.months, delta.days
 
 
+@deprecate("Use senaite.core.api.dtime.get_since_date instead")
 def get_birth_date(period, on_date=None, default=_marker):
     """Returns the date when something started given a period in ymd format
     and the date when such period was recorded
@@ -289,43 +243,24 @@ def get_birth_date(period, on_date=None, default=_marker):
     :returns: a tuple with the years, months and days
     :rtype: tuple
     """
-    # extract the years, months and days from the period
-    try:
-        years, months, days = get_years_months_days(period)
-    except (TypeError, ValueError) as e:
-        if default is _marker:
-            raise e
-        return dtime.to_dt(default)
-
-    # date when the ymd period was recorded
-    on_date = dtime.to_dt(on_date)
-    if not on_date:
-        on_date = datetime.now()
-        # apply system's current time zone
-        tz = dtime.get_os_timezone()
-        on_date = dtime.to_zone(on_date, tz)
-
-    # calculate the date when everything started
-    delta = relativedelta(years=years, months=months, days=days)
-    return on_date - delta
+    if default is _marker:
+        return dtime.get_since_date(period, dt=on_date)
+    return dtime.get_since_date(period, dt=on_date, default=default)
 
 
+@deprecate("Use senaite.core.api.dtime.get_ymd instead")
 def get_age_ymd(birth_date, on_date=None):
     """Returns the age at on_date if not None. Otherwise, current age
     """
-    try:
-        delta = dtime.get_relative_delta(birth_date, on_date)
-        return to_ymd(delta)
-    except (ValueError, TypeError):
-        return None
+    return dtime.get_ymd(birth_date, dt2=on_date)
 
 
-@deprecated("Use senaite.core.api.dtime.get_relative_delta instead")
+@deprecate("Use senaite.core.api.dtime.get_relativedelta instead")
 def get_relative_delta(from_date, to_date=None):
     """Returns the relative delta between two dates. If to_date is None,
     compares the from_date with now
     """
-    return dtime.get_relative_delta(from_date, to_date)
+    return dtime.get_relativedelta(from_date, to_date)
 
 
 def tuplify_identifiers(identifiers):
