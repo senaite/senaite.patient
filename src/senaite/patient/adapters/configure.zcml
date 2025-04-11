@@ -53,5 +53,11 @@
          senaite.patient.interfaces.IPatient"
     provides="senaite.app.listing.interfaces.IListingViewAdapter"
     factory=".listing.SamplesListingAdapter" />
+  
+  <!-- Edit form handler for Patient -->
+  <adapter
+      for="senaite.patient.interfaces.IPatient
+           senaite.patient.interfaces.ISenaitePatientLayer"
+      factory=".form.PatientEditForm"/>
 
 </configure>

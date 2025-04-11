@@ -329,6 +329,15 @@ class IPatientSchema(model.Schema):
         required=False,
     )
 
+    age = schema.TextLine(
+        title=_(u"label_patient_age", default=u"Age"),
+        description=_(
+            u"description_patient_age",
+            default=u"Age in YMD format or a single number representing years"
+        ),
+        required=False,
+    )
+
     deceased = schema.Bool(
         title=_(
             u"label_patient_deceased",
@@ -432,6 +441,15 @@ class IPatientSchema(model.Schema):
         now = dtime.to_zone(datetime.now(), tz)
         if now < dob:
             raise Invalid(_("Date of birth cannot be a future date"))
+
+    @invariant
+    def validate_age(data):
+        """Validate the age is in YMD format or a valid year."""
+        if not data.age:
+            return
+
+        if not dtime.is_ymd(data.age):
+            raise Invalid(_("Age must be in YMD format or a valid year"))
 
 
 @implementer(IPatient, IPatientSchema, IClientShareable)
@@ -810,3 +828,19 @@ class Patient(Container):
         """
         mutator = self.mutator("estimated_birthdate")
         return mutator(self, value)
+
+    @security.protected(permissions.View)
+    def getAge(self):
+        """Returns the age with the field accessor
+        """
+        accessor = self.accessor("age")
+        return accessor(self)
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setAge(self, value):
+        """Set the age with the field accessor
+        """
+        mutator = self.mutator("age")
+        return mutator(self, value)
+
+    Age = property(getAge, setAge)
