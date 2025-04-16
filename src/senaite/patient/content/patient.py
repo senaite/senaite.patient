@@ -333,7 +333,10 @@ class IPatientSchema(model.Schema):
         title=_(u"label_patient_age", default=u"Age"),
         description=_(
             u"description_patient_age",
-            default=u"Age in YMD format"
+            default=_(
+                u"Age in YMD (Years-Months-Days) format. "
+                u"Examples: '45y 3m 20d', '67y'."
+            )
         ),
         required=False,
     )
