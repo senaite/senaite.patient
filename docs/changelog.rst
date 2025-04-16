@@ -4,6 +4,7 @@ Changelog
 1.6.0 (unreleased)
 ------------------
 
+- #118 Remove patient-specific settings, catalogs and objects on uninstall
 - #121 Compatibility with core#2695 (relativedelta and ymd in api.dtime)
 - #125 Add Age field for patient content
 

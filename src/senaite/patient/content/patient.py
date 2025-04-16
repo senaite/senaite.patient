@@ -18,12 +18,12 @@
 # Copyright 2020-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+from datetime import datetime
 from string import Template
 
 from AccessControl import ClassSecurityInfo
 from bika.lims import api
 from bika.lims.api.mail import is_valid_email_address
-from datetime import datetime
 from plone.autoform import directives
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
@@ -44,7 +44,6 @@ from senaite.core.z3cform.widgets.datetimewidget import DatetimeWidget
 from senaite.core.z3cform.widgets.phone import PhoneWidgetFactory
 from senaite.patient import api as patient_api
 from senaite.patient import messageFactory as _
-from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.config import GENDERS
 from senaite.patient.config import SEXES
 from senaite.patient.i18n import translate
@@ -459,11 +458,6 @@ class IPatientSchema(model.Schema):
 class Patient(Container):
     """Results Interpretation Template content
     """
-
-    # XXX Remove after 1.5.0
-    #     See https://github.com/senaite/senaite.patient/pull/119
-    _catalogs = [PATIENT_CATALOG]
-
     security = ClassSecurityInfo()
 
     @security.protected(permissions.View)
