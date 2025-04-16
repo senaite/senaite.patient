@@ -3,6 +3,9 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="senaite.patient">
 
+  <!-- 1.6.0 -->
+  <include file="v01_06_000.zcml" />
+
   <!-- 1.5.0 -->
   <include file="v01_05_000.zcml" />
 

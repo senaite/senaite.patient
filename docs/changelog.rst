@@ -1,7 +1,11 @@
 Changelog
 =========
 
-1.5.0 (unreleased)
+1.6.0 (unreleased)
+------------------
+
+
+1.5.0 (2025-04-04)
 ------------------
 
 - #121 Compatibility with core#2695 (relativedelta and ymd in api.dtime)
