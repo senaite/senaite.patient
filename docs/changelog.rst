@@ -4,11 +4,12 @@ Changelog
 1.6.0 (unreleased)
 ------------------
 
+- #121 Compatibility with core#2695 (relativedelta and ymd in api.dtime)
+
 
 1.5.0 (2025-04-04)
 ------------------
 
-- #121 Compatibility with core#2695 (relativedelta and ymd in api.dtime)
 - #123 Hyperlink patient on sample listing
 - #119 Rely on `catalog_mappings` to get the catalogs for Patient portal type
 - #117 Make accessor and mutator from Patient to rely on base class
