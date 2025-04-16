@@ -46,7 +46,9 @@ class PatientEditForm(EditFormAdapterBase):
     def modified(self, data):
         if data.get("name") == ESTIMATED_BIRTHDATE_FIELDS[0]:
             estimated_birthdate = data.get("value")
-            self.toggle_and_update_fields(data.get("form"), estimated_birthdate)
+            self.toggle_and_update_fields(
+                data.get("form"), estimated_birthdate
+            )
         return self.data
 
     def update_age_field_from_birthdate(self, birthdate):
