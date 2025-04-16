@@ -303,6 +303,20 @@ class IPatientSchema(model.Schema):
         ]
     )
 
+    estimated_birthdate = schema.Bool(
+        title=_(
+            u"label_patient_estimated_birthdate",
+            default=u"Birthdate is estimated"
+        ),
+        description=_(
+            u"description_patient_estimated_birthdate",
+            default=u"Select this option if the patient's date of birth is "
+                    u"estimated"
+        ),
+        default=False,
+        required=False,
+    )
+
     directives.widget("birthdate",
                       DatetimeWidget,
                       show_time=False)
@@ -315,17 +329,15 @@ class IPatientSchema(model.Schema):
     #     property is explicitly set to the widget
     birthdate.get_max = get_max_birthdate
 
-    estimated_birthdate = schema.Bool(
-        title=_(
-            u"label_patient_estimated_birthdate",
-            default=u"Birthdate is estimated"
-        ),
+    age = schema.TextLine(
+        title=_(u"label_patient_age", default=u"Age"),
         description=_(
-            u"description_patient_estimated_birthdate",
-            default=u"Select this option if the patient's date of birth is "
-                    u"estimated"
+            u"description_patient_age",
+            default=_(
+                u"Age in YMD (Years-Months-Days) format. "
+                u"Examples: '45y 3m 20d', '67y'."
+            )
         ),
-        default=False,
         required=False,
     )
 
@@ -432,6 +444,15 @@ class IPatientSchema(model.Schema):
         now = dtime.to_zone(datetime.now(), tz)
         if now < dob:
             raise Invalid(_("Date of birth cannot be a future date"))
+
+    @invariant
+    def validate_age(data):
+        """Validate the age is in YMD format."""
+        if not data.age:
+            return
+
+        if not dtime.is_ymd(data.age):
+            raise Invalid(_("Age must be in YMD format"))
 
 
 @implementer(IPatient, IPatientSchema, IClientShareable)
@@ -810,3 +831,31 @@ class Patient(Container):
         """
         mutator = self.mutator("estimated_birthdate")
         return mutator(self, value)
+
+    @security.protected(permissions.View)
+    def getAge(self):
+        """Returns the age of the patient at current time
+        """
+        dob = self.getBirthdate()
+        return dtime.get_ymd(dob) or ""
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setAge(self, value):
+        """Set the age of the patient at current time
+        """
+        if not dtime.is_ymd(value):
+            return
+
+        # don't assign age unless estimated DoB
+        if not self.getEstimatedBirthdate():
+            return
+
+        # update the value of the date of birth
+        dob = dtime.get_since_date(value)
+        self.setBirthdate(dob)
+
+    # BBB AT schema field property
+    Age = property(getAge, setAge)
+
+    # no value is stored for age, but relies on birthdate
+    age = property(getAge, setAge)
