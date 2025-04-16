@@ -72,7 +72,7 @@ class PatientEditForm(EditFormAdapterBase):
             self.add_hide_field(BIRTHDATE_FIELDS[0])
         else:
             age = form.get(AGE_FIELD)
-            if age:
+            if dtime.is_ymd(age):
                 self.update_birthdate_field_from_age(age)
             self.add_show_field(BIRTHDATE_FIELDS[0])
             self.add_hide_field(AGE_FIELD)

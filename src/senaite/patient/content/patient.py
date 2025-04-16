@@ -834,16 +834,23 @@ class Patient(Container):
 
     @security.protected(permissions.View)
     def getAge(self):
-        """Returns the age with the field accessor
+        """Returns the age of the patient at current time
         """
-        accessor = self.accessor("age")
-        return accessor(self)
+        dob = self.getBirthdate()
+        return dtime.get_ymd(dob) or ""
 
     @security.protected(permissions.ModifyPortalContent)
     def setAge(self, value):
-        """Set the age with the field accessor
+        """Set the age of the patient at current time
         """
-        mutator = self.mutator("age")
-        return mutator(self, value)
+        if not dtime.is_ymd(value):
+            return
 
+        dob = dtime.get_since_date(value)
+        self.setEstimatedBirthdate(True)
+        self.setBirthdate(dob)
+
+    # BBB AT schema field property
     Age = property(getAge, setAge)
+
+    age = property(getAge, setAge)
