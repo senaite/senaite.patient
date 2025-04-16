@@ -303,18 +303,6 @@ class IPatientSchema(model.Schema):
         ]
     )
 
-    directives.widget("birthdate",
-                      DatetimeWidget,
-                      show_time=False)
-    birthdate = DatetimeField(
-        title=_(u"label_patient_birthdate", default=u"Birthdate"),
-        description=_(u"Patient birthdate"),
-        required=False,
-    )
-    # XXX core's DateTimeWidget relies on field's get_max function if not 'max'
-    #     property is explicitly set to the widget
-    birthdate.get_max = get_max_birthdate
-
     estimated_birthdate = schema.Bool(
         title=_(
             u"label_patient_estimated_birthdate",
@@ -328,6 +316,18 @@ class IPatientSchema(model.Schema):
         default=False,
         required=False,
     )
+
+    directives.widget("birthdate",
+                      DatetimeWidget,
+                      show_time=False)
+    birthdate = DatetimeField(
+        title=_(u"label_patient_birthdate", default=u"Birthdate"),
+        description=_(u"Patient birthdate"),
+        required=False,
+    )
+    # XXX core's DateTimeWidget relies on field's get_max function if not 'max'
+    #     property is explicitly set to the widget
+    birthdate.get_max = get_max_birthdate
 
     age = schema.TextLine(
         title=_(u"label_patient_age", default=u"Age"),
