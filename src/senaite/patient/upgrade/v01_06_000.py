@@ -23,7 +23,7 @@ from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
 from senaite.patient.config import PRODUCT_NAME
 
-version = "1.2.0"
+version = "1.6.0"
 profile = "profile-{0}:default".format(PRODUCT_NAME)
 
 
@@ -43,7 +43,6 @@ def upgrade(tool):
                                                    version))
 
     # -------- ADD YOUR STUFF BELOW --------
-    setup.runImportStepFromProfile(profile, "plone.app.registry")
 
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True

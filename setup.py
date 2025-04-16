@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-version = "1.5.0"
+version = "1.6.0"
 
 with open("README.rst", "r") as fh:
     long_description = fh.read()
@@ -36,7 +36,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "senaite.lims>=2.6.0",
+        "senaite.lims>=2.7.0",
     ],
     extras_require={
         "test": [

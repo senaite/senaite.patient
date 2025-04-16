@@ -25,7 +25,7 @@ SENAITE.PATIENT adds Patient handling to `SENAITE LIMS`_.
 License
 -------
 
-**SENAITE.PATIENT** Copyright (C) 2020-2024 RIDING BYTES & NARALABS
+**SENAITE.PATIENT** Copyright (C) 2020-2025 RIDING BYTES & NARALABS
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the `GNU General Public License version 2`_ as published

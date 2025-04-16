@@ -1,10 +1,17 @@
 Changelog
 =========
 
-1.5.0 (unreleased)
+1.6.0 (unreleased)
 ------------------
 
 - #118 Remove patient-specific settings, catalogs and objects on uninstall
+- #121 Compatibility with core#2695 (relativedelta and ymd in api.dtime)
+
+
+1.5.0 (2025-04-04)
+------------------
+
+- #123 Hyperlink patient on sample listing
 - #119 Rely on `catalog_mappings` to get the catalogs for Patient portal type
 - #117 Make accessor and mutator from Patient to rely on base class
 - #116 Fix APIError: Expected string type in samples listing
