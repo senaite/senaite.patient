@@ -846,11 +846,16 @@ class Patient(Container):
         if not dtime.is_ymd(value):
             return
 
+        # don't assign age unless estimated DoB
+        if not self.getEstimatedBirthdate():
+            return
+
+        # update the value of the date of birth
         dob = dtime.get_since_date(value)
-        self.setEstimatedBirthdate(True)
         self.setBirthdate(dob)
 
     # BBB AT schema field property
     Age = property(getAge, setAge)
 
+    # no value is stored for age, but relies on birthdate
     age = property(getAge, setAge)
