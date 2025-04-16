@@ -18,7 +18,6 @@
 # Copyright 2020-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-from datetime import date
 from senaite.core.api import dtime
 from senaite.core.browser.form.adapters import EditFormAdapterBase
 
@@ -51,19 +50,19 @@ class PatientEditForm(EditFormAdapterBase):
         return self.data
 
     def update_age_field_from_birthdate(self, birthdate):
-        age = dtime.get_ymd(birthdate, dt2=date.today())
+        age = dtime.get_ymd(birthdate)
         self.add_update_field(AGE_FIELD, age)
 
     def update_birthdate_field_from_age(self, age):
         birthdate = dtime.get_since_date(age)
-        birthdate_str = birthdate.strftime("%Y-%m-%d") if birthdate else ""
+        birthdate_str = dtime.date_to_string(birthdate)
         for field in BIRTHDATE_FIELDS:
             self.add_update_field(field, birthdate_str)
 
     def toggle_and_update_fields(self, form, estimated_birthdate):
         """Toggle age and birthdate fields that depend on estimated_birthdate
         """
-        if estimated_birthdate is True or estimated_birthdate == "selected":
+        if estimated_birthdate in [True, "selected"]:
             birthdate = form.get(BIRTHDATE_FIELDS[0])
             if birthdate:
                 self.update_age_field_from_birthdate(birthdate)

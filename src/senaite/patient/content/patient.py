@@ -333,7 +333,7 @@ class IPatientSchema(model.Schema):
         title=_(u"label_patient_age", default=u"Age"),
         description=_(
             u"description_patient_age",
-            default=u"Age in YMD format or a single number representing years"
+            default=u"Age in YMD format"
         ),
         required=False,
     )
@@ -444,12 +444,12 @@ class IPatientSchema(model.Schema):
 
     @invariant
     def validate_age(data):
-        """Validate the age is in YMD format or a valid year."""
+        """Validate the age is in YMD format."""
         if not data.age:
             return
 
         if not dtime.is_ymd(data.age):
-            raise Invalid(_("Age must be in YMD format or a valid year"))
+            raise Invalid(_("Age must be in YMD format"))
 
 
 @implementer(IPatient, IPatientSchema, IClientShareable)
