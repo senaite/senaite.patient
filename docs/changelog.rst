@@ -4,8 +4,9 @@ Changelog
 1.6.0 (unreleased)
 ------------------
 
-- #121 Compatibility with core#2695 (relativedelta and ymd in api.dtime)
+- #127 Add adapter for patient add views
 - #125 Add Age field for patient content
+- #121 Compatibility with core#2695 (relativedelta and ymd in api.dtime)
 
 
 1.5.0 (2025-04-04)
