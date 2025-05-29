@@ -1,6 +1,13 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
+  
+  <genericsetup:upgradeStep
+      title="Add modified index to patient catalog"
+      source="1600"
+      destination="1601"
+      handler=".v01_06_000.upgrade_catalog_modified_index"
+      profile="senaite.patient:default"/>
 
   <genericsetup:upgradeStep
       title="Upgrade to SENAITE.PATIENT 1.6.0"

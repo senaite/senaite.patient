@@ -43,6 +43,7 @@ INDEXES = BASE_INDEXES + [
     ("patient_searchable_text", "", "ZCTextIndex"),
     ("patient_searchable_mrn", "", "ZCTextIndex"),
     ("patient_deceased", "", "BooleanIndex"),
+    ("modified", "", "DateIndex"),
 ]
 
 COLUMNS = BASE_COLUMNS + [
