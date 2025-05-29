@@ -4,6 +4,7 @@ Changelog
 1.6.0 (unreleased)
 ------------------
 
+- #128 Add modified index to Patient catalog
 - #127 Add adapter for patient add views
 - #125 Add Age field for patient content
 - #121 Compatibility with core#2695 (relativedelta and ymd in api.dtime)
