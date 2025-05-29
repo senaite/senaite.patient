@@ -22,6 +22,7 @@ from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
 from senaite.patient.config import PRODUCT_NAME
+from senaite.patient.setuphandlers import setup_catalog_mappings
 
 version = "1.6.0"
 profile = "profile-{0}:default".format(PRODUCT_NAME)
@@ -46,3 +47,11 @@ def upgrade(tool):
 
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True
+
+
+@upgradestep(PRODUCT_NAME, version)
+def upgrade_catalog_modified_index(tool):
+    logger.info("Upgrade catalog modified index ...")
+    portal = tool.aq_inner.aq_parent
+    # setup patient catalog to add new indexes
+    setup_catalog_mappings(portal)
