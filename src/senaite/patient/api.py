@@ -355,7 +355,7 @@ def is_patient_creation_allowed(container):
     return api.security.check_permission(AddPatient, container)
 
 
-def is_mrn_unique(mrn):
+def is_mrn_unique(mrn, uid=None):
     """Checks whether the mrn provided is unique. This is, no patients with
     this mrn exist, regardless of their status
 
@@ -367,4 +367,11 @@ def is_mrn_unique(mrn):
         "patient_mrn": api.safe_unicode(mrn).encode("utf8"),
     }
     brains = api.search(query, PATIENT_CATALOG)
-    return len(brains) == 0
+
+    if len(brains) == 0:
+        return True
+
+    if uid and api.get_uid(brains[0]) == uid:
+        return True
+
+    return False

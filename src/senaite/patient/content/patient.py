@@ -375,7 +375,7 @@ class IPatientSchema(model.Schema):
             return
 
         # search for uniqueness
-        if not patient_api.is_mrn_unique(data.mrn):
+        if not patient_api.is_mrn_unique(data.mrn, api.get_uid(data)):
             raise Invalid(
                 _("invalid_patient_mrn_must_be_unique",
                   default="Patient Medical Record Number must be unique"))
@@ -432,7 +432,7 @@ class IPatientSchema(model.Schema):
             return
 
         # check if field is in current fieldset to avoid multiple raising
-        if 'birthdate' not in data._Data_data___:
+        if 'birthdate' not in data.__dict__:
             return
 
         if patient_api.is_future_birthdate_allowed():
