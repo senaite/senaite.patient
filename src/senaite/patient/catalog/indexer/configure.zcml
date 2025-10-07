@@ -7,7 +7,7 @@
   <adapter name="medical_record_number" factory=".sample.medical_record_number"/>
 
   <!-- Additional tokens for listing_searchable_text -->
-  <adapter name="senaite.patient.indexer.listing_searchable_text"
+  <adapter name="senaite.patient.catalog.sample.indexer.listing_searchable_text"
            factory=".sample.ListingSearchableTextProvider"/>
 
   <!-- Patient Indexes -->
