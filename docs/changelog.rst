@@ -4,6 +4,7 @@ Changelog
 1.6.0 (unreleased)
 ------------------
 
+- #131 Fix BehaviorRegistrationNotFound on Patient creation via JSON API
 - #130 Fix cannot search samples by MRN or patient name
 - #127 Add adapter for patient add views
 - #125 Add Age field for patient content
