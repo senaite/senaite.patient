@@ -60,7 +60,7 @@ def fix_clientshareable_behavior(tool):
 
     pt = api.get_tool("portal_types")
     fti = pt.get("Patient")
-    behaviors = [ beh for beh in fti.behaviors if beh != old ]
+    behaviors = [beh for beh in fti.behaviors if beh != old]
     if new not in behaviors:
         behaviors.append(new)
     fti.behaviors = tuple(behaviors)
