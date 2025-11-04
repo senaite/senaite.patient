@@ -846,9 +846,8 @@ class Patient(Container):
         if not dtime.is_ymd(value):
             return
 
-        # don't assign age unless estimated DoB
-        if not self.getEstimatedBirthdate():
-            return
+        # Set estimated_birthdate to True when age is set
+        self.setEstimatedBirthdate(True)
 
         # update the value of the date of birth
         dob = dtime.get_since_date(value)
