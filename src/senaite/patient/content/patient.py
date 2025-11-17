@@ -18,6 +18,7 @@
 # Copyright 2020-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+import json
 from string import Template
 
 from AccessControl import ClassSecurityInfo
@@ -391,7 +392,32 @@ class IPatientSchema(model.Schema):
         # check if a valid email is in the request
         # Note: Workaround for missing `data.email`
         request = api.get_request()
-        email = request.form.get("form.widgets.email")
+        form_data = request.form or {}
+
+        def extract_email(form_data, request):
+            # Get from form widgets
+            email = form_data.get("form.widgets.email")
+            if email:
+                return email
+
+            # Get from request BODY
+            try:
+                body = json.loads(request.get("BODY", "{}"))
+            except Exception:
+                return None
+
+            # Get from body.email
+            if body.get("email"):
+                return body["email"]
+
+            # Get from body.items[0].email
+            items = body.get("items", [])
+            if items and isinstance(items, list):
+                return items[0].get("email")
+
+            return None
+
+        email = extract_email(form_data, request)
         if email and is_valid_email_address(email):
             return
 
