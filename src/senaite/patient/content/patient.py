@@ -18,7 +18,6 @@
 # Copyright 2020-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-import json
 from string import Template
 
 from AccessControl import ClassSecurityInfo
