@@ -382,53 +382,6 @@ class IPatientSchema(model.Schema):
                   default="Patient Medical Record Number must be unique"))
 
     @invariant
-    def validate_email_report(data):
-        """Checks if an email is set
-        """
-        value = data.email_report
-        if not value:
-            return
-
-        # check if a valid email is in the request
-        # Note: Workaround for missing `data.email`
-        request = api.get_request()
-        form_data = request.form or {}
-
-        def extract_email(form_data, request):
-            # Get from form widgets
-            email = form_data.get("form.widgets.email")
-            if email:
-                return email
-
-            # Get from request BODY
-            try:
-                body = json.loads(request.get("BODY", "{}"))
-            except Exception:
-                return None
-
-            # Get from body.email
-            if body.get("email"):
-                return body["email"]
-
-            # Get from body.items[0].email
-            items = body.get("items", [])
-            if items and isinstance(items, list):
-                return items[0].get("email")
-
-            return None
-
-        email = extract_email(form_data, request)
-        if email and is_valid_email_address(email):
-            return
-
-        # mark the request to avoid multiple raising
-        key = "_v_email_report_checked"
-        if getattr(request, key, False):
-            return
-        setattr(request, key, True)
-        raise Invalid(_("Please set a valid email address first"))
-
-    @invariant
     def validate_email(data):
         """Checks if the email is correct
         """
