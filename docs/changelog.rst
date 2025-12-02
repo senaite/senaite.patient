@@ -4,7 +4,7 @@ Changelog
 1.6.0 (unreleased)
 ------------------
 
-- #133 Enhance email extraction in IPatientSchema to support JSON request body
+- #133 Remove email invariant and add adapter to toggle email_report
 - #131 Fix BehaviorRegistrationNotFound on Patient creation via JSON API
 - #130 Fix cannot search samples by MRN or patient name
 - #127 Add adapter for patient add views
