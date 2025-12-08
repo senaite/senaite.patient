@@ -101,6 +101,7 @@ class IPatientSchema(model.Schema):
         label=u"Email and Phone",
         fields=[
             "email",
+            "email_report",
             "additional_emails",
             "phone",
             "additional_phone_numbers",
