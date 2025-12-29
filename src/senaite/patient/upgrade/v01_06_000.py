@@ -23,6 +23,7 @@ from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
 from senaite.patient.config import PRODUCT_NAME
+from senaite.patient.setuphandlers import display_in_nav
 
 version = "1.6.0"
 profile = "profile-{0}:default".format(PRODUCT_NAME)
@@ -66,3 +67,12 @@ def fix_clientshareable_behavior(tool):
     fti.behaviors = tuple(behaviors)
 
     logger.info("Fix IClientShareableBehavior [DONE]")
+
+
+def display_patients_navbar(tool):
+    """Displays the patients's root folder in the navigation bar
+    """
+    logger.info("Display Patients in navigation bar ...")
+    patients = api.get_portal().patients
+    display_in_nav(patients)
+    logger.info("Display Patients in navigation bar [DONE]")

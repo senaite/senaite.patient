@@ -3,6 +3,18 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Display Patients in the navbar"
+      description="
+        This upgrade step makes the product compatible with senaite.core#2835
+        by adding the Patient folder to the setup field “Sidebar displayed
+        portal types”, thereby displaying the Patients link in the left-hand
+        navigation bar."
+      source="1601"
+      destination="1602"
+      handler=".v01_06_000.display_patients_navbar"
+      profile="senaite.patient:default"/>
+
+  <genericsetup:upgradeStep
       title="Fix wrong behavior name"
       description="
         This upgrade step changes the name of the behavior assigned to Patient
