@@ -4,6 +4,7 @@ Changelog
 1.6.0 (unreleased)
 ------------------
 
+- #118 Remove patient-specific settings, catalogs and objects on uninstall
 - #131 Fix BehaviorRegistrationNotFound on Patient creation via JSON API
 - #130 Fix cannot search samples by MRN or patient name
 - #127 Add adapter for patient add views

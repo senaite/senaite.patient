@@ -1,0 +1,15 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
+
+  <!-- Uninstall profile -->
+  <genericsetup:registerProfile
+      name="uninstall"
+      title="SENAITE PATIENT (uninstall)"
+      directory="profiles/uninstall"
+      description="Uninstalls SENAITE PATIENT"
+      pre_handler=".uninstall.pre_uninstall"
+      post_handler=".uninstall.post_uninstall"
+      provides="Products.GenericSetup.interfaces.EXTENSION"/>
+
+</configure>
