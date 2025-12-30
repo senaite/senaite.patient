@@ -3,6 +3,17 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Fix wrong behavior name"
+      description="
+        This upgrade step changes the name of the behavior assigned to Patient
+        object from 'senaite.core.behaviors.IClientShareableBehavior' to
+        'senaite.core.behavior.clientshareable'"
+      source="1600"
+      destination="1601"
+      handler=".v01_06_000.fix_clientshareable_behavior"
+      profile="senaite.patient:default"/>
+
+  <genericsetup:upgradeStep
       title="Upgrade to SENAITE.PATIENT 1.6.0"
       source="1503"
       destination="1600"

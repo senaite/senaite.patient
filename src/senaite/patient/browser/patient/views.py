@@ -45,7 +45,7 @@ def fiddle_schema_fields(fields):
 
 
 class PatientAddForm(DefaultAddForm):
-    """Patient edit view
+    """Patient add view
     """
     portal_type = "Patient"
     default_fieldset_label = _("label_schema_personal", default=u"Personal")

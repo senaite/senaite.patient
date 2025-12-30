@@ -18,6 +18,7 @@
 # Copyright 2020-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+from bika.lims import api
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
@@ -46,3 +47,22 @@ def upgrade(tool):
 
     logger.info("{0} upgraded to version {1}".format(PRODUCT_NAME, version))
     return True
+
+
+def fix_clientshareable_behavior(tool):
+    """Updates the catalog mappings of senaite registry
+    """
+    logger.info("Fix IClientShareableBehavior ... ")
+    logger.info("Setup Behaviors ...")
+
+    old = "senaite.core.behaviors.IClientShareableBehavior"
+    new = "senaite.core.behavior.clientshareable"
+
+    pt = api.get_tool("portal_types")
+    fti = pt.get("Patient")
+    behaviors = [beh for beh in fti.behaviors if beh != old]
+    if new not in behaviors:
+        behaviors.append(new)
+    fti.behaviors = tuple(behaviors)
+
+    logger.info("Fix IClientShareableBehavior [DONE]")

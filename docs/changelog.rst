@@ -5,6 +5,10 @@ Changelog
 ------------------
 
 - #118 Remove patient-specific settings, catalogs and objects on uninstall
+- #131 Fix BehaviorRegistrationNotFound on Patient creation via JSON API
+- #130 Fix cannot search samples by MRN or patient name
+- #127 Add adapter for patient add views
+- #125 Add Age field for patient content
 - #121 Compatibility with core#2695 (relativedelta and ymd in api.dtime)
 
 
