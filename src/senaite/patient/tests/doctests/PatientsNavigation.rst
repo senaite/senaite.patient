@@ -37,26 +37,18 @@ Patients Folder Navigation Visibility
 --------------------------------------
 
 After installation, the Patients folder should be visible in the navigation bar.
-This is configured through three mechanisms:
+This is configured through two mechanisms:
 
-1. The portal type "PatientFolder" should be in Plone's displayed_types registry:
+1. The portal type "PatientFolder" should NOT be in SENAITE Setup's sidebar_skip_types
+   (types in this list are excluded from the sidebar):
 
-    >>> registry = getUtility(IRegistry)
-    >>> displayed_types = registry.get("plone.displayed_types", ())
-    >>> "PatientFolder" in displayed_types
+    >>> sidebar_skip_types = setup.getSidebarSkipTypes()
+    >>> sidebar_skip_types is not None
+    True
+    >>> "PatientFolder" not in sidebar_skip_types
     True
 
-2. The portal type "PatientFolder" should be in SENAITE Setup's sidebar_displayed_types
-   (if the attribute is populated):
-
-    >>> sidebar_displayed_types = setup.getSidebarDisplayedTypes()
-    >>> if sidebar_displayed_types:
-    ...     print("PatientFolder" in sidebar_displayed_types)
-    ... else:
-    ...     print("sidebar_displayed_types is not set (None or empty)")
-    sidebar_displayed_types is not set (None or empty)
-
-3. Since the patients folder is a root folder (direct child of portal), its ID
+2. Since the patients folder is a root folder (direct child of portal), its ID
    should be in SENAITE Setup's sidebar_folders:
 
     >>> sidebar_folders = setup.getSidebarFolders()

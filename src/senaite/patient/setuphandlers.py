@@ -19,7 +19,6 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims import api
-from plone.registry.interfaces import IRegistry
 from Products.DCWorkflow.Guard import Guard
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.catalog import set_catalogs
@@ -31,7 +30,6 @@ from senaite.patient import permissions
 from senaite.patient import PRODUCT_NAME
 from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.catalog.patient_catalog import PatientCatalog
-from zope.component import getUtility
 
 PROFILE_ID = "profile-{}:default".format(PRODUCT_NAME)
 
@@ -250,20 +248,12 @@ def display_in_nav(obj):
     """
     portal_type = api.get_portal_type(obj)
 
-    # add to the plone's registry displayed_types
-    registry = getUtility(IRegistry)
-    key = "plone.displayed_types"
-    displayed = registry.get(key, ())
-    if portal_type not in displayed:
-        displayed += (portal_type,)
-        registry[key] = displayed
-
-    # add to senaite setup's sidebar_displayed_types
+    # remove from senaite setup's sidebar_skip_types
     setup = api.get_senaite_setup()
-    displayed = setup.getSidebarDisplayedTypes()
-    if displayed and portal_type not in displayed:
-        displayed += (portal_type,)
-        setup.setSidebarDisplayedTypes(displayed)
+    skip = setup.getSidebarSkipTypes()
+    if skip and portal_type in skip:
+        skip = tuple(pt for pt in skip if pt != portal_type)
+        setup.setSidebarSkipTypes(skip)
 
     # if a root folder, add to senaite setup's sidebar_folders
     setup = api.get_senaite_setup()
