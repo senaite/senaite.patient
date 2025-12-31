@@ -19,7 +19,6 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims import api
-from plone.registry.interfaces import IRegistry
 from Products.DCWorkflow.Guard import Guard
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.catalog import set_catalogs
@@ -31,7 +30,6 @@ from senaite.patient import permissions
 from senaite.patient import PRODUCT_NAME
 from senaite.patient.catalog import PATIENT_CATALOG
 from senaite.patient.catalog.patient_catalog import PatientCatalog
-from zope.component import getUtility
 
 PROFILE_ID = "profile-{}:default".format(PRODUCT_NAME)
 
@@ -59,10 +57,6 @@ COLUMNS = [
     (SAMPLE_CATALOG, "isMedicalRecordTemporary"),
     (SAMPLE_CATALOG, "getMedicalRecordNumberValue"),
     (SAMPLE_CATALOG, "getPatientFullName"),
-]
-
-NAVTYPES = [
-    "PatientFolder",
 ]
 
 # An array of dicts. Each dict represents an ID formatting configuration
@@ -182,9 +176,6 @@ def setup_handler(context):
     # Setup patients root folder
     add_patient_folder(portal)
 
-    # Configure visible navigation items
-    setup_navigation_types(portal)
-
     # Apply ID format to content types
     setup_id_formatting(portal)
 
@@ -247,17 +238,32 @@ def add_patient_folder(portal):
         logger.info("Adding Patient Folder")
         portal.invokeFactory("PatientFolder", "patients", title="Patients")
 
+    # make the patients folder visible in the navigation bar
+    patients = api.get_portal().patients
+    display_in_nav(patients)
 
-def setup_navigation_types(portal):
-    """Add additional types for navigation
+
+def display_in_nav(obj):
+    """Makes an object to be displayed in the navigation bar
     """
-    registry = getUtility(IRegistry)
-    key = "plone.displayed_types"
-    display_types = registry.get(key, ())
+    portal_type = api.get_portal_type(obj)
 
-    new_display_types = set(display_types)
-    new_display_types.update(NAVTYPES)
-    registry[key] = tuple(new_display_types)
+    # remove from senaite setup's sidebar_skip_types
+    setup = api.get_senaite_setup()
+    skip = setup.getSidebarSkipTypes()
+    if skip and portal_type in skip:
+        skip = tuple(pt for pt in skip if pt != portal_type)
+        setup.setSidebarSkipTypes(skip)
+
+    # if a root folder, add to senaite setup's sidebar_folders
+    setup = api.get_senaite_setup()
+    portal = api.get_portal()
+    if api.get_parent(obj) == portal:
+        obj_id = api.get_id(obj)
+        folders = setup.getSidebarFolders()
+        if obj_id not in folders:
+            folders += (obj_id, )
+            setup.setSidebarFolders(folders)
 
 
 def setup_id_formatting(portal, format_definition=None):
