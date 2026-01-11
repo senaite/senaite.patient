@@ -4,6 +4,7 @@ Changelog
 1.6.0 (unreleased)
 ------------------
 
+- #133 Remove email invariant and add adapter to toggle email_report
 - #134 Compatibility with core#2835 (display Patients in navbar)
 - #131 Fix BehaviorRegistrationNotFound on Patient creation via JSON API
 - #130 Fix cannot search samples by MRN or patient name

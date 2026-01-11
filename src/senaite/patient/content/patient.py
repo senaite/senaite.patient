@@ -101,6 +101,7 @@ class IPatientSchema(model.Schema):
         label=u"Email and Phone",
         fields=[
             "email",
+            "email_report",
             "additional_emails",
             "phone",
             "additional_phone_numbers",
@@ -379,28 +380,6 @@ class IPatientSchema(model.Schema):
             raise Invalid(
                 _("invalid_patient_mrn_must_be_unique",
                   default="Patient Medical Record Number must be unique"))
-
-    @invariant
-    def validate_email_report(data):
-        """Checks if an email is set
-        """
-        value = data.email_report
-        if not value:
-            return
-
-        # check if a valid email is in the request
-        # Note: Workaround for missing `data.email`
-        request = api.get_request()
-        email = request.form.get("form.widgets.email")
-        if email and is_valid_email_address(email):
-            return
-
-        # mark the request to avoid multiple raising
-        key = "_v_email_report_checked"
-        if getattr(request, key, False):
-            return
-        setattr(request, key, True)
-        raise Invalid(_("Please set a valid email address first"))
 
     @invariant
     def validate_email(data):
