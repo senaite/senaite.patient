@@ -3,6 +3,19 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Drop ordering annotations from PatientFolder"
+      description="
+        Remove the plone.folder.ordered.order PersistentList and
+        plone.folder.ordered.pos OIBTree annotations from the PatientFolder.
+        The folder now uses UnorderedOrdering as its IOrdering adapter, so
+        these annotations are no longer maintained and become a stale ZODB
+        conflict spot if left in place."
+      source="1602"
+      destination="1603"
+      handler=".v01_06_000.drop_patientfolder_ordering_annotations"
+      profile="senaite.patient:default"/>
+
+  <genericsetup:upgradeStep
       title="Display Patients in the navbar"
       description="
         This upgrade step makes the product compatible with senaite.core#2835

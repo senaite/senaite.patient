@@ -24,6 +24,7 @@ from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
 from senaite.patient.config import PRODUCT_NAME
 from senaite.patient.setuphandlers import display_in_nav
+from zope.annotation.interfaces import IAnnotations
 
 version = "1.6.0"
 profile = "profile-{0}:default".format(PRODUCT_NAME)
@@ -76,3 +77,44 @@ def display_patients_navbar(tool):
     patients = api.get_portal().patients
     display_in_nav(patients)
     logger.info("Display Patients in navigation bar [DONE]")
+
+
+def drop_patientfolder_ordering_annotations(tool):
+    """Remove the legacy IOrdering annotations from the PatientFolder.
+
+    The PatientFolder now uses `plone.folder.unordered.UnorderedOrdering`
+    as its `IOrdering` adapter, so the previous default-ordering
+    annotations are no longer maintained:
+
+      - `plone.folder.ordered.order` — a `PersistentList` of every
+        child id, mutated on every `_setObject` via
+        `DefaultOrdering.notifyAdded`. With one Patient per registered
+        sample on a clinical-lab installation, this list grows to many
+        tens of thousands of entries; because `PersistentList` has no
+        `_p_resolveConflict()`, every concurrent registration that
+        creates a new Patient collided on it and the conflict
+        propagated all the way to the publisher's retry loop.
+
+      - `plone.folder.ordered.pos` — companion `OIBTree` mapping
+        child id -> position. No longer read by anything once the
+        adapter is unordered.
+
+    Removing both annotations after the adapter switch frees the
+    storage they occupy and removes a stale hot-mutation bucket from
+    the ZODB cache. The adapter override is what stops new writes
+    from touching them; this step is hygiene.
+    """
+    logger.info("Dropping IOrdering annotations from PatientFolder ...")
+    patients = api.get_portal().patients
+    ann = IAnnotations(patients)
+    had_order = "plone.folder.ordered.order" in ann
+    had_pos = "plone.folder.ordered.pos" in ann
+    if not (had_order or had_pos):
+        logger.info(
+            "Dropping IOrdering annotations from PatientFolder [SKIP] "
+            "(no annotations found)")
+        return
+    ann.pop("plone.folder.ordered.order", None)
+    ann.pop("plone.folder.ordered.pos", None)
+    patients._p_changed = True
+    logger.info("Dropping IOrdering annotations from PatientFolder [DONE]")
