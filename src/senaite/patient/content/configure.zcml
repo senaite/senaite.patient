@@ -16,4 +16,29 @@
       factory=".analysisrequest.AnalysisRequestSchemaModifier"
       provides="archetypes.schemaextender.interfaces.ISchemaModifier"/>
 
+  <!--
+    Use plone.folder's UnorderedOrdering as the IOrdering adapter for the
+    PatientFolder.
+
+    The default DefaultOrdering keeps a `plone.folder.ordered.order`
+    PersistentList annotation that grows with the number of children:
+    every `_setObject` calls `notifyAdded` which appends to the list.
+    PersistentList has no `_p_resolveConflict()`, so two concurrent
+    appends collide and the conflict propagates to the client through
+    the publisher's retry loop. On clinical-lab installations the
+    PatientFolder accumulates one Patient per registered sample, so
+    every concurrent sample-registration that creates a new Patient
+    contends on the same annotation. With tens of thousands of children
+    the cost grows roughly with the number of entries.
+
+    Patient listings never depend on the parent folder's manual
+    ordering — they sort catalog brains. Switching IPatientFolder to
+    UnorderedOrdering removes the hot-spot at no functional cost.
+    -->
+  <adapter
+      for=".patientfolder.IPatientFolder"
+      factory="plone.folder.unordered.UnorderedOrdering"
+      provides="plone.folder.interfaces.IOrdering"
+      />
+
 </configure>

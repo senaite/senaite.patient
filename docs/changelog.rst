@@ -5,6 +5,9 @@ Changelog
 ------------------
 
 - #118 Remove patient-specific settings, catalogs and objects on uninstall
+- #135 Use UnorderedOrdering for PatientFolder to avoid ZODB conflicts
+- #133 Remove email invariant and add adapter to toggle email_report
+- #134 Compatibility with core#2835 (display Patients in navbar)
 - #131 Fix BehaviorRegistrationNotFound on Patient creation via JSON API
 - #130 Fix cannot search samples by MRN or patient name
 - #127 Add adapter for patient add views

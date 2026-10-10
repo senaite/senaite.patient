@@ -18,19 +18,22 @@
 # Copyright 2020-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
+from bika.lims.api.mail import is_valid_email_address
 from senaite.core.api import dtime
 from senaite.core.browser.form.adapters import EditFormAdapterBase
 
-
-ESTIMATED_BIRTHDATE_FIELDS = (
-    "form.widgets.estimated_birthdate",
-    "form.widgets.estimated_birthdate:list"
-)
+ESTIMATED_BIRTHDATE_FIELD = "form.widgets.estimated_birthdate:list"
 AGE_FIELD = "form.widgets.age"
 BIRTHDATE_FIELDS = (
     "form.widgets.birthdate",
     "form.widgets.birthdate-date"
 )
+BIRTHDATE_FIELD = "form.widgets.birthdate"
+EMAIL_FIELD = "form.widgets.email"
+EMAIL_REPORT_FIELDS = [
+    "form.widgets.email_report",
+    "form.widgets.email_report-empty-marker"
+]
 
 
 class PatientEditForm(EditFormAdapterBase):
@@ -39,16 +42,11 @@ class PatientEditForm(EditFormAdapterBase):
 
     def initialized(self, data):
         form = data.get("form")
-        estimated_birthdate = form.get(ESTIMATED_BIRTHDATE_FIELDS[1])
-        self.toggle_and_update_fields(form, estimated_birthdate)
+        self.toggle_and_update_fields(form)
         return self.data
 
     def modified(self, data):
-        if data.get("name") == ESTIMATED_BIRTHDATE_FIELDS[0]:
-            estimated_birthdate = data.get("value")
-            self.toggle_and_update_fields(
-                data.get("form"), estimated_birthdate
-            )
+        self.toggle_and_update_fields(data.get("form"))
         return self.data
 
     def update_age_field_from_birthdate(self, birthdate):
@@ -61,9 +59,10 @@ class PatientEditForm(EditFormAdapterBase):
         for field in BIRTHDATE_FIELDS:
             self.add_update_field(field, birthdate_str)
 
-    def toggle_and_update_fields(self, form, estimated_birthdate):
-        """Toggle age and birthdate fields that depend on estimated_birthdate
+    def toggle_and_update_fields(self, form):
+        """Toggle patient fields
         """
+        estimated_birthdate = form.get(ESTIMATED_BIRTHDATE_FIELD)
         if estimated_birthdate in [True, "selected"]:
             birthdate = form.get(BIRTHDATE_FIELDS[0])
             if birthdate:
@@ -76,3 +75,9 @@ class PatientEditForm(EditFormAdapterBase):
                 self.update_birthdate_field_from_age(age)
             self.add_show_field(BIRTHDATE_FIELDS[0])
             self.add_hide_field(AGE_FIELD)
+
+        email = form.get(EMAIL_FIELD)
+        if email and is_valid_email_address(email):
+            self.add_show_field(EMAIL_REPORT_FIELDS[0])
+        else:
+            self.add_hide_field(EMAIL_REPORT_FIELDS[1])
