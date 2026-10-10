@@ -45,6 +45,12 @@ class PatientDynamicResultsRange(DynamicResultsRange):
         in ansi format for easy comparison and to avoid TZ issues
         """
         dob_field = self.analysisrequest.getField("DateOfBirth")
+        if dob_field is None:
+            # The sample has no date of birth field. This adapter is
+            # registered for every routine analysis as soon as this
+            # package is loaded, which does not mean its profile has
+            # been applied to the site the sample lives in.
+            return None
         dob = dob_field.get_date_of_birth(self.analysisrequest)
         # convert to ansi to avoid TZ issues
         return dtime.to_ansi(dob)
