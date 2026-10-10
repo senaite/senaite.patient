@@ -107,7 +107,7 @@ def purge_catalogs(portal):
     # Delete product-specific columns
     for cat_id, column in COLUMNS:
         cat = api.get_tool(cat_id)
-        if column not in cat.schema():
+        if column in cat.schema():
             logger.info("Removing column from %s: %s" % (cat.id, column))
             cat.delColumn(column)
 
