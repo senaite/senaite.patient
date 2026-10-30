@@ -22,6 +22,7 @@ from bika.lims import api
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import logger
+from senaite.patient.api import sync_patients_in_clients
 from senaite.patient.config import PRODUCT_NAME
 from senaite.patient.setuphandlers import display_in_nav
 from zope.annotation.interfaces import IAnnotations
@@ -68,6 +69,15 @@ def fix_clientshareable_behavior(tool):
     fti.behaviors = tuple(behaviors)
 
     logger.info("Fix IClientShareableBehavior [DONE]")
+
+
+def restore_patients_in_clients(tool):
+    """Applies the setting for patients in clients to the client type
+    """
+    logger.info("Restore patients in clients ...")
+    allowed = sync_patients_in_clients()
+    logger.info("Restore patients in clients (allowed: {}) [DONE]"
+                .format(allowed))
 
 
 def display_patients_navbar(tool):
