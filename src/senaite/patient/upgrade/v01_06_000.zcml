@@ -3,6 +3,18 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Restore patients in clients"
+      description="
+        Apply the setting 'Allow patients in clients' to the client type
+        again. Imports of the type information reset the allowed types of
+        clients, so patients could no longer be created in clients
+        although the setting was enabled."
+      source="1603"
+      destination="1604"
+      handler=".v01_06_000.restore_patients_in_clients"
+      profile="senaite.patient:default"/>
+
+  <genericsetup:upgradeStep
       title="Drop ordering annotations from PatientFolder"
       description="
         Remove the plone.folder.ordered.order PersistentList and

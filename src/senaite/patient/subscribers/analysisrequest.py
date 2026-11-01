@@ -98,6 +98,15 @@ def update_patient(instance):
         if not patient_api.is_patient_creation_allowed(container):
             return None
 
+        # refuse with a clear message instead of failing on creation, e.g.
+        # when an import of the type information reset the client types
+        if not patient_api.is_patient_type_allowed(container):
+            title = api.get_title(container) or api.get_id(container)
+            raise ValueError(
+                "No patient found with MRN '{}' and patients cannot be "
+                "created in '{}'. Please check the patient settings."
+                .format(api.to_utf8(mrn), api.to_utf8(title)))
+
         logger.info("Creating new Patient in '{}' with MRN: '{}'"
                     .format(api.get_path(container), mrn))
         values = get_patient_fields(instance)

@@ -22,6 +22,12 @@
       handler=".analysisrequest.on_object_created"
       />
 
+  <!-- Profile or import step imported -->
+  <subscriber
+      for="Products.GenericSetup.interfaces.IProfileImportedEvent"
+      handler=".genericsetup.on_profile_imported"
+      />
+
   <subscriber
       for="senaite.patient.browser.controlpanel.IPatientControlPanel
            zope.lifecycleevent.interfaces.IObjectModifiedEvent"
