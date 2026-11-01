@@ -328,6 +328,22 @@ def allow_patients_in_clients(allow=True):
     fti.allowed_content_types = tuple(allowed_types)
 
 
+def sync_patients_in_clients():
+    """Apply the setting for patients in clients to the client type
+
+    The `typeinfo` import step resets the allowed content types of the
+    client type, which drops the patient type added by the setting.
+
+    :returns: the setting applied, or None if there is no setting
+    """
+    allowed = api.get_registry_record(
+        "senaite.patient.allow_patients_in_clients", None)
+    if allowed is None:
+        return None
+    allow_patients_in_clients(allowed)
+    return allowed
+
+
 def is_patient_allowed_in_client():
     """Returns wether patients can be created in clients or not
     """
@@ -353,6 +369,17 @@ def is_patient_creation_allowed(container):
               otherwise False
     """
     return api.security.check_permission(AddPatient, container)
+
+
+def is_patient_type_allowed(container):
+    """Check if the container accepts patients as content
+
+    :param container: The container to check the allowed types
+    :returns: True if patients can be added to the container,
+              otherwise False
+    """
+    fti = container.getTypeInfo()
+    return fti.allowType(PATIENT_TYPE)
 
 
 def is_mrn_unique(mrn):

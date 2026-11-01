@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - #136 Fix AttributeError on dynamic results range when the site has no patient fields
+- #137 Restore patients in clients after an import of the type information
 - #118 Remove patient-specific settings, catalogs and objects on uninstall
 - #135 Use UnorderedOrdering for PatientFolder to avoid ZODB conflicts
 - #133 Remove email invariant and add adapter to toggle email_report
