@@ -23,6 +23,7 @@ from bika.lims.interfaces import IRejected
 from bika.lims.interfaces import IRetracted
 from bika.lims.interfaces import IVerified
 from senaite.core.behaviors import IClientShareableBehavior
+from senaite.core.interfaces import ILockingState
 from senaite.patient import api as patient_api
 from senaite.patient import calc
 from senaite.patient import check_installed
@@ -176,6 +177,9 @@ def recalculate_results(sample):
     """Recalculates the results not yet submitted whose calculation uses the
     patient data, together with the results that depend on them
     """
+    # the analyses of a disposed or dispatched sample are locked
+    if ILockingState.providedBy(sample):
+        return
     analyses = sample.getAnalyses(full_objects=True)
     analyses = filter(uses_patient_data, analyses)
     recalculated = set()

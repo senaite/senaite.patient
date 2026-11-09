@@ -53,13 +53,17 @@ def age(uid):
     """Returns the patient's age in whole years on the date sampled
 
     :param uid: UID of the analysis being calculated
-    :raises ValueError: when the sample has no date of birth
+    :raises ValueError: when the sample has no date of birth, or it is after
+        the date sampled
     """
     sample = get_sample(uid)
     delta = sample.getAge()
     if delta is None:
         raise ValueError("No date of birth in sample {}".format(
             api.get_id(sample)))
+    if any(value < 0 for value in (delta.years, delta.months, delta.days)):
+        raise ValueError("Date of birth after the date sampled in sample {}"
+                         .format(api.get_id(sample)))
     return delta.years
 
 

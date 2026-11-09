@@ -42,7 +42,7 @@ Needed imports:
 
 Functional helpers:
 
-    >>> def new_sample(services, **kwargs):
+    >>> def new_sample(services, receive=True, **kwargs):
     ...     values = {
     ...         "Client": api.get_uid(client),
     ...         "Contact": api.get_uid(contact),
@@ -52,7 +52,8 @@ Functional helpers:
     ...     values.update(kwargs)
     ...     uids = map(api.get_uid, services)
     ...     sample = create_analysisrequest(client, request, values, uids)
-    ...     success, message = do_action_for(sample, "receive")
+    ...     if receive:
+    ...         success, message = do_action_for(sample, "receive")
     ...     return sample
 
     >>> def get_analysis(sample, keyword):
@@ -180,6 +181,34 @@ And raise an error when the patient data is missing:
     ...
     ValueError: No sex in sample SER-...
 
+Or when the date of birth is after the date sampled, rather than returning a
+negative age:
+
+    >>> sample = new_sample([CRE, EGFR], DateOfBirth=dob, Sex="f",
+    ...                     DateSampled="1976-06-01")
+    >>> uid = api.get_uid(get_analysis(sample, "EGFR"))
+    >>> calc.age(uid)
+    Traceback (most recent call last):
+    ...
+    ValueError: Date of birth after the date sampled in sample SER-...
+
+A quality control analysis has no patient. Quality control analyses are not
+created for results that depend on others, like the eGFR, but the functions
+refuse the UID of any of them, e.g. of a creatinine control:
+
+    >>> supplier = api.create(setup.suppliers, "Supplier", Name="Supplier")
+    >>> refs = [{"uid": api.get_uid(CRE), "result": "1.0",
+    ...          "min": "0.9", "max": "1.1"}]
+    >>> control = api.create(supplier, "ReferenceSample", title="Control",
+    ...                      Blank=False, ReferenceResults=refs,
+    ...                      ExpiryDate=DateTime() + 365)
+    >>> worksheet = api.create(portal.worksheets, "Worksheet")
+    >>> qc = worksheet.addReferenceAnalyses(control, [api.get_uid(CRE)])[0]
+    >>> calc.age(api.get_uid(qc))
+    Traceback (most recent call last):
+    ...
+    ValueError: No analysis of a sample with UID '...'
+
 
 Female and male patients
 ........................
@@ -225,6 +254,22 @@ Nor without date of birth:
 When the patient data is fixed on the sample, the eGFR is recalculated:
 
     >>> edit(sample, DateOfBirth=dob)
+    >>> egfr.getFormattedResult()
+    '69'
+
+And when the patient data is removed afterwards, the eGFR is no longer
+calculated, also when it is submitted already:
+
+    >>> success, message = do_action_for(get_analysis(sample, "CRE"), "submit")
+    >>> success, message = do_action_for(egfr, "submit")
+    >>> api.get_review_status(egfr)
+    'to_be_verified'
+
+    >>> edit(sample, Sex="")
+    >>> egfr.getResult()
+    'NA'
+
+    >>> edit(sample, Sex="f")
     >>> egfr.getFormattedResult()
     '69'
 
@@ -313,6 +358,73 @@ So is a retracted result, and the retest is recalculated instead:
     '69'
     >>> retest.getFormattedResult()
     '92'
+
+
+Results that are not recalculated
+.................................
+
+A rejected result is kept:
+
+    >>> sample = new_sample([CRE, EGFR], DateOfBirth=dob, Sex="f")
+    >>> set_creatinine(sample, "1.0")
+    >>> egfr = get_analysis(sample, "EGFR")
+    >>> success, message = do_action_for(egfr, "reject")
+    >>> api.get_review_status(egfr)
+    'rejected'
+
+    >>> edit(sample, Sex="m")
+    >>> egfr.getFormattedResult()
+    '69'
+
+So is the result of a cancelled sample. The sample cannot be edited through
+the form anymore, but its fields can still be set by code:
+
+    >>> sample = new_sample([CRE, EGFR], receive=False,
+    ...                     DateOfBirth=dob, Sex="f")
+    >>> set_creatinine(sample, "1.0")
+    >>> egfr = get_analysis(sample, "EGFR")
+    >>> success, message = do_action_for(sample, "cancel")
+    >>> api.get_review_status(egfr)
+    'cancelled'
+
+    >>> sample.getField("Sex").set(sample, "m")
+    >>> modified(sample)
+    >>> egfr.getFormattedResult()
+    '69'
+
+And the results of a disposed sample, which are locked:
+
+    >>> api.get_senaite_setup().setDisposeWorkflowEnabled(True)
+    >>> sample = new_sample([CRE, EGFR], DateOfBirth=dob, Sex="f")
+    >>> set_creatinine(sample, "1.0")
+    >>> egfr = get_analysis(sample, "EGFR")
+    >>> success, message = do_action_for(sample, "dispose")
+    >>> api.get_review_status(egfr)
+    'locked'
+
+    >>> sample.getField("Sex").set(sample, "m")
+    >>> modified(sample)
+    >>> egfr.getFormattedResult()
+    '69'
+    >>> api.get_senaite_setup().setDisposeWorkflowEnabled(False)
+
+A result whose calculation does not use the patient data is not recalculated,
+e.g. a result entered by hand:
+
+    >>> double_calc = api.create(setup.calculations, "Calculation",
+    ...                          title="Double creatinine")
+    >>> double_calc.setFormula("[CRE] * 2")
+    >>> DOUBLE = api.create(services, "AnalysisService",
+    ...                     title="Double creatinine", Keyword="DOUBLE",
+    ...                     Category=category, Calculation=double_calc)
+    >>> sample = new_sample([CRE, DOUBLE], DateOfBirth=dob, Sex="f")
+    >>> get_analysis(sample, "CRE").setResult("1.0")
+    >>> double = get_analysis(sample, "DOUBLE")
+    >>> double.setResult("5")
+
+    >>> edit(sample, Sex="m")
+    >>> double.getResult()
+    '5'
 
 
 Dependent results
