@@ -19,14 +19,14 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims import api
+from bika.lims.interfaces import IRejected
+from bika.lims.interfaces import IRetracted
+from bika.lims.interfaces import IVerified
 from senaite.core.behaviors import IClientShareableBehavior
 from senaite.patient import api as patient_api
 from senaite.patient import calc
 from senaite.patient import check_installed
 from senaite.patient import logger
-
-# Statuses of an analysis whose result is not submitted yet
-RECALCULABLE_STATUSES = ("registered", "unassigned", "assigned")
 
 
 @check_installed(None)
@@ -192,16 +192,27 @@ def uses_patient_data(analysis):
 
 
 def recalculate_result(analysis, recalculated):
-    """Recalculates the result of the analysis and of its dependents, unless
-    the result is already submitted
+    """Recalculates the result of the analysis and of its dependents, as
+    long as the result is not verified
     """
     uid = api.get_uid(analysis)
     if uid in recalculated:
         return
     recalculated.add(uid)
-    if api.get_review_status(analysis) not in RECALCULABLE_STATUSES:
+    if not is_recalculable(analysis):
         return
     if analysis.calculateResult(override=True):
         analysis.reindexObject()
     for dependent in analysis.getDependents():
         recalculate_result(dependent, recalculated)
+
+
+def is_recalculable(analysis):
+    """Returns whether the result of the analysis can be recalculated: it is
+    neither verified, nor retracted, rejected or cancelled
+    """
+    if IVerified.providedBy(analysis):
+        return False
+    if IRetracted.providedBy(analysis) or IRejected.providedBy(analysis):
+        return False
+    return api.is_active(analysis)

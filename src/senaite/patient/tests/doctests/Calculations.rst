@@ -18,7 +18,7 @@ calls them with the UID of the analysis being calculated, e.g.
 When the patient data is missing, the functions raise an error, so the result
 is not calculated rather than calculated with a guessed value.
 
-The results not yet submitted are recalculated when the sample is modified.
+The results not yet verified are recalculated when the sample is modified.
 
 Running this test from the buildout directory:
 
@@ -250,11 +250,24 @@ And a change of the sex:
     >>> egfr.getFormattedResult()
     '92'
 
+The results are recalculated also when the sample is modified by a user who
+cannot edit results, e.g. a lab clerk:
+
+    >>> setRoles(portal, TEST_USER_ID, ["LabClerk", ])
+    >>> edit(sample, Sex="f")
+    >>> egfr.getFormattedResult()
+    '69'
+
+    >>> edit(sample, Sex="m")
+    >>> egfr.getFormattedResult()
+    '92'
+    >>> setRoles(portal, TEST_USER_ID, ["LabManager", ])
+
 
 Changes after the result is submitted
 .....................................
 
-Once submitted, the result is kept:
+A submitted result is recalculated too, until it is verified:
 
     >>> success, message = do_action_for(get_analysis(sample, "CRE"), "submit")
     >>> success, message = do_action_for(egfr, "submit")
@@ -263,6 +276,42 @@ Once submitted, the result is kept:
 
     >>> edit(sample, Sex="f")
     >>> egfr.getFormattedResult()
+    '69'
+
+Once verified, the result is kept, e.g. when the sample can still be edited
+because other analyses are not verified yet:
+
+    >>> bika_setup.setSelfVerificationEnabled(True)
+    >>> sample = new_sample([CRE, EGFR, LOW], DateOfBirth=dob, Sex="f")
+    >>> set_creatinine(sample, "1.0")
+    >>> egfr = get_analysis(sample, "EGFR")
+    >>> for keyword in ["CRE", "EGFR"]:
+    ...     analysis = get_analysis(sample, keyword)
+    ...     success, message = do_action_for(analysis, "submit")
+    ...     success, message = do_action_for(analysis, "verify")
+    >>> api.get_review_status(egfr)
+    'verified'
+
+    >>> edit(sample, Sex="m")
+    >>> egfr.getFormattedResult()
+    '69'
+
+So is a retracted result, and the retest is recalculated instead:
+
+    >>> sample = new_sample([CRE, EGFR], DateOfBirth=dob, Sex="f")
+    >>> set_creatinine(sample, "1.0")
+    >>> egfr = get_analysis(sample, "EGFR")
+    >>> success, message = do_action_for(get_analysis(sample, "CRE"), "submit")
+    >>> success, message = do_action_for(egfr, "submit")
+    >>> success, message = do_action_for(egfr, "retract")
+    >>> api.get_review_status(egfr)
+    'retracted'
+    >>> retest = egfr.getRetest()
+
+    >>> edit(sample, Sex="m")
+    >>> egfr.getFormattedResult()
+    '69'
+    >>> retest.getFormattedResult()
     '92'
 
 
