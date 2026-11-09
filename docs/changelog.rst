@@ -4,6 +4,7 @@ Changelog
 1.6.0 (unreleased)
 ------------------
 
+- #136 Fix AttributeError on dynamic results range when the site has no patient fields
 - #138 Fix a new site cannot be created since #137
 - #137 Restore patients in clients after an import of the type information
 - #118 Remove patient-specific settings, catalogs and objects on uninstall
