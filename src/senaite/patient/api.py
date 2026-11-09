@@ -21,9 +21,11 @@
 from datetime import datetime
 
 from bika.lims import api
+from plone.registry.interfaces import IRegistry
 from senaite.core.api import dtime
 from senaite.patient.config import PATIENT_CATALOG
 from senaite.patient.permissions import AddPatient
+from zope.component import queryUtility
 from zope.deprecation import deprecate
 
 CLIENT_TYPE = "Client"
@@ -336,6 +338,9 @@ def sync_patients_in_clients():
 
     :returns: the setting applied, or None if there is no setting
     """
+    if queryUtility(IRegistry) is None:
+        # a new site imports its profiles before it has a registry
+        return None
     allowed = api.get_registry_record(
         "senaite.patient.allow_patients_in_clients", None)
     if allowed is None:

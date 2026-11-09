@@ -122,6 +122,22 @@ The upgrade step applies the setting again on existing sites:
     >>> is_patient_in_client_types()
     True
 
+A new site imports the profiles it is set up with before it has a registry,
+and every import of the type information notifies the subscriber. Without a
+registry nothing is done:
+
+    >>> from plone.registry.interfaces import IRegistry
+    >>> from zope.component import getSiteManager
+    >>> site_manager = getSiteManager()
+    >>> registry = site_manager.getUtility(IRegistry)
+    >>> site_manager.unregisterUtility(registry, IRegistry)
+    True
+    >>> patient_api.sync_patients_in_clients() is None
+    True
+    >>> site_manager.registerUtility(registry, IRegistry)
+    >>> patient_api.sync_patients_in_clients()
+    True
+
 If the client type does not accept patients although the setting is
 enabled, a sample with an unknown MRN is refused with a clear message:
 
