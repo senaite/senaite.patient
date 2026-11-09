@@ -21,8 +21,12 @@
 from bika.lims import api
 from senaite.core.behaviors import IClientShareableBehavior
 from senaite.patient import api as patient_api
+from senaite.patient import calc
 from senaite.patient import check_installed
 from senaite.patient import logger
+
+# Statuses of an analysis whose result is not submitted yet
+RECALCULABLE_STATUSES = ("registered", "unassigned", "assigned")
 
 
 @check_installed(None)
@@ -61,6 +65,8 @@ def on_object_edited(instance, event):
     update_patient(instance)
     # update results ranges so dynamic specs are recalculated
     update_results_ranges(instance)
+    # recalculate the results that use the patient data
+    recalculate_results(instance)
 
 
 def add_cc_email(sample, email):
@@ -164,3 +170,38 @@ def update_results_ranges(sample):
     if spec:
         ranges = spec.getResultsRange()
         sample.setResultsRange(ranges, recursive=False)
+
+
+def recalculate_results(sample):
+    """Recalculates the results not yet submitted whose calculation uses the
+    patient data, together with the results that depend on them
+    """
+    analyses = sample.getAnalyses(full_objects=True)
+    analyses = filter(uses_patient_data, analyses)
+    recalculated = set()
+    for analysis in analyses:
+        recalculate_result(analysis, recalculated)
+
+
+def uses_patient_data(analysis):
+    """Returns whether the calculation of the analysis imports functions from
+    `senaite.patient.calc`
+    """
+    imports = analysis.getCalculationImports()
+    return any(imp.get("module") == calc.MODULE for imp in imports)
+
+
+def recalculate_result(analysis, recalculated):
+    """Recalculates the result of the analysis and of its dependents, unless
+    the result is already submitted
+    """
+    uid = api.get_uid(analysis)
+    if uid in recalculated:
+        return
+    recalculated.add(uid)
+    if api.get_review_status(analysis) not in RECALCULABLE_STATUSES:
+        return
+    if analysis.calculateResult(override=True):
+        analysis.reindexObject()
+    for dependent in analysis.getDependents():
+        recalculate_result(dependent, recalculated)
