@@ -293,6 +293,16 @@ Each recalculation of the submitted result is noted in its remarks:
 Changes before the result is submitted
 ......................................
 
+On a new sample, with the result not submitted yet:
+
+    >>> sample = new_sample([CRE, EGFR], DateOfBirth=dob, Sex="f")
+    >>> set_creatinine(sample, "1.0")
+    >>> egfr = get_analysis(sample, "EGFR")
+    >>> api.get_review_status(egfr)
+    'unassigned'
+    >>> egfr.getFormattedResult()
+    '69'
+
 A change of the date of birth recalculates the eGFR:
 
     >>> edit(sample, DateOfBirth=DateTime("1975-06-15"))
@@ -478,3 +488,38 @@ The results that depend on a recalculated result are recalculated too:
     '74'
     >>> low.getResult()
     '0'
+
+
+Interim fields named like the functions
+.......................................
+
+An interim field can have the same keyword as one of the functions, e.g. the
+age at onset of a disease as `age`. The formula reads the interim field with
+its placeholder `[age]` and calls the function with `age(...)`, and neither
+takes the place of the other:
+
+    >>> onset_calc = api.create(setup.calculations, "Calculation",
+    ...                         title="Years since onset")
+    >>> onset_calc.setPythonImports([
+    ...     {"module": "senaite.patient.calc", "function": "age"},
+    ... ])
+    >>> onset_calc.setInterimFields([{
+    ...     "keyword": "age", "title": "Age at onset", "value": "",
+    ...     "hidden": False, "unit": "years"}])
+    >>> onset_calc.setFormula("age(%(context_uid)s) - [age]")
+    >>> YSO = api.create(services, "AnalysisService",
+    ...                  title="Years since onset", Keyword="YSO",
+    ...                  Unit="years", Precision=0, Category=category,
+    ...                  Calculation=onset_calc)
+
+The patient is 50 years old on the date sampled, and was 20 at onset:
+
+    >>> sample = new_sample([YSO], DateOfBirth=dob, Sex="f")
+    >>> yso = get_analysis(sample, "YSO")
+    >>> calc.age(api.get_uid(yso))
+    50
+    >>> yso.setInterimValue("age", 20)
+    >>> yso.calculateResult(override=True)
+    True
+    >>> yso.getFormattedResult()
+    '30'
