@@ -37,6 +37,7 @@ Needed imports:
     >>> from DateTime import DateTime
     >>> from plone.app.testing import setRoles
     >>> from plone.app.testing import TEST_USER_ID
+    >>> from senaite.core.api.calculation import is_allowed_module
     >>> from senaite.patient import calc
     >>> from zope.lifecycleevent import modified
 
@@ -98,6 +99,13 @@ Create some baseline objects for the test:
     >>> CRE = api.create(services, "AnalysisService",
     ...                  title="Creatinine", Keyword="CRE", Unit="mg/dL",
     ...                  Category=category)
+
+The module is part of the `senaite` package, which calculations must not
+import from. senaite.patient registers it as a module for calculations and
+adds it to the modules the site allows, so a calculation can import from it:
+
+    >>> is_allowed_module("senaite.patient.calc")
+    True
 
 The eGFR with the CKD-EPI 2021 equation, from serum creatinine in mg/dL, age
 and sex:
