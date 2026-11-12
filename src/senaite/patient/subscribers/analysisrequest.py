@@ -208,7 +208,7 @@ def recalculate_result(analysis, recalculated):
     recalculated.add(uid)
     if not is_recalculable(analysis):
         return
-    previous = analysis.getFormattedResult(html=False)
+    previous = get_result_text(analysis)
     if analysis.calculateResult(override=True):
         if ISubmitted.providedBy(analysis):
             add_recalculation_remark(analysis, previous)
@@ -217,21 +217,31 @@ def recalculate_result(analysis, recalculated):
         recalculate_result(dependent, recalculated)
 
 
+def get_result_text(analysis):
+    """Returns the formatted result of the analysis, followed by its unit
+    when the result is a number, e.g. `69 mL/min/1.73m2` but `NA`
+    """
+    result = api.safe_unicode(analysis.getFormattedResult(html=False))
+    unit = api.safe_unicode(analysis.getUnit() or u"").strip()
+    if not unit or not api.is_floatable(analysis.getResult()):
+        return result
+    return u"{} {}".format(result, unit)
+
+
 def add_recalculation_remark(analysis, previous):
     """Adds a remark to a submitted result that was recalculated
 
     The verifier would otherwise see the new result as if the analyst had
     submitted it. Nothing is added when the result did not change.
     """
-    current = analysis.getFormattedResult(html=False)
+    current = get_result_text(analysis)
     if current == previous:
         return
     remark = t(_(
         u"recalculated_after_patient_data_change",
         default=u"Recalculated after a change of the patient data: "
                 u"${previous} -> ${current}",
-        mapping={"previous": api.safe_unicode(previous),
-                 "current": api.safe_unicode(current)}))
+        mapping={"previous": previous, "current": current}))
     remarks = api.safe_unicode(analysis.getRemarks() or u"")
     remarks = u"\n".join(filter(None, [remarks, remark]))
     analysis.setRemarks(remarks)

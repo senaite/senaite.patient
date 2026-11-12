@@ -286,8 +286,8 @@ calculated, also when it is submitted already:
 Each recalculation of the submitted result is noted in its remarks:
 
     >>> print(egfr.getRemarks())
-    Recalculated after a change of the patient data: 69 -> NA
-    Recalculated after a change of the patient data: NA -> 69
+    Recalculated after a change of the patient data: 69 mL/min/1.73m2 -> NA
+    Recalculated after a change of the patient data: NA -> 69 mL/min/1.73m2
 
 
 Changes before the result is submitted
@@ -342,7 +342,8 @@ A submitted result is recalculated too, until it is verified:
 The remarks of the result say so, with the result before and after:
 
     >>> print(egfr.getRemarks())
-    Recalculated after a change of the patient data: 92 -> 69
+    Recalculated after a change of the patient data:
+    92 mL/min/1.73m2 -> 69 mL/min/1.73m2
 
 A change that gives the same result adds no remark:
 
@@ -350,7 +351,8 @@ A change that gives the same result adds no remark:
     >>> egfr.getFormattedResult()
     '69'
     >>> print(egfr.getRemarks())
-    Recalculated after a change of the patient data: 92 -> 69
+    Recalculated after a change of the patient data:
+    92 mL/min/1.73m2 -> 69 mL/min/1.73m2
 
 Once verified, the result is kept, e.g. when the sample can still be edited
 because other analyses are not verified yet:
