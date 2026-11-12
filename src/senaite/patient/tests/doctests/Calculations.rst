@@ -19,6 +19,8 @@ When the patient data is missing, the functions raise an error, so the result
 is not calculated rather than calculated with a guessed value.
 
 The results not yet verified are recalculated when the sample is modified.
+A submitted result that changes gets a remark with the result before and
+after, so the verifier sees it is not the value the analyst submitted.
 
 Running this test from the buildout directory:
 
@@ -281,6 +283,12 @@ calculated, also when it is submitted already:
     >>> egfr.getFormattedResult()
     '69'
 
+Each recalculation of the submitted result is noted in its remarks:
+
+    >>> print(egfr.getRemarks())
+    Recalculated after a change of the patient data: 69 -> NA
+    Recalculated after a change of the patient data: NA -> 69
+
 
 Changes before the result is submitted
 ......................................
@@ -330,6 +338,19 @@ A submitted result is recalculated too, until it is verified:
     >>> edit(sample, Sex="f")
     >>> egfr.getFormattedResult()
     '69'
+
+The remarks of the result say so, with the result before and after:
+
+    >>> print(egfr.getRemarks())
+    Recalculated after a change of the patient data: 92 -> 69
+
+A change that gives the same result adds no remark:
+
+    >>> edit(sample, DateSampled=DateTime("2026-06-02"))
+    >>> egfr.getFormattedResult()
+    '69'
+    >>> print(egfr.getRemarks())
+    Recalculated after a change of the patient data: 92 -> 69
 
 Once verified, the result is kept, e.g. when the sample can still be edited
 because other analyses are not verified yet:

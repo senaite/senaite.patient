@@ -21,13 +21,16 @@
 from bika.lims import api
 from bika.lims.interfaces import IRejected
 from bika.lims.interfaces import IRetracted
+from bika.lims.interfaces import ISubmitted
 from bika.lims.interfaces import IVerified
 from senaite.core.behaviors import IClientShareableBehavior
+from senaite.core.i18n import translate as t
 from senaite.core.interfaces import ILockingState
 from senaite.patient import api as patient_api
 from senaite.patient import calc
 from senaite.patient import check_installed
 from senaite.patient import logger
+from senaite.patient import messageFactory as _
 
 
 @check_installed(None)
@@ -174,7 +177,7 @@ def update_results_ranges(sample):
 
 
 def recalculate_results(sample):
-    """Recalculates the results not yet submitted whose calculation uses the
+    """Recalculates the results not yet verified whose calculation uses the
     patient data, together with the results that depend on them
     """
     # the analyses of a disposed or dispatched sample are locked
@@ -205,10 +208,33 @@ def recalculate_result(analysis, recalculated):
     recalculated.add(uid)
     if not is_recalculable(analysis):
         return
+    previous = analysis.getFormattedResult(html=False)
     if analysis.calculateResult(override=True):
+        if ISubmitted.providedBy(analysis):
+            add_recalculation_remark(analysis, previous)
         analysis.reindexObject()
     for dependent in analysis.getDependents():
         recalculate_result(dependent, recalculated)
+
+
+def add_recalculation_remark(analysis, previous):
+    """Adds a remark to a submitted result that was recalculated
+
+    The verifier would otherwise see the new result as if the analyst had
+    submitted it. Nothing is added when the result did not change.
+    """
+    current = analysis.getFormattedResult(html=False)
+    if current == previous:
+        return
+    remark = t(_(
+        u"recalculated_after_patient_data_change",
+        default=u"Recalculated after a change of the patient data: "
+                u"${previous} -> ${current}",
+        mapping={"previous": api.safe_unicode(previous),
+                 "current": api.safe_unicode(current)}))
+    remarks = api.safe_unicode(analysis.getRemarks() or u"")
+    remarks = u"\n".join(filter(None, [remarks, remark]))
+    analysis.setRemarks(remarks)
 
 
 def is_recalculable(analysis):
