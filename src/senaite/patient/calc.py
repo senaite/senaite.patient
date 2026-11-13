@@ -37,7 +37,7 @@ from bika.lims.interfaces.analysis import IRequestAnalysis
 MODULE = __name__
 
 
-def get_sample(uid):
+def _get_sample(uid):
     """Returns the sample of the analysis being calculated
 
     :param uid: UID of the analysis being calculated
@@ -56,7 +56,7 @@ def age(uid):
     :raises ValueError: when the sample has no date of birth, or it is after
         the date sampled
     """
-    sample = get_sample(uid)
+    sample = _get_sample(uid)
     delta = sample.getAge()
     if delta is None:
         raise ValueError("No date of birth in sample {}".format(
@@ -73,7 +73,7 @@ def sex(uid):
     :param uid: UID of the analysis being calculated
     :raises ValueError: when the sex of the sample is not specified
     """
-    sample = get_sample(uid)
+    sample = _get_sample(uid)
     value = sample.getSex()
     if value not in ("m", "f"):
         raise ValueError("No sex in sample {}".format(api.get_id(sample)))
