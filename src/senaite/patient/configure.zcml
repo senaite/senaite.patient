@@ -59,6 +59,13 @@
       component="senaite.patient.vocabularies.NameEntryModesVocabularyFactory"
       name="senaite.patient.vocabularies.name_entry_modes" />
 
+  <!-- Module calculations may import from. It is part of the `senaite`
+       package, which calculations must not import from otherwise -->
+  <utility
+      component=".calc"
+      provides="senaite.core.interfaces.ICalculationModule"
+      name="senaite.patient.calc" />
+
   <!-- Package includes -->
   <include package=".adapters" />
   <include package=".browser" />

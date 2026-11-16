@@ -3,6 +3,17 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
 
   <genericsetup:upgradeStep
+      title="Allow calculations to import from senaite.patient.calc"
+      description="
+        Add senaite.patient.calc to the modules the site allows calculations
+        to import from, so that formulas can read the patient data of the
+        sample."
+      source="1604"
+      destination="1605"
+      handler=".v01_06_000.allow_calculation_module"
+      profile="senaite.patient:default"/>
+
+  <genericsetup:upgradeStep
       title="Restore patients in clients"
       description="
         Apply the setting 'Allow patients in clients' to the client type

@@ -19,10 +19,18 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims import api
+from bika.lims.interfaces import IRejected
+from bika.lims.interfaces import IRetracted
+from bika.lims.interfaces import ISubmitted
+from bika.lims.interfaces import IVerified
 from senaite.core.behaviors import IClientShareableBehavior
+from senaite.core.i18n import translate as t
+from senaite.core.interfaces import ILockingState
 from senaite.patient import api as patient_api
+from senaite.patient import calc
 from senaite.patient import check_installed
 from senaite.patient import logger
+from senaite.patient import messageFactory as _
 
 
 @check_installed(None)
@@ -61,6 +69,8 @@ def on_object_edited(instance, event):
     update_patient(instance)
     # update results ranges so dynamic specs are recalculated
     update_results_ranges(instance)
+    # recalculate the results that use the patient data
+    recalculate_results(instance)
 
 
 def add_cc_email(sample, email):
@@ -164,3 +174,85 @@ def update_results_ranges(sample):
     if spec:
         ranges = spec.getResultsRange()
         sample.setResultsRange(ranges, recursive=False)
+
+
+def recalculate_results(sample):
+    """Recalculates the results not yet verified whose calculation uses the
+    patient data, together with the results that depend on them
+    """
+    # the analyses of a disposed or dispatched sample are locked
+    if ILockingState.providedBy(sample):
+        return
+    analyses = sample.getAnalyses(full_objects=True)
+    analyses = filter(uses_patient_data, analyses)
+    recalculated = set()
+    for analysis in analyses:
+        recalculate_result(analysis, recalculated)
+
+
+def uses_patient_data(analysis):
+    """Returns whether the calculation of the analysis imports functions from
+    `senaite.patient.calc`
+    """
+    imports = analysis.getCalculationImports()
+    return any(imp.get("module") == calc.MODULE for imp in imports)
+
+
+def recalculate_result(analysis, recalculated):
+    """Recalculates the result of the analysis and of its dependents, as
+    long as the result is not verified
+    """
+    uid = api.get_uid(analysis)
+    if uid in recalculated:
+        return
+    recalculated.add(uid)
+    if not is_recalculable(analysis):
+        return
+    previous = get_result_text(analysis)
+    if analysis.calculateResult(override=True):
+        if ISubmitted.providedBy(analysis):
+            add_recalculation_remark(analysis, previous)
+        analysis.reindexObject()
+    for dependent in analysis.getDependents():
+        recalculate_result(dependent, recalculated)
+
+
+def get_result_text(analysis):
+    """Returns the formatted result of the analysis, followed by its unit
+    when the result is a number, e.g. `69 mL/min/1.73m2` but `NA`
+    """
+    result = api.safe_unicode(analysis.getFormattedResult(html=False))
+    unit = api.safe_unicode(analysis.getUnit() or u"").strip()
+    if not unit or not api.is_floatable(analysis.getResult()):
+        return result
+    return u"{} {}".format(result, unit)
+
+
+def add_recalculation_remark(analysis, previous):
+    """Adds a remark to a submitted result that was recalculated
+
+    The verifier would otherwise see the new result as if the analyst had
+    submitted it. Nothing is added when the result did not change.
+    """
+    current = get_result_text(analysis)
+    if current == previous:
+        return
+    remark = t(_(
+        u"recalculated_after_patient_data_change",
+        default=u"Recalculated after a change of the patient data: "
+                u"${previous} -> ${current}",
+        mapping={"previous": previous, "current": current}))
+    remarks = api.safe_unicode(analysis.getRemarks() or u"")
+    remarks = u"\n".join(filter(None, [remarks, remark]))
+    analysis.setRemarks(remarks)
+
+
+def is_recalculable(analysis):
+    """Returns whether the result of the analysis can be recalculated: it is
+    neither verified, nor retracted, rejected or cancelled
+    """
+    if IVerified.providedBy(analysis):
+        return False
+    if IRetracted.providedBy(analysis) or IRejected.providedBy(analysis):
+        return False
+    return api.is_active(analysis)

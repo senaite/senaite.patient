@@ -19,8 +19,10 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims import api
+from senaite.core.api.calculation import allow_module
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
+from senaite.patient import calc
 from senaite.patient import logger
 from senaite.patient.api import sync_patients_in_clients
 from senaite.patient.config import PRODUCT_NAME
@@ -69,6 +71,15 @@ def fix_clientshareable_behavior(tool):
     fti.behaviors = tuple(behaviors)
 
     logger.info("Fix IClientShareableBehavior [DONE]")
+
+
+def allow_calculation_module(tool):
+    """Allows calculations to import from `senaite.patient.calc`
+    """
+    module = calc.__name__
+    logger.info("Allow calculations to import from {} ...".format(module))
+    allow_module(module)
+    logger.info("Allow calculations to import from {} [DONE]".format(module))
 
 
 def restore_patients_in_clients(tool):

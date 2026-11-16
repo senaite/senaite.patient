@@ -6,4 +6,12 @@
       interface="senaite.patient.browser.controlpanel.IPatientControlPanel"
       prefix="senaite.patient" />
 
+  <!-- Allow calculations to import from senaite.patient.calc, next to the
+       modules the site allows already -->
+  <record name="senaite.core.registry.schema.ICalculationImportsRegistry.calculation_import_modules">
+    <value purge="false">
+      <element>senaite.patient.calc</element>
+    </value>
+  </record>
+
 </registry>
