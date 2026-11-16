@@ -19,9 +19,7 @@
 # Some rights reserved, see README and LICENSE.
 
 from bika.lims import api
-from plone.registry.interfaces import IRegistry
-from senaite.core.api.calculation import IMPORT_MODULES_RECORD
-from senaite.core.registry.schema import ICalculationImportsRegistry
+from senaite.core.api.calculation import allow_module
 from senaite.core.upgrade import upgradestep
 from senaite.core.upgrade.utils import UpgradeUtils
 from senaite.patient import calc
@@ -30,7 +28,6 @@ from senaite.patient.api import sync_patients_in_clients
 from senaite.patient.config import PRODUCT_NAME
 from senaite.patient.setuphandlers import display_in_nav
 from zope.annotation.interfaces import IAnnotations
-from zope.component import getUtility
 
 version = "1.6.0"
 profile = "profile-{0}:default".format(PRODUCT_NAME)
@@ -78,22 +75,10 @@ def fix_clientshareable_behavior(tool):
 
 def allow_calculation_module(tool):
     """Allows calculations to import from `senaite.patient.calc`
-
-    The record may not exist yet, when the upgrade step of senaite.core
-    that adds it runs after this one. Registering its interface creates it
-    with the default modules and keeps the value of an existing one, so the
-    module is added in either order.
     """
     module = calc.__name__
     logger.info("Allow calculations to import from {} ...".format(module))
-    registry = getUtility(IRegistry)
-    registry.registerInterface(ICalculationImportsRegistry)
-    modules = list(registry[IMPORT_MODULES_RECORD] or [])
-    if module in modules:
-        logger.info("Allow calculations to import from {} [SKIP]"
-                    .format(module))
-        return
-    registry[IMPORT_MODULES_RECORD] = modules + [module]
+    allow_module(module)
     logger.info("Allow calculations to import from {} [DONE]".format(module))
 
 
